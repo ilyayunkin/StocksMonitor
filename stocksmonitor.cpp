@@ -1,13 +1,13 @@
 #include "stocksmonitor.h"
 
 #include <QFile>
-#include <QTextStream>
 #include <QDateTime>
 #include <QDebug>
 #include <QTimer>
 
 #include <algorithm>
 
+#define WRITE_DEBUG_FILES 0
 namespace  {
 const QString htmlName = "stocks.html";
 const QString txtName = "stocks.txt";
@@ -38,9 +38,15 @@ enum
 }
 
 
-StocksMonitor::StocksMonitor(QObject *parent) : QObject(parent)
+StocksMonitor::StocksMonitor(AbstractStocksModel &model, QObject *parent) : QObject(parent),
+    model(model)
 {
+    connect(&m_WebCtrl, &QNetworkAccessManager::finished,
+            this, &StocksMonitor::fileDownloaded);
     requestWordsFromTheInternet();
+    QTimer *t = new QTimer(this);
+    connect(t, &QTimer::timeout, this, &StocksMonitor::requestWordsFromTheInternet);
+    t->start(5000);
 }
 
 
@@ -49,8 +55,6 @@ void StocksMonitor::requestWordsFromTheInternet()
     qDebug() << __PRETTY_FUNCTION__;
     QNetworkRequest request(QUrl("https://smart-lab.ru/q/shares/order_by_last_to_prev_price/asc/"));
     m_WebCtrl.get(request);
-    connect(&m_WebCtrl, &QNetworkAccessManager::finished,
-            this, &StocksMonitor::fileDownloaded);
 }
 
 void StocksMonitor::fileDownloaded(QNetworkReply *r)
@@ -60,7 +64,10 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
     //emit a signal
     r->deleteLater();
 
+
+
     QDateTime begin = QDateTime::currentDateTime();
+#if WRITE_DEBUG_FILES
     {
         QFile f(htmlName);
         f.open(QIODevice::WriteOnly);
@@ -72,12 +79,14 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
             f.close();
         }
     }
+#endif
     QDateTime t1 = QDateTime::currentDateTime();
 
     QByteArrayList tableRows;
     {
         QByteArray div = getDiv(m_DownloadeAwholeDocumentdData);
         QByteArray table = getTable(div);
+#if WRITE_DEBUG_FILES
         {
             QFile f(tableName);
             f.open(QIODevice::WriteOnly);
@@ -89,6 +98,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
                 f.close();
             }
         }
+#endif
         tableRows = getRows(table);
     }
     QDateTime t2 = QDateTime::currentDateTime();
@@ -121,6 +131,8 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
              << t2.secsTo(t3);
     qDebug() << __PRETTY_FUNCTION__
              << "Stocks count: " << stocks.size();
+
+    model.setStocks(std::move(stocks));
     emit downloaded();
 }
 
@@ -196,6 +208,7 @@ QByteArrayList StocksMonitor::getRows(const QByteArray &table)
         QByteArray tableRow = table.mid(fieldBegin, fieldEnd - fieldBegin);
         tableRow.replace("\t", "");
         ret.push_back(tableRow);
+#if WRITE_DEBUG_FILES
         {
             QFile f(QString::number(i) +".txt");
             f.open(QIODevice::WriteOnly);
@@ -207,6 +220,7 @@ QByteArrayList StocksMonitor::getRows(const QByteArray &table)
                 f.close();
             }
         }
+#endif
         ++i;
         assert(i < 500);
     }

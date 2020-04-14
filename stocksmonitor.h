@@ -5,20 +5,14 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QList>
 
-struct Stock
-{
-    int rowNum;
-    QString name;
-    QString ticker;
-    double price;
-};
-typedef QList<Stock> StocksList;
+#include "abstractstocksmodel.h"
 
 class StocksMonitor : public QObject
 {
     Q_OBJECT
+    AbstractStocksModel &model;
+
     QNetworkAccessManager m_WebCtrl;
     QByteArray getDiv(const QByteArray &wholeDocument);
     QByteArray getTable(const QByteArray &div);
@@ -26,7 +20,7 @@ class StocksMonitor : public QObject
     QByteArrayList getCols(const QByteArray &table);
     QByteArray getA(const QByteArray &tableCol);
 public:
-    explicit StocksMonitor(QObject *parent = nullptr);
+    explicit StocksMonitor(AbstractStocksModel &model, QObject *parent = nullptr);
 public slots:
     void requestWordsFromTheInternet();
     void fileDownloaded(QNetworkReply*r);
