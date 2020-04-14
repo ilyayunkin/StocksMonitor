@@ -14,11 +14,12 @@ class StocksMonitor : public QObject
     AbstractStocksModel &model;
 
     QNetworkAccessManager m_WebCtrl;
-    QByteArray getDiv(const QByteArray &wholeDocument);
-    QByteArray getTable(const QByteArray &div);
-    QByteArrayList getRows(const QByteArray &table);
-    QByteArrayList getCols(const QByteArray &table);
-    QByteArray getA(const QByteArray &tableCol);
+    static QByteArray getDiv(const QByteArray &wholeDocument);
+    static QByteArray getTable(const QByteArray &div);
+    static QByteArrayList getRows(const QByteArray &table);
+    static QByteArrayList getCols(const QByteArray &table);
+    static QByteArray getA(const QByteArray &tableCol);
+    static float getPercentage(const QByteArray &tableCol);
 public:
     explicit StocksMonitor(AbstractStocksModel &model, QObject *parent = nullptr);
 public slots:

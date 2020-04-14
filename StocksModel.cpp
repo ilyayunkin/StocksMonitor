@@ -47,6 +47,18 @@ QVariant StocksModel::headerData(int section,
             case PRICE:
                 ret = tr("Price");
                 break;
+            case DERIVATION:
+                ret = tr("Derivation");
+                break;
+            case DERIVATION_WEEK:
+                ret = tr("Derivation Week");
+                break;
+            case DERIVATION_MONTH:
+                ret = tr("Derivation Month");
+                break;
+            case DERIVATION_YEAR:
+                ret = tr("Derivation Year");
+                break;
             default:
                 break;
             }
@@ -76,6 +88,18 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
                 break;
             case PRICE:
                 ret = stock.price;
+                break;
+            case DERIVATION:
+                ret = stock.derivation;
+                break;
+            case DERIVATION_WEEK:
+                ret = stock.derivationWeek;
+                break;
+            case DERIVATION_MONTH:
+                ret = stock.derivationMonth;
+                break;
+            case DERIVATION_YEAR:
+                ret = stock.derivationYear;
                 break;
             default:
                 break;

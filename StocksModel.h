@@ -17,6 +17,10 @@ class StocksModel : public QAbstractTableModel, public AbstractStocksModel
         NAME,
         TICKER,
         PRICE,
+        DERIVATION,
+        DERIVATION_WEEK,
+        DERIVATION_MONTH,
+        DERIVATION_YEAR,
 
         COL_COUNT
     };

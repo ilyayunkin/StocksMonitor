@@ -120,6 +120,11 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
                 stock.name = QString(getA(tableCols.at(NAME)));
                 stock.ticker = tableCols.at(TICKER);
                 stock.price = QString(tableCols.at(PRICE)).toDouble();
+                stock.derivation = getPercentage(tableCols.at(DERIVATION_PC));
+                stock.derivationWeek = getPercentage(tableCols.at(DERIVATION_PC_WEEK));
+                stock.derivationMonth = getPercentage(tableCols.at(DERIVATION_PC_MONTH));
+                stock.derivationYear = getPercentage(tableCols.at(DERIVATION_PC_YEAR));
+
                 stocks.push_back(stock);
             }
         }
@@ -155,6 +160,8 @@ QByteArray StocksMonitor::getDiv(const QByteArray &wholeDocument)
 
     QByteArray paragraph = wholeDocument.mid(fieldBegin, fieldEnd - fieldBegin);
     paragraph.replace("\t", "");
+    paragraph.replace("\r", "");
+    paragraph.replace("\n", "");
 
     return paragraph;
 }
@@ -177,7 +184,6 @@ QByteArray StocksMonitor::getTable(const QByteArray &div)
     }
 
     QByteArray paragraph = div.mid(fieldBegin, fieldEnd - fieldBegin);
-    paragraph.replace("\t", "");
 
     return paragraph;
 
@@ -206,7 +212,6 @@ QByteArrayList StocksMonitor::getRows(const QByteArray &table)
         }
 
         QByteArray tableRow = table.mid(fieldBegin, fieldEnd - fieldBegin);
-        tableRow.replace("\t", "");
         ret.push_back(tableRow);
 #if WRITE_DEBUG_FILES
         {
@@ -252,7 +257,6 @@ QByteArrayList StocksMonitor::getCols(const QByteArray &table)
         }
 
         QByteArray tableCol = table.mid(fieldBegin, fieldEnd - fieldBegin);
-        tableCol.replace("\t", "");
         ret.push_back(tableCol);
 
         ++i;
@@ -297,3 +301,9 @@ QByteArray StocksMonitor::getA(const QByteArray &tableCol)
 
     return ret;
 }
+
+float StocksMonitor::getPercentage(const QByteArray &tableCol)
+{
+    return QString(tableCol).replace('%', ' ').toDouble();
+}
+

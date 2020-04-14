@@ -9,7 +9,11 @@ struct Stock
     int rowNum;
     QString name;
     QString ticker;
-    double price;
+    float price;
+    float derivation;
+    float derivationWeek;
+    float derivationMonth;
+    float derivationYear;
 };
 typedef QList<Stock> StocksList;
 
