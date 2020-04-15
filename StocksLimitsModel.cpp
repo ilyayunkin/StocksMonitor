@@ -7,6 +7,30 @@ StocksLimitsModel::StocksLimitsModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
     stockLimits.reserve(100);
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("db_name.sqlite");
+
+    if (!db.open()) {
+        qDebug() << db.lastError().text();
+    }else
+    {
+        {
+            QSqlQuery q = executeQuery(
+                        "create table if not exists "
+                        "Limits (ticker TEXT, name TEXT, base_price REAL)");
+        }
+        {
+            QSqlQuery q = executeQuery("SELECT * FROM Limits");
+            QSqlRecord rec = q.record();
+            while (q.next()) {
+                StockLimit limit{};
+                limit.ticker = q.value(rec.indexOf("ticker")).toByteArray();
+                limit.name = q.value(rec.indexOf("name")).toByteArray();
+                limit.basePrice = q.value(rec.indexOf("base_price")).toFloat();
+                stockLimits.push_back(limit);
+            }
+        }
+    }
     {
         QTimer *t = new QTimer(this);
         connect(t, &QTimer::timeout, this, &StocksLimitsModel::update);
@@ -158,6 +182,12 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
     {
         float v = value.toFloat();
         stockLimits[row].basePrice = v;
+        {
+            executeQuery(QString("UPDATE Limits "
+                                 "SET base_price = %1 "
+                                 "WHERE ticker = '%2';")
+                         .arg(stockLimits[row].basePrice).arg(QString(stockLimits[row].ticker)));
+        }
         return true;
     }
     return false;
@@ -166,6 +196,10 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
 void StocksLimitsModel::addStock(const StockLimit &stockLimit)
 {
     auto size = stockLimits.size();
+    {
+        executeQuery(QString("INSERT INTO Limits (ticker, name, base_price) VALUES ('%1', '%2', '%3');")
+                     .arg(QString(stockLimit.ticker)).arg(stockLimit.name).arg(stockLimit.basePrice));
+    }
 
     beginInsertRows(QModelIndex(), size, size);
 
@@ -173,4 +207,15 @@ void StocksLimitsModel::addStock(const StockLimit &stockLimit)
 
     endInsertRows();
 }
+
+QSqlQuery StocksLimitsModel::executeQuery(const QString &query)
+{
+    QSqlQuery q = db.exec(query);
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastError();
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.record();
+
+    return q;
+}
+
 

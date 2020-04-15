@@ -2,26 +2,29 @@
 #define StocksLimitsModel_H
 
 #include <QAbstractTableModel>
+
+#include <QtSql>
+
 #include "abstractstocksmodel.h"
+
 struct StockLimit
 {
     QString name;
     QByteArray ticker;
     float price;
     float basePrice;
-
+    StockLimit() = default;
     StockLimit(const Stock &stock, float basePrice) :
         name(stock.name), ticker(stock.ticker), price(stock.price), basePrice(basePrice)
     {}
 };
 typedef QList<StockLimit> StockLimitsList;
-/**
- * @brief Класс Модели (архитектура Модель/Представление), реализующей
- * хранение вычисленных значений моментов.
- */
+
 class StocksLimitsModel : public QAbstractTableModel
 {
     Q_OBJECT
+
+    QSqlDatabase db;
 
     enum
     {
@@ -39,6 +42,7 @@ class StocksLimitsModel : public QAbstractTableModel
     AbstractStocksModel *stocksModel = nullptr;
 
     void update();
+    QSqlQuery executeQuery(const QString &query);
 public:
     explicit StocksLimitsModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
