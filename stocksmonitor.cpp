@@ -55,7 +55,9 @@ StocksMonitor::StocksMonitor(AbstractStocksModel &model, QObject *parent) : QObj
 
 void StocksMonitor::requestWordsFromTheInternet()
 {
+#if DEBUG_PRINT
     qDebug() << __PRETTY_FUNCTION__;
+#endif
     QNetworkRequest request(QUrl("https://smart-lab.ru/q/shares/order_by_last_to_prev_price/asc/"));
     m_WebCtrl.get(request);
 }

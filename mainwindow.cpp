@@ -15,12 +15,22 @@ MainWindow::MainWindow(QWidget *parent)
         stocksTableView = new QTableView;
         hlay->addWidget(stocksTableView);
         stocksTableView->setModel(&model);
+
+        QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+        proxyModel->setSourceModel(&model);
+        stocksTableView->setModel(proxyModel);
+        stocksTableView->setSortingEnabled(true);
         stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     {
         stocksLimitsTableView = new QTableView;
         hlay->addWidget(stocksLimitsTableView);
-        stocksLimitsTableView->setModel(&limitsModel);
+
+        QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+        proxyModel->setSourceModel(&limitsModel);
+        stocksLimitsTableView->setModel(proxyModel);
+        stocksLimitsTableView->setSortingEnabled(true);
+        stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
     limitsModel.setStocksModel(&model);
 
@@ -35,9 +45,9 @@ MainWindow::~MainWindow()
 void MainWindow::stockDoubleClicked(const QModelIndex &index)
 {
     qDebug() << __PRETTY_FUNCTION__;
-    Stock stock = model.getStock(index.row());
+    Stock stock = model.getStock(static_cast<QSortFilterProxyModel *>(stocksTableView->model())->mapToSource(index).row());
     bool ok;
-    float basePrice = QInputDialog::getDouble(this, tr("Input base price"), tr("Price"), stock.price, 0, 100000, 10, &ok);
+    float basePrice = QInputDialog::getDouble(this, stock.name, tr("Price"), stock.price, 0, 100000, 10, &ok);
     if(ok)
     {
         limitsModel.addStock(StockLimit{stock, basePrice});
