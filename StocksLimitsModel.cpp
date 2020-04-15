@@ -187,6 +187,7 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
                                  "SET base_price = %1 "
                                  "WHERE ticker = '%2';")
                          .arg(stockLimits[row].basePrice).arg(QString(stockLimits[row].ticker)));
+            emit dataChanged(createIndex(row, 0), createIndex(row, COL_COUNT - 1));
         }
         return true;
     }
