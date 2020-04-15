@@ -26,6 +26,12 @@ class StocksLimitsModel : public QAbstractTableModel
 
     QSqlDatabase db;
 
+    StockLimitsList stockLimits;
+    AbstractStocksModel *stocksModel = nullptr;
+
+    void update();
+    QSqlQuery executeQuery(const QString &query);
+public:
     enum
     {
         NAME,
@@ -36,14 +42,6 @@ class StocksLimitsModel : public QAbstractTableModel
 
         COL_COUNT
     };
-
-
-    StockLimitsList stockLimits;
-    AbstractStocksModel *stocksModel = nullptr;
-
-    void update();
-    QSqlQuery executeQuery(const QString &query);
-public:
     explicit StocksLimitsModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;

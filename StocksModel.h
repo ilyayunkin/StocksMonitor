@@ -11,6 +11,8 @@ class StocksModel : public QAbstractTableModel, public AbstractStocksModel
 {
     Q_OBJECT
 
+    StocksList stocks;
+public:
     enum
     {
         NUM,
@@ -24,9 +26,6 @@ class StocksModel : public QAbstractTableModel, public AbstractStocksModel
 
         COL_COUNT
     };
-
-    StocksList stocks;
-public:
     explicit StocksModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
