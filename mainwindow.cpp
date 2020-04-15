@@ -3,6 +3,10 @@
 #include <QHeaderView>
 #include <QDebug>
 #include <QInputDialog>
+#include <QMenuBar>
+#include <QFile>
+#include <QTextStream>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -35,6 +39,13 @@ MainWindow::MainWindow(QWidget *parent)
         stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
     }
     limitsModel.setStocksModel(&model);
+    {
+        QMenuBar *bar = new QMenuBar;
+        setMenuBar(bar);
+        QMenu *fileMenu = bar->addMenu(tr("File"));
+        QAction *saveAction = fileMenu->addAction(tr("Save limits"));
+        connect(saveAction, &QAction::triggered, this, &MainWindow::save);
+    }
 
     connect(stocksTableView, &QAbstractItemView::doubleClicked,
             this, &MainWindow::stockDoubleClicked);
@@ -53,5 +64,34 @@ void MainWindow::stockDoubleClicked(const QModelIndex &index)
     if(ok)
     {
         limitsModel.addStock(StockLimit{stock, basePrice});
+    }
+}
+
+void MainWindow::save()
+{
+    qDebug() << __PRETTY_FUNCTION__;
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save"));
+    if(!filename.isNull())
+    {
+        QFile f(filename);
+        if(f.open(QIODevice::WriteOnly))
+        {
+            QTextStream stream(&f);
+            StockLimitsList list = limitsModel.getList();
+            int i = 0;
+            for(auto &limit : list)
+            {
+                if(i > 0)
+                {
+                    stream << '\n';
+                }
+                stream << limit.name << '\t'
+                       << limit.ticker << '\t'
+                       << limit.basePrice;
+                ++i;
+            }
+            stream.flush();
+            f.close();
+        }
     }
 }

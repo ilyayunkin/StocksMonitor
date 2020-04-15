@@ -20,5 +20,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     AbstractStocksModel &getModel(){return model;}
     ~MainWindow();
+    void save();
 };
 #endif // MAINWINDOW_H

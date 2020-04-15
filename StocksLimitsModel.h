@@ -54,6 +54,7 @@ public:
 
     void setStocksModel(AbstractStocksModel *stocksModel);
     void addStock(const StockLimit &stockLimit);
+    StockLimitsList getList() const {return stockLimits;}
 };
 
 #endif // StocksLimitsModel_H
