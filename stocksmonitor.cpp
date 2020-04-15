@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #define WRITE_DEBUG_FILES 0
+#define DEBUG_PRINT 0
 namespace  {
 const QString htmlName = "stocks.html";
 const QString txtName = "stocks.txt";
@@ -62,7 +63,9 @@ void StocksMonitor::requestWordsFromTheInternet()
 void StocksMonitor::fileDownloaded(QNetworkReply *r)
 {
     const QByteArray m_DownloadeAwholeDocumentdData = r->readAll();
+#if DEBUG_PRINT
     qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "received" << m_DownloadeAwholeDocumentdData.size();
+#endif
     //emit a signal
     r->deleteLater();
 
@@ -111,14 +114,11 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
         QByteArrayList tableCols = getCols(row);
         if(tableCols.size() >= COL_COUNT)
         {
-            qDebug() << __PRETTY_FUNCTION__;
-            qDebug() << tableCols;
             bool b = false;
             int rowNum = QString(tableCols[NUM]).toInt(&b);
             if(b)
             {
                 Stock stock;
-                qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "rowNum" << rowNum;
                 stock.rowNum = rowNum;
                 stock.name = QString(getA(tableCols.at(NAME)));
                 stock.ticker = tableCols.at(TICKER);
@@ -133,13 +133,14 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
         }
     }
     QDateTime t3 = QDateTime::currentDateTime();
+#if DEBUG_PRINT
     qDebug() << __PRETTY_FUNCTION__
              << "Timings: " << begin.secsTo(t1)
              << t1.secsTo(t2)
              << t2.secsTo(t3);
     qDebug() << __PRETTY_FUNCTION__
              << "Stocks count: " << stocks.size();
-
+#endif
     model.setStocks(std::move(stocks));
     emit downloaded();
 }
@@ -271,8 +272,6 @@ QByteArrayList StocksMonitor::getCols(const QByteArray &table)
 
 QByteArray StocksMonitor::getA(const QByteArray &tableCol)
 {
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << tableCol;
-
     QByteArray ret = tableCol;
     constexpr char divBegin[] = "<a";
     constexpr char divEnd[] = "</a>";
