@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
         stocksTableView->setModel(proxyModel);
         stocksTableView->setSortingEnabled(true);
         stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-        proxyModel->sort(StocksModel::NUM, Qt::AscendingOrder);
+        stocksTableView->sortByColumn(StocksModel::NUM, Qt::AscendingOrder);
     }
     {
         stocksLimitsTableView = new QTableView;
@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
         stocksLimitsTableView->setModel(proxyModel);
         stocksLimitsTableView->setSortingEnabled(true);
         stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-        proxyModel->sort(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
+        stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
     }
     limitsModel.setStocksModel(&model);
 
