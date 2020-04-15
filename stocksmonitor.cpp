@@ -6,6 +6,7 @@
 #include <QTimer>
 
 #include <algorithm>
+#include <assert.h>
 
 #define WRITE_DEBUG_FILES 0
 #define DEBUG_PRINT 0
@@ -68,6 +69,10 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
 #if DEBUG_PRINT
     qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "received" << m_DownloadeAwholeDocumentdData.size();
 #endif
+    if(m_DownloadeAwholeDocumentdData.isEmpty())
+    {
+        return;
+    }
     //emit a signal
     r->deleteLater();
 
