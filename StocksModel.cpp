@@ -148,16 +148,23 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
 
 void StocksModel::setStocks(StocksList &&stocks)
 {
-    if(!this->stocks.empty())
+    if(!this->stocks.empty() && (stocks.size() == this->stocks.size()))
     {
-        beginRemoveRows(QModelIndex(), 0, this->stocks.size() - 1);
-        endRemoveRows();
-    }
-    if(!stocks.empty())
-    {
-        beginInsertRows(QModelIndex(), 0, stocks.size() - 1);
         this->stocks = stocks;
-        endInsertRows();
+        emit dataChanged(createIndex(0, 0), createIndex(stocks.size() - 1, COL_COUNT - 1));
+    }else
+    {
+        if(!this->stocks.empty())
+        {
+            beginRemoveRows(QModelIndex(), 0, this->stocks.size() - 1);
+            endRemoveRows();
+        }
+        if(!stocks.empty())
+        {
+            beginInsertRows(QModelIndex(), 0, stocks.size() - 1);
+            this->stocks = stocks;
+            endInsertRows();
+        }
     }
 }
 
