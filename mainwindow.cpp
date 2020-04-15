@@ -36,6 +36,10 @@ void MainWindow::stockDoubleClicked(const QModelIndex &index)
 {
     qDebug() << __PRETTY_FUNCTION__;
     Stock stock = model.getStock(index.row());
-    float basePrice = QInputDialog::getDouble(this, tr("Input base price"), tr("Price"), stock.price);
-    limitsModel.addStock(StockLimit{stock, basePrice});
+    bool ok;
+    float basePrice = QInputDialog::getDouble(this, tr("Input base price"), tr("Price"), stock.price, 0, 100000, 10, &ok);
+    if(ok)
+    {
+        limitsModel.addStock(StockLimit{stock, basePrice});
+    }
 }
