@@ -1,5 +1,8 @@
 #include "StocksModel.h"
 
+#include <QBrush>
+
+#include <algorithm>
 
 StocksModel::StocksModel(QObject *parent) :
     QAbstractTableModel(parent)
@@ -48,16 +51,16 @@ QVariant StocksModel::headerData(int section,
                 ret = tr("Price");
                 break;
             case DERIVATION:
-                ret = tr("Derivation");
+                ret = tr("%\nDay");
                 break;
             case DERIVATION_WEEK:
-                ret = tr("Derivation Week");
+                ret = tr("%\nWeek");
                 break;
             case DERIVATION_MONTH:
-                ret = tr("Derivation Month");
+                ret = tr("%\nMonth");
                 break;
             case DERIVATION_YEAR:
-                ret = tr("Derivation Year");
+                ret = tr("%\nYear");
                 break;
             default:
                 break;
@@ -106,20 +109,88 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
             }
         }
     }
+    if (role == Qt::ForegroundRole)
+    {
+        int row = index.row();
+        int col = index.column();
+        if(row < stocks.size())
+        {
+            const Stock &stock = stocks.at(row);
+            float number = 0.0;
+            switch (col) {
+            case DERIVATION:
+                number = stock.derivation;
+                break;
+            case DERIVATION_WEEK:
+                number = stock.derivationWeek;
+                break;
+            case DERIVATION_MONTH:
+                number = stock.derivationMonth;
+                break;
+            case DERIVATION_YEAR:
+                number = stock.derivationYear;
+                break;
+            default:
+                break;
+            }
+            if(number < 0.)
+            {
+                return QBrush(Qt::GlobalColor::darkRed);
+            }
+            if(number > 0.)
+            {
+                return QBrush(Qt::GlobalColor::darkGreen);
+            }
+        }
+    }
     return ret;
 }
 
 void StocksModel::setStocks(StocksList &&stocks)
 {
-    if(!this->stocks.isEmpty())
+    if(!this->stocks.empty())
     {
         beginRemoveRows(QModelIndex(), 0, this->stocks.size() - 1);
         endRemoveRows();
     }
-    if(!stocks.isEmpty())
+    if(!stocks.empty())
     {
         beginInsertRows(QModelIndex(), 0, stocks.size() - 1);
         this->stocks = stocks;
         endInsertRows();
     }
+}
+
+Stock StocksModel::getStock(const QByteArray &ticker)
+{
+    Stock ret{};
+    auto cit = std::find_if(stocks.begin(), stocks.end(),
+                            [&](auto &stock){return stock.ticker == ticker;});
+    if(cit != stocks.cend())
+    {
+        ret = *cit;
+    }
+    return ret;
+}
+
+Stock StocksModel::getStock(const size_t i)
+{
+    Stock ret{};
+    if(i < stocks.size())
+    {
+        ret = stocks.at(i);
+    }
+    return ret;
+}
+
+float StocksModel::getStockPrice(const QByteArray &ticker)
+{
+    float ret{};
+    auto cit = std::find_if(stocks.begin(), stocks.end(),
+                            [&](auto &stock){return stock.ticker == ticker;});
+    if(cit != stocks.cend())
+    {
+        ret = cit->price;
+    }
+    return ret;
 }

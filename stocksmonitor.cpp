@@ -44,9 +44,11 @@ StocksMonitor::StocksMonitor(AbstractStocksModel &model, QObject *parent) : QObj
     connect(&m_WebCtrl, &QNetworkAccessManager::finished,
             this, &StocksMonitor::fileDownloaded);
     requestWordsFromTheInternet();
-    QTimer *t = new QTimer(this);
-    connect(t, &QTimer::timeout, this, &StocksMonitor::requestWordsFromTheInternet);
-    t->start(5000);
+    {
+        QTimer *t = new QTimer(this);
+        connect(t, &QTimer::timeout, this, &StocksMonitor::requestWordsFromTheInternet);
+        t->start(5000);
+    }
 }
 
 
@@ -103,6 +105,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
     }
     QDateTime t2 = QDateTime::currentDateTime();
     StocksList stocks;
+    stocks.reserve(500);
     for(auto &row : tableRows)
     {
         QByteArrayList tableCols = getCols(row);

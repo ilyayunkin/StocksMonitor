@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <StocksModel.h>
+#include <StocksLimitsModel.h>
 #include <QTableView>
 
 class MainWindow : public QMainWindow
@@ -10,8 +11,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
     StocksModel model;
-    QTableView *tw;
+    StocksLimitsModel limitsModel;
+    QTableView *stocksTableView;
+    QTableView *stocksLimitsTableView;
 
+    void stockDoubleClicked(const QModelIndex &index);
 public:
     MainWindow(QWidget *parent = nullptr);
     AbstractStocksModel &getModel(){return model;}

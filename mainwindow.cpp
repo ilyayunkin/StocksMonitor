@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include <QHBoxLayout>
+#include <QHeaderView>
+#include <QDebug>
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,12 +11,31 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(w);
 
     QHBoxLayout *hlay = new QHBoxLayout(w);
-    tw = new QTableView;
-    hlay->addWidget(tw);
-    tw->setModel(&model);
+    {
+        stocksTableView = new QTableView;
+        hlay->addWidget(stocksTableView);
+        stocksTableView->setModel(&model);
+        stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
+    {
+        stocksLimitsTableView = new QTableView;
+        hlay->addWidget(stocksLimitsTableView);
+        stocksLimitsTableView->setModel(&limitsModel);
+    }
+    limitsModel.setStocksModel(&model);
+
+    connect(stocksTableView, &QAbstractItemView::doubleClicked,
+            this, &MainWindow::stockDoubleClicked);
 }
 
 MainWindow::~MainWindow()
 {
 }
 
+void MainWindow::stockDoubleClicked(const QModelIndex &index)
+{
+    qDebug() << __PRETTY_FUNCTION__;
+    Stock stock = model.getStock(index.row());
+    float basePrice = QInputDialog::getDouble(this, tr("Input base price"), tr("Price"), stock.price);
+    limitsModel.addStock(StockLimit{stock, basePrice});
+}

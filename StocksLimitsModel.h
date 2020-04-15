@@ -1,33 +1,46 @@
-#ifndef StocksModel_H
-#define StocksModel_H
+#ifndef StocksLimitsModel_H
+#define StocksLimitsModel_H
 
 #include <QAbstractTableModel>
 #include "abstractstocksmodel.h"
+struct StockLimit
+{
+    QString name;
+    QByteArray ticker;
+    float price;
+    float basePrice;
+
+    StockLimit(const Stock &stock, float basePrice) :
+        name(stock.name), ticker(stock.ticker), price(stock.price), basePrice(basePrice)
+    {}
+};
+typedef QList<StockLimit> StockLimitsList;
 /**
  * @brief Класс Модели (архитектура Модель/Представление), реализующей
  * хранение вычисленных значений моментов.
  */
-class StocksModel : public QAbstractTableModel, public AbstractStocksModel
+class StocksLimitsModel : public QAbstractTableModel
 {
     Q_OBJECT
 
     enum
     {
-        NUM,
         NAME,
         TICKER,
         PRICE,
-        DERIVATION,
-        DERIVATION_WEEK,
-        DERIVATION_MONTH,
-        DERIVATION_YEAR,
+        BASE_PRICE,
+        DISTANCE,
 
         COL_COUNT
     };
 
-    StocksList stocks;
+
+    StockLimitsList stockLimits;
+    AbstractStocksModel *stocksModel = nullptr;
+
+    void update();
 public:
-    explicit StocksModel(QObject *parent = 0);
+    explicit StocksLimitsModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
@@ -35,13 +48,10 @@ public:
                         Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    void setStocks(StocksList &&stocks) override;
-    size_t size() override
-    { return stocks.size(); }
-    Stock getStock(const QByteArray &ticker) override;
-    Stock getStock(const size_t i) override;
-    float getStockPrice(const QByteArray &ticker) override;
+    void setStocksModel(AbstractStocksModel *stocksModel);
+    void addStock(const StockLimit &stockLimit);
 };
 
-#endif // StocksModel_H
+#endif // StocksLimitsModel_H
