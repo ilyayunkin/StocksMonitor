@@ -243,19 +243,44 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
 
 void StocksLimitsModel::addStock(const StockLimit &stockLimit)
 {
-    auto size = stockLimits.size();
     {
-        executeQuery(QString("INSERT INTO Limits (ticker, name, base_price) VALUES ('%1', '%2', '%3');")
-                     .arg(QString(stockLimit.ticker)).arg(stockLimit.name).arg(stockLimit.basePrice));
+        StockLimitsList::iterator it = std::find_if(stockLimits.begin(), stockLimits.end(),
+                                                 [&](const StockLimit &l){return l.ticker == stockLimit.ticker;});
+        if(it != stockLimits.end())
+        {
+            bool answer =
+            {
+                QMessageBox::question(0,tr("Replace?"),
+                tr("There already is %1:\n %1 %2")
+                .arg(QString(it->ticker))
+                .arg(it->basePrice))
+                == QMessageBox::Yes
+            };
+            if(answer)
+            {
+                *it = stockLimit;
+                int row = it - stockLimits.begin();
+                emit dataChanged(createIndex(row, 0), createIndex(row, COL_COUNT - 1));
+            }
+
+            return;
+        }
     }
+    {
+        auto size = stockLimits.size();
+        {
+            executeQuery(QString("INSERT INTO Limits (ticker, name, base_price) VALUES ('%1', '%2', '%3');")
+                         .arg(QString(stockLimit.ticker)).arg(stockLimit.name).arg(stockLimit.basePrice));
+        }
 
-    beginInsertRows(QModelIndex(), size, size);
+        beginInsertRows(QModelIndex(), size, size);
 
-    stockLimits.push_back(stockLimit);
-    colors.push_back(colorForDistance(distance(stockLimit)));
+        stockLimits.push_back(stockLimit);
+        colors.push_back(colorForDistance(distance(stockLimit)));
 
-    endInsertRows();
-    assert(stockLimits.size() == colors.size());
+        endInsertRows();
+        assert(stockLimits.size() == colors.size());
+    }
 }
 
 QSqlQuery StocksLimitsModel::executeQuery(const QString &query)
