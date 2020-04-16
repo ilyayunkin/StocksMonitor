@@ -2,6 +2,8 @@
 
 #include <QBrush>
 #include <QTimer>
+#include <QMessageBox>
+#include <algorithm>
 
 StocksLimitsModel::StocksLimitsModel(QObject *parent) :
     QAbstractTableModel(parent)
@@ -29,6 +31,39 @@ StocksLimitsModel::StocksLimitsModel(QObject *parent) :
                 limit.name = q.value(rec.indexOf("name")).toByteArray();
                 limit.basePrice = q.value(rec.indexOf("base_price")).toFloat();
                 stockLimits.push_back(limit);
+            }
+            {// Delete copies
+                std::sort(stockLimits.begin(), stockLimits.end(),
+                          [](const StockLimit &lhs, const StockLimit &rhs){return lhs.ticker < rhs.ticker;});
+                StockLimitsList::iterator it = stockLimits.begin();
+                while((it = std::adjacent_find(it, stockLimits.end()))
+                      != stockLimits.end())
+                {
+                    bool answer =
+                    {
+                        QMessageBox::question(0,tr("Delete double?"),
+                        QString("%1 %2\n%3 %4")
+                        .arg(QString(it->ticker))
+                        .arg(it->basePrice)
+                        .arg(QString((it + 1)->ticker))
+                        .arg((it + 1)->basePrice))
+                        == QMessageBox::Yes
+                    };
+                    if(answer)
+                    {
+                        executeQuery(QString("DELETE FROM Limits "
+                                             "WHERE ticker = '%1';")
+                                     .arg(QString(it->ticker)));
+                        executeQuery(QString("INSERT INTO Limits (ticker, name, base_price) "
+                                             "VALUES ('%1', '%2', '%3');")
+                                     .arg(QString(it->ticker))
+                                     .arg(it->name).arg(it->basePrice));
+                        it = stockLimits.erase(it);
+                    }else
+                    {
+                        ++it;
+                    }
+                }
             }
             for(auto const &limit : stockLimits)
             {
