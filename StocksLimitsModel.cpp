@@ -3,7 +3,9 @@
 #include <QBrush>
 #include <QTimer>
 #include <QMessageBox>
+
 #include <algorithm>
+#include <assert.h>
 
 StocksLimitsModel::StocksLimitsModel(QObject *parent) :
     QAbstractTableModel(parent)
