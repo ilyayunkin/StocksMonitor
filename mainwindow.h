@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTableView>
+#include <QLabel>
 
 #include "StocksModel.h"
 #include "StocksLimitsModel.h"
@@ -20,6 +21,7 @@ class MainWindow : public QMainWindow
     StocksLimitsModel limitsModel;
     QTableView *stocksTableView;
     QTableView *stocksLimitsTableView;
+    QLabel *statusLabel;
 
     void stockDoubleClicked(const QModelIndex &index);
     void signalize();
@@ -28,5 +30,6 @@ public:
     AbstractStocksModel &getModel(){return model;}
     ~MainWindow();
     void save();
+    void lastTime(const QByteArray &time);
 };
 #endif // MAINWINDOW_H

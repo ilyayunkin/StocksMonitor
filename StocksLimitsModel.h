@@ -76,7 +76,6 @@ class StocksLimitsModel final: public QAbstractTableModel
         return (stock.price - stock.basePrice) / stock.basePrice;
     }
 
-    void update();
     QSqlQuery executeQuery(const QString &query);
 public:
     enum
@@ -89,7 +88,7 @@ public:
 
         COL_COUNT
     };
-    explicit StocksLimitsModel(QObject *parent = 0);
+    explicit StocksLimitsModel(bool autoupdate = true, QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
@@ -103,6 +102,8 @@ public:
     void addStock(const StockLimit &stockLimit);
     StockLimitsList getList() const {return stockLimits;}
 
+public slots:
+    void update();
 signals:
     void boundCrossed();
 };

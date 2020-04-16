@@ -13,6 +13,7 @@ class StocksMonitor : public QObject
     Q_OBJECT
     AbstractStocksModel &model;
 
+    QByteArray time;
     QNetworkAccessManager m_WebCtrl;
     static QByteArray getDiv(const QByteArray &wholeDocument);
     static QByteArray getTable(const QByteArray &div);
@@ -27,7 +28,7 @@ public slots:
     void fileDownloaded(QNetworkReply*r);
 
 signals:    
-    void downloaded();
+    void downloaded(const QByteArray &time);
 };
 
 #endif // STOCKSMONITOR_H

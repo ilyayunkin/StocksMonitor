@@ -9,6 +9,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     StocksMonitor monitor(w.getModel());
+    QObject::connect(&monitor, &StocksMonitor::downloaded,
+                     &w, &MainWindow::lastTime);
 
     return a.exec();
 }

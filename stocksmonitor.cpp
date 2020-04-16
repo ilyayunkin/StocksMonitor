@@ -76,8 +76,6 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
     //emit a signal
     r->deleteLater();
 
-
-
     QDateTime begin = QDateTime::currentDateTime();
 #if WRITE_DEBUG_FILES
     {
@@ -116,27 +114,47 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
     QDateTime t2 = QDateTime::currentDateTime();
     StocksList stocks;
     stocks.reserve(500);
-    for(auto &row : tableRows)
     {
-        QByteArrayList tableCols = getCols(row);
-        if(tableCols.size() >= COL_COUNT)
+        int i = 0;
+        for(auto &row : tableRows)
         {
-            bool b = false;
-            int rowNum = QString(tableCols[NUM]).toInt(&b);
-            if(b)
+            QByteArrayList tableCols = getCols(row);
+            if(tableCols.size() >= COL_COUNT)
             {
-                Stock stock;
-                stock.rowNum = rowNum;
-                stock.name = QString(getA(tableCols.at(NAME)));
-                stock.ticker = tableCols.at(TICKER);
-                stock.price = QString(tableCols.at(PRICE)).toDouble();
-                stock.derivation = getPercentage(tableCols.at(DERIVATION_PC));
-                stock.derivationWeek = getPercentage(tableCols.at(DERIVATION_PC_WEEK));
-                stock.derivationMonth = getPercentage(tableCols.at(DERIVATION_PC_MONTH));
-                stock.derivationYear = getPercentage(tableCols.at(DERIVATION_PC_YEAR));
+                bool b = false;
+                int rowNum = QString(tableCols[NUM]).toInt(&b);
+                if(b)
+                {
+                    Stock stock;
+                    stock.rowNum = rowNum;
+                    stock.name = QString(getA(tableCols.at(NAME)));
+                    stock.ticker = tableCols.at(TICKER);
+                    stock.price = QString(tableCols.at(PRICE)).toDouble();
+                    stock.derivation = getPercentage(tableCols.at(DERIVATION_PC));
+                    stock.derivationWeek = getPercentage(tableCols.at(DERIVATION_PC_WEEK));
+                    stock.derivationMonth = getPercentage(tableCols.at(DERIVATION_PC_MONTH));
+                    stock.derivationYear = getPercentage(tableCols.at(DERIVATION_PC_YEAR));
 
-                stocks.push_back(stock);
+                    stocks.push_back(stock);
+                }else if(i == 1)
+                {
+                    QByteArray t = tableCols.at(TIME);
+#if DEBUG_PRINT
+                    qDebug() << __PRETTY_FUNCTION__ << "time" << t;
+#endif
+                    if(t == time)
+                    {
+#if DEBUG_PRINT
+                        qDebug() << __PRETTY_FUNCTION__ << "skip";
+#endif
+                        return;
+                    }else
+                    {
+                        time = t;
+                    }
+                }
             }
+            ++i;
         }
     }
     QDateTime t3 = QDateTime::currentDateTime();
@@ -149,7 +167,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
              << "Stocks count: " << stocks.size();
 #endif
     model.setStocks(std::move(stocks));
-    emit downloaded();
+    emit downloaded(time);
 }
 
 QByteArray StocksMonitor::getDiv(const QByteArray &wholeDocument)
@@ -203,7 +221,7 @@ QByteArray StocksMonitor::getTable(const QByteArray &div)
 QByteArrayList StocksMonitor::getRows(const QByteArray &table)
 {
     QByteArrayList ret;
-    constexpr char divBegin[] = "<tr>";
+    constexpr char divBegin[] = "<tr";
     constexpr char divEnd[] = "</tr>";
     int beginPos = 0;
     int i = 0;

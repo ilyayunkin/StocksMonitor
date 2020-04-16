@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include <QHBoxLayout>
+#include <QVBoxLayout>
+
 #include <QHeaderView>
 #include <QDebug>
 #include <QInputDialog>
@@ -10,34 +12,45 @@
 #include <QApplication>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      limitsModel(false)
 {
     QWidget *w = new QWidget;
     setCentralWidget(w);
 
-    QHBoxLayout *hlay = new QHBoxLayout(w);
     {
-        stocksTableView = new QTableView;
-        hlay->addWidget(stocksTableView);
-        stocksTableView->setModel(&model);
+        QVBoxLayout *vlay = new QVBoxLayout(w);
+        {
+            QHBoxLayout *hlay = new QHBoxLayout;
+            vlay->addLayout(hlay);
+            {
+                stocksTableView = new QTableView;
+                hlay->addWidget(stocksTableView);
+                stocksTableView->setModel(&model);
 
-        QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
-        proxyModel->setSourceModel(&model);
-        stocksTableView->setModel(proxyModel);
-        stocksTableView->setSortingEnabled(true);
-        stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-        stocksTableView->sortByColumn(StocksModel::NUM, Qt::AscendingOrder);
-    }
-    {
-        stocksLimitsTableView = new QTableView;
-        hlay->addWidget(stocksLimitsTableView);
+                QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+                proxyModel->setSourceModel(&model);
+                stocksTableView->setModel(proxyModel);
+                stocksTableView->setSortingEnabled(true);
+                stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+                stocksTableView->sortByColumn(StocksModel::NUM, Qt::AscendingOrder);
+            }
+            {
+                stocksLimitsTableView = new QTableView;
+                hlay->addWidget(stocksLimitsTableView);
 
-        QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
-        proxyModel->setSourceModel(&limitsModel);
-        stocksLimitsTableView->setModel(proxyModel);
-        stocksLimitsTableView->setSortingEnabled(true);
-        stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-        stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
+                QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+                proxyModel->setSourceModel(&limitsModel);
+                stocksLimitsTableView->setModel(proxyModel);
+                stocksLimitsTableView->setSortingEnabled(true);
+                stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+                stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
+            }
+        }
+        {
+            statusLabel = new QLabel;
+            vlay->addWidget(statusLabel);
+        }
     }
     limitsModel.setStocksModel(&model);
     {
@@ -106,4 +119,10 @@ void MainWindow::signalize()
 {
     QApplication::alert(this);
     speaker.say("Woop woop! Woop woop! Woop woop!");
+}
+
+void MainWindow::lastTime(const QByteArray &time)
+{
+    statusLabel->setText(QString(time));
+    limitsModel.update();
 }

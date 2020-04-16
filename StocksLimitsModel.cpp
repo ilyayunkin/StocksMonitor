@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <assert.h>
 
-StocksLimitsModel::StocksLimitsModel(QObject *parent) :
+StocksLimitsModel::StocksLimitsModel(bool autoupdate, QObject *parent) :
     QAbstractTableModel(parent)
 {
     stockLimits.reserve(100);
@@ -74,6 +74,7 @@ StocksLimitsModel::StocksLimitsModel(QObject *parent) :
             }
         }
     }
+    if(autoupdate)
     {
         QTimer *t = new QTimer(this);
         connect(t, &QTimer::timeout, this, &StocksLimitsModel::update);
