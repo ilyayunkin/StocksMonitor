@@ -53,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&limitsModel, &StocksLimitsModel::boundCrossed,
             this, &MainWindow::signalize);
+
+    speaker.setRate(0.3);
 }
 
 MainWindow::~MainWindow()
@@ -103,4 +105,5 @@ void MainWindow::save()
 void MainWindow::signalize()
 {
     QApplication::alert(this);
+    speaker.say("Woop woop! Woop woop! Woop woop!");
 }

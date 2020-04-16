@@ -2,13 +2,19 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <StocksModel.h>
-#include <StocksLimitsModel.h>
 #include <QTableView>
+
+#include "StocksModel.h"
+#include "StocksLimitsModel.h"
+
+#include <QTextToSpeech>
+
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
+    QTextToSpeech speaker;
 
     StocksModel model;
     StocksLimitsModel limitsModel;
