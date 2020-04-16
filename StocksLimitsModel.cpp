@@ -97,11 +97,11 @@ void StocksLimitsModel::update()
                 emit dataChanged(createIndex(i, 0), createIndex(i, COL_COUNT - 1));
 
                 const Color c = colorForDistance(distance(stockLimits[i]));
-                if(c != colors[i])
+                if(c < colors[i])
                 {
-                    colors[i] = c;
                     boundCross = true;
                 }
+                colors[i] = c;
             }
             ++i;
         }
