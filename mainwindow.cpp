@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QFileDialog>
+#include <QApplication>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -49,6 +50,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(stocksTableView, &QAbstractItemView::doubleClicked,
             this, &MainWindow::stockDoubleClicked);
+
+    connect(&limitsModel, &StocksLimitsModel::boundCrossed,
+            this, &MainWindow::signalize);
 }
 
 MainWindow::~MainWindow()
@@ -94,4 +98,9 @@ void MainWindow::save()
             f.close();
         }
     }
+}
+
+void MainWindow::signalize()
+{
+    QApplication::alert(this);
 }

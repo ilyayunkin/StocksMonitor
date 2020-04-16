@@ -7,7 +7,7 @@
  * @brief Класс Модели (архитектура Модель/Представление), реализующей
  * хранение вычисленных значений моментов.
  */
-class StocksModel : public QAbstractTableModel, public AbstractStocksModel
+class StocksModel final: public QAbstractTableModel, public AbstractStocksModel
 {
     Q_OBJECT
 

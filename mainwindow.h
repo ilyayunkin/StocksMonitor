@@ -16,6 +16,7 @@ class MainWindow : public QMainWindow
     QTableView *stocksLimitsTableView;
 
     void stockDoubleClicked(const QModelIndex &index);
+    void signalize();
 public:
     MainWindow(QWidget *parent = nullptr);
     AbstractStocksModel &getModel(){return model;}

@@ -7,6 +7,7 @@ StocksLimitsModel::StocksLimitsModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
     stockLimits.reserve(100);
+    colors.reserve(100);
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("db_name.sqlite");
 
@@ -29,6 +30,11 @@ StocksLimitsModel::StocksLimitsModel(QObject *parent) :
                 limit.basePrice = q.value(rec.indexOf("base_price")).toFloat();
                 stockLimits.push_back(limit);
             }
+            for(auto const &limit : stockLimits)
+            {
+                (void)limit;
+                colors.push_back(Color::NO_COLOR);
+            }
         }
     }
     {
@@ -36,10 +42,12 @@ StocksLimitsModel::StocksLimitsModel(QObject *parent) :
         connect(t, &QTimer::timeout, this, &StocksLimitsModel::update);
         t->start(5000);
     }
+    assert(stockLimits.size() == colors.size());
 }
 
 void StocksLimitsModel::update()
 {
+    bool boundCross = false;
     if(stocksModel != nullptr)
     {
         int i = 0;
@@ -50,9 +58,20 @@ void StocksLimitsModel::update()
             {
                 limit.price = price;
                 emit dataChanged(createIndex(i, 0), createIndex(i, COL_COUNT - 1));
+
+                const Color c = colorForDistance(distance(stockLimits[i]));
+                if(c != colors[i])
+                {
+                    colors[i] = c;
+                    boundCross = true;
+                }
             }
             ++i;
         }
+    }
+    if(boundCross)
+    {
+        emit boundCrossed();
     }
 }
 
@@ -148,19 +167,7 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     {
         if(row < stockLimits.size())
         {
-            const StockLimit &stock = stockLimits.at(row);
-            float number =
-                    (stock.price - stock.basePrice) / stock.basePrice;
-            if(number < 0.01)
-            {
-                return QBrush(Qt::GlobalColor::red);
-            }else if(number < 0.05)
-            {
-                return QBrush(Qt::GlobalColor::yellow);
-            }else if(number < 0.1)
-            {
-                return QBrush(Qt::GlobalColor::green);
-            }
+            ret = brushForColor(colors.at(row));
         }
     }
     return ret;
@@ -175,6 +182,7 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
                                 const QVariant &value,
                                 int role)
 {
+    assert(stockLimits.size() == colors.size());
     int row = index.row();
     int col = index.column();
 
@@ -182,6 +190,7 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
     {
         float v = value.toFloat();
         stockLimits[row].basePrice = v;
+        colors[row] = colorForDistance(distance(stockLimits[row]));
         {
             executeQuery(QString("UPDATE Limits "
                                  "SET base_price = '%1' "
@@ -205,8 +214,10 @@ void StocksLimitsModel::addStock(const StockLimit &stockLimit)
     beginInsertRows(QModelIndex(), size, size);
 
     stockLimits.push_back(stockLimit);
+    colors.push_back(colorForDistance(distance(stockLimit)));
 
     endInsertRows();
+    assert(stockLimits.size() == colors.size());
 }
 
 QSqlQuery StocksLimitsModel::executeQuery(const QString &query)

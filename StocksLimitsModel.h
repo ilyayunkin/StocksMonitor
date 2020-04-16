@@ -5,6 +5,8 @@
 
 #include <QtSql>
 
+#include <vector>
+
 #include "abstractstocksmodel.h"
 
 struct StockLimit
@@ -18,16 +20,56 @@ struct StockLimit
         name(stock.name), ticker(stock.ticker), price(stock.price), basePrice(basePrice)
     {}
 };
-typedef QList<StockLimit> StockLimitsList;
+typedef std::vector<StockLimit> StockLimitsList;
 
-class StocksLimitsModel : public QAbstractTableModel
+class StocksLimitsModel final: public QAbstractTableModel
 {
     Q_OBJECT
+    enum class Color
+    {
+        RED,
+        YELLOW,
+        GREEN,
+        NO_COLOR
+    };
+    typedef std::vector<Color> ColorsList;
 
     QSqlDatabase db;
 
     StockLimitsList stockLimits;
+    ColorsList colors;
     AbstractStocksModel *stocksModel = nullptr;
+
+    static Color colorForDistance(float d)
+    {
+        if(d < 0.01)
+            return Color::RED;
+        else if(d < 0.05)
+            return Color::YELLOW;
+        else if(d < 0.1)
+            return Color::GREEN;
+        else
+            return Color::NO_COLOR;
+    }
+    static Color colorForDistance(const StockLimit &limit)
+    {
+        float d = (limit.price - limit.basePrice) / limit.basePrice;
+        return colorForDistance(d);
+    }
+    static QBrush brushForColor(const Color c)
+    {
+        switch (c) {
+        case Color::RED: return QBrush(Qt::GlobalColor::red);
+        case Color::YELLOW: return QBrush(Qt::GlobalColor::yellow);
+        case Color::GREEN: return QBrush(Qt::GlobalColor::green);
+        default:
+        case Color::NO_COLOR: return QBrush();
+        }
+    }
+    static float distance(const StockLimit &stock)
+    {
+        return (stock.price - stock.basePrice) / stock.basePrice;
+    }
 
     void update();
     QSqlQuery executeQuery(const QString &query);
@@ -55,6 +97,9 @@ public:
     void setStocksModel(AbstractStocksModel *stocksModel);
     void addStock(const StockLimit &stockLimit);
     StockLimitsList getList() const {return stockLimits;}
+
+signals:
+    void boundCrossed();
 };
 
 #endif // StocksLimitsModel_H
