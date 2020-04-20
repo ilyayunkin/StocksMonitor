@@ -172,7 +172,7 @@ Stock StocksModel::getStock(const QByteArray &ticker)
 {
     Stock ret{};
     auto cit = std::find_if(stocks.begin(), stocks.end(),
-                            [&](Stock &stock){return stock.ticker == ticker;});
+                            [&](const Stock &stock){return stock.ticker == ticker;});
     if(cit != stocks.cend())
     {
         ret = *cit;
@@ -194,7 +194,7 @@ float StocksModel::getStockPrice(const QByteArray &ticker)
 {
     float ret{};
     auto cit = std::find_if(stocks.begin(), stocks.end(),
-                            [&](Stock &stock){return stock.ticker == ticker;});
+                            [&](const Stock &stock){return stock.ticker == ticker;});
     if(cit != stocks.cend())
     {
         ret = cit->price;
