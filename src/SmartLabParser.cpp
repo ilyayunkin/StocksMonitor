@@ -1,5 +1,7 @@
 #include "SmartLabParser.h"
 
+#include <assert.h>
+
 #include <QDateTime>
 #include <QDebug>
 
