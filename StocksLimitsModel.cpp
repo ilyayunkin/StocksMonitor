@@ -3,6 +3,7 @@
 #include <QBrush>
 #include <QTimer>
 #include <QMessageBox>
+#include <QDebug>
 
 #include <algorithm>
 #include <assert.h>
@@ -85,6 +86,7 @@ StocksLimitsModel::StocksLimitsModel(bool autoupdate, QObject *parent) :
 
 void StocksLimitsModel::update()
 {
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__;
     bool boundCross = false;
     if(stocksModel != nullptr)
     {

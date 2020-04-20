@@ -1,23 +1,7 @@
 #ifndef ABSTRACTSTOCKSMODEL_H
 #define ABSTRACTSTOCKSMODEL_H
 
-#include <QList>
-#include <QString>
-
-#include <vector>
-
-struct Stock
-{
-    int rowNum;
-    QString name;
-    QByteArray ticker;
-    float price;
-    float derivation;
-    float derivationWeek;
-    float derivationMonth;
-    float derivationYear;
-};
-typedef std::vector<Stock> StocksList;
+#include "StocksList.h"
 
 class AbstractStocksModel
 {

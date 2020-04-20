@@ -18,9 +18,14 @@ public:
     NoDivisionException() : std::runtime_error("NoDivision") { }
 };
 
-class NoDataException : public std::runtime_error {
+class PageUnavailibleException : public std::runtime_error {
 public:
-    NoDataException() : std::runtime_error("NoDataException") { }
+    PageUnavailibleException() : std::runtime_error("PageUnavailibleException") { }
+};
+
+class EmptyTableException : public std::runtime_error {
+public:
+    EmptyTableException() : std::runtime_error("EmptyTableException") { }
 };
 
 #endif // EXCEPTIONCLASSES_H

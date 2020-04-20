@@ -15,13 +15,6 @@ class StocksMonitor : public QObject
 
     QByteArray time;
     QNetworkAccessManager m_WebCtrl;
-    static QByteArray getDiv(const QByteArray &wholeDocument);
-    static QByteArray getTable(const QByteArray &div);
-    static QByteArrayList getRows(const QByteArray &table);
-    static QByteArrayList getCols(const QByteArray &table);
-    static QByteArray getA(const QByteArray &tableCol);
-    static float getPercentage(const QByteArray &tableCol);
-    void parse(const QByteArray &m_DownloadeAwholeDocumentdData);
 public:
     explicit StocksMonitor(AbstractStocksModel &model, QObject *parent = nullptr);
 public slots:
