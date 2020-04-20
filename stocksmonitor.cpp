@@ -66,7 +66,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
             model.setStocks(std::move(stocks));
             emit downloaded(time);
         }
-    } catch (std::runtime_error e) {
+    } catch (std::runtime_error &e) {
         qDebug() << __PRETTY_FUNCTION__ << __LINE__ << e.what();
     } catch (...) {
         qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "Unknown error";
