@@ -26,6 +26,7 @@ SOURCES += \
     stocksmonitor.cpp
 
 HEADERS += \
+    ExceptionClasses.h \
     StocksLimitsModel.h \
     StocksModel.h \
     abstractstocksmodel.h \

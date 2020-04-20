@@ -21,6 +21,7 @@ class StocksMonitor : public QObject
     static QByteArrayList getCols(const QByteArray &table);
     static QByteArray getA(const QByteArray &tableCol);
     static float getPercentage(const QByteArray &tableCol);
+    void parse(const QByteArray &m_DownloadeAwholeDocumentdData);
 public:
     explicit StocksMonitor(AbstractStocksModel &model, QObject *parent = nullptr);
 public slots:

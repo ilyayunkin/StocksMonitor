@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <assert.h>
+#include "ExceptionClasses.h"
 
 #define WRITE_DEBUG_FILES 0
 #define DEBUG_PRINT 0
@@ -35,7 +36,9 @@ enum
     VALUE_DERIVATION,
     POS_VAL_DER,
 
-    COL_COUNT
+    COL_COUNT,
+    // Two last columns are icons with site's controls
+    COL_COUNT_TOTAL = COL_COUNT + 2
 };
 }
 
@@ -66,15 +69,26 @@ void StocksMonitor::requestWordsFromTheInternet()
 void StocksMonitor::fileDownloaded(QNetworkReply *r)
 {
     const QByteArray m_DownloadeAwholeDocumentdData = r->readAll();
+    r->deleteLater();
+
 #if DEBUG_PRINT
     qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "received" << m_DownloadeAwholeDocumentdData.size();
 #endif
+    try {
+        parse(m_DownloadeAwholeDocumentdData);
+    } catch (std::runtime_error e) {
+        qDebug() << __PRETTY_FUNCTION__ << __LINE__ << e.what();
+    } catch (...) {
+        qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "Unknown error";
+    }
+}
+
+void StocksMonitor::parse(const QByteArray &m_DownloadeAwholeDocumentdData)
+{
     if(m_DownloadeAwholeDocumentdData.isEmpty())
     {
-        return;
+        throw NoDataException();
     }
-    //emit a signal
-    r->deleteLater();
 
     QDateTime begin = QDateTime::currentDateTime();
 #if WRITE_DEBUG_FILES
@@ -176,15 +190,15 @@ QByteArray StocksMonitor::getDiv(const QByteArray &wholeDocument)
     constexpr char divEnd[] = "</div>";
 
     const int fieldBegin = wholeDocument.indexOf(divBegin);
-    assert(fieldBegin != -1);
     if(fieldBegin == -1)
     {
+        throw NoDivisionException();
     }
 
     const int fieldEnd = wholeDocument.indexOf(divEnd, fieldBegin);
-    assert(fieldEnd != -1);
     if(fieldEnd == -1)
     {
+        throw NoDivisionException();
     }
 
     QByteArray paragraph = wholeDocument.mid(fieldBegin, fieldEnd - fieldBegin);
@@ -201,15 +215,15 @@ QByteArray StocksMonitor::getTable(const QByteArray &div)
     constexpr char divEnd[] = "</table>";
 
     const int fieldBegin = div.indexOf(divBegin);
-    assert(fieldBegin != -1);
     if(fieldBegin == -1)
     {
+        throw NoTableException();
     }
 
     const int fieldEnd = div.indexOf(divEnd, fieldBegin);
-    assert(fieldEnd != -1);
     if(fieldEnd == -1)
     {
+        throw NoTableException();
     }
 
     QByteArray paragraph = div.mid(fieldBegin, fieldEnd - fieldBegin);
@@ -229,13 +243,11 @@ QByteArrayList StocksMonitor::getRows(const QByteArray &table)
     while((beginPos = table.indexOf(divBegin, beginPos)) != -1)
     {
         const int fieldBegin = beginPos;
-        //assert(fieldBegin != -1);
         if(fieldBegin == -1)
         {
         }
 
         const int fieldEnd = beginPos = table.indexOf(divEnd, fieldBegin);
-        //assert(fieldEnd != -1);
         if(fieldEnd == -1)
         {
         }
@@ -273,14 +285,12 @@ QByteArrayList StocksMonitor::getCols(const QByteArray &table)
     while((beginPos = table.indexOf(divBegin, beginPos)) != -1)
     {
         int fieldBegin = table.indexOf(">", beginPos);
-        //assert(fieldBegin != -1);
         if(fieldBegin == -1)
         {
         }
         ++fieldBegin;
 
         const int fieldEnd = beginPos = table.indexOf(divEnd, fieldBegin);
-        //assert(fieldEnd != -1);
         if(fieldEnd == -1)
         {
         }
@@ -289,7 +299,10 @@ QByteArrayList StocksMonitor::getCols(const QByteArray &table)
         ret.push_back(tableCol);
 
         ++i;
-        assert(i < 500);
+        if(i > COL_COUNT_TOTAL)
+        {
+            throw TooManyColsException();
+        }
     }
 
     return ret;
@@ -303,14 +316,12 @@ QByteArray StocksMonitor::getA(const QByteArray &tableCol)
 
     const int beginPos = tableCol.indexOf(divBegin);
     // There could be unformated text like <td>ИСУ ГК-3</td>
-    //    assert(beginPos != -1);
     if(beginPos == -1)
     {
         return ret;
     }
 
     int fieldBegin = tableCol.indexOf(">", beginPos);
-    //    assert(fieldBegin != -1);
     if(fieldBegin == -1)
     {
         return ret;
@@ -318,7 +329,6 @@ QByteArray StocksMonitor::getA(const QByteArray &tableCol)
     ++fieldBegin;
 
     const int fieldEnd = tableCol.indexOf(divEnd, fieldBegin);
-    //assert(fieldEnd != -1);
     if(fieldEnd == -1)
     {
         return ret;
