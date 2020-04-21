@@ -7,7 +7,7 @@
 #include <QTimer>
 #include <QHBoxLayout>
 
-PopUpWindow::PopUpWindow(const QString &text)
+PopUpWindow::PopUpWindow(const QString &text, int timeMs)
 {
     QHBoxLayout *lay = new QHBoxLayout(this);
     QLabel *l = new QLabel(text);
@@ -30,12 +30,19 @@ PopUpWindow::PopUpWindow(const QString &text)
                 width(),
                 height());
 
-    QTimer *t = new QTimer(this);
-    connect(t, &QTimer::timeout, this, &QObject::deleteLater);
-    t->start(5000);
+    {
+        QTimer *t = new QTimer(this);
+        connect(t, &QTimer::timeout, this, &QObject::deleteLater);
+        t->start(timeMs);
+    }
 }
 
-void PopUpWindow::showPopUpWindow(const QString &text)
+void PopUpWindow::mousePressEvent(QMouseEvent *event)
 {
-    new PopUpWindow(text);
+    deleteLater();
+}
+
+void PopUpWindow::showPopUpWindow(const QString &text, int timeMs)
+{
+    new PopUpWindow(text, timeMs);
 }
