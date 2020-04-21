@@ -6,7 +6,7 @@ compiler:
   
 install:
   - sudo apt-get update
-  - sudo apt install qt5-default qtbase5-dev qtdeclarative5-dev
+  - sudo apt install qt5-default qtbase5-dev qtdeclarative5-dev qtcreator
 
 script:
   - cd ./src
