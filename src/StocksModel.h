@@ -36,11 +36,11 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void setStocks(StocksList &&stocks) override;
-    size_t size() override
+    size_t size() const override
     { return stocks.size(); }
-    Stock getStock(const QByteArray &ticker) override;
-    Stock getStock(const size_t i) override;
-    float getStockPrice(const QByteArray &ticker) override;
+    Stock getStock(const QByteArray &ticker) const override;
+    Stock getStock(const size_t i) const override;
+    float getStockPrice(const QByteArray &ticker) const override;
 };
 
 #endif // StocksModel_H

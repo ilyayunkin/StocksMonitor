@@ -168,7 +168,7 @@ void StocksModel::setStocks(StocksList &&stocks)
     }
 }
 
-Stock StocksModel::getStock(const QByteArray &ticker)
+Stock StocksModel::getStock(const QByteArray &ticker) const
 {
     Stock ret{};
     auto cit = std::find_if(stocks.begin(), stocks.end(),
@@ -180,7 +180,7 @@ Stock StocksModel::getStock(const QByteArray &ticker)
     return ret;
 }
 
-Stock StocksModel::getStock(const size_t i)
+Stock StocksModel::getStock(const size_t i) const
 {
     Stock ret{};
     if(i < stocks.size())
@@ -190,7 +190,7 @@ Stock StocksModel::getStock(const size_t i)
     return ret;
 }
 
-float StocksModel::getStockPrice(const QByteArray &ticker)
+float StocksModel::getStockPrice(const QByteArray &ticker) const
 {
     float ret{};
     auto cit = std::find_if(stocks.begin(), stocks.end(),
