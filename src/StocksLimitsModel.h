@@ -114,6 +114,7 @@ public slots:
     void update();
 signals:
     void boundCrossed();
+    void crossedLimit(const StockLimit &stockLimit);
 };
 
 #endif // StocksLimitsModel_H

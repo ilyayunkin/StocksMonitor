@@ -103,6 +103,7 @@ void StocksLimitsModel::update()
                 if(c < colors[i])
                 {
                     boundCross = true;
+                    emit crossedLimit(limit);
                 }
                 colors[i] = c;
             }
@@ -207,7 +208,7 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     {
         if(row < stockLimits.size())
         {
-            ret = brushForColor(colors.at(row));
+            ret = QBrush(brushForColor(colors.at(row)));
         }
     }
     if (role == Qt::ToolTipRole)

@@ -11,6 +11,8 @@
 #include <QFileDialog>
 #include <QApplication>
 
+#include "PopUpWindow.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       limitsModel(false)
@@ -66,6 +68,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&limitsModel, &StocksLimitsModel::boundCrossed,
             this, &MainWindow::signalize);
+
+    connect(&limitsModel, &StocksLimitsModel::crossedLimit,
+            this, &MainWindow::crossedLimit);
 
     speaker.setRate(0.3);
 }
@@ -125,4 +130,11 @@ void MainWindow::lastTime(const QByteArray &time)
 {
     statusLabel->setText(QString(time));
     limitsModel.update();
+}
+
+void MainWindow::crossedLimit(const StockLimit &stockLimit)
+{
+    PopUpWindow::showPopUpWindow(QString("%1\n%2")
+                                 .arg(stockLimit.name)
+                                 .arg(stockLimit.price));
 }

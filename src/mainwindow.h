@@ -25,6 +25,7 @@ class MainWindow : public QMainWindow
 
     void stockDoubleClicked(const QModelIndex &index);
     void signalize();
+    void crossedLimit(const StockLimit &stockLimit);
 public:
     MainWindow(QWidget *parent = nullptr);
     AbstractStocksModel &getModel(){return model;}
