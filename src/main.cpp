@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
                            + __PRETTY_FUNCTION__);
 
     MainWindow w;
-    w.show();
+    w.showMaximized();
     StocksMonitor monitor(w.getModel());
     QObject::connect(&monitor, &StocksMonitor::downloaded,
                      &w, &MainWindow::lastTime);
