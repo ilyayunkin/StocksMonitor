@@ -10,6 +10,7 @@
 
 #include "ExceptionClasses.h"
 #include "SmartLabParser.h"
+#include "logger.h"
 
 #define WRITE_DEBUG_FILES 0
 #define DEBUG_PRINT 0
@@ -68,7 +69,13 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
         }
     } catch (std::runtime_error &e) {
         qDebug() << __PRETTY_FUNCTION__ << __LINE__ << e.what();
+        Logger::instance().log(QDateTime::currentDateTime().toString()
+                               + __PRETTY_FUNCTION__
+                               + e.what());
     } catch (...) {
         qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "Unknown error";
+        Logger::instance().log(QDateTime::currentDateTime().toString()
+                               + __PRETTY_FUNCTION__
+                               + "Unknown error");
     }
 }

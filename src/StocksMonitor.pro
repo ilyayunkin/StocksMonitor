@@ -23,6 +23,7 @@ SOURCES += \
     StocksLimitsModel.cpp \
     StocksModel.cpp \
     abstractstocksmodel.cpp \
+    logger.cpp \
     main.cpp \
     mainwindow.cpp \
     stocksmonitor.cpp
@@ -35,6 +36,7 @@ HEADERS += \
     StocksList.h \
     StocksModel.h \
     abstractstocksmodel.h \
+    logger.h \
     mainwindow.h \
     stocksmonitor.h
 

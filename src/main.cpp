@@ -1,11 +1,18 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QDateTime>
+
 #include "stocksmonitor.h"
+#include "logger.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    Logger::instance().log(QDateTime::currentDateTime().toString()
+                           + __PRETTY_FUNCTION__);
+
     MainWindow w;
     w.show();
     StocksMonitor monitor(w.getModel());
