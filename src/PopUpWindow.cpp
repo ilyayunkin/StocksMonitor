@@ -19,8 +19,8 @@ PopUpWindow::PopUpWindow(const QString &text, int timeMs)
     lay->addWidget(l);
 
     setWindowFlags(windowFlags()
-                   | Qt::Popup
-                   | Qt::WindowStaysOnTopHint);
+                   | Qt::WindowStaysOnTopHint
+                   | Qt::FramelessWindowHint);
     show();
     adjustSize();
 
