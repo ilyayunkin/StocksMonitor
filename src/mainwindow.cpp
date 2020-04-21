@@ -138,3 +138,8 @@ void MainWindow::crossedLimit(const StockLimit &stockLimit)
                                  .arg(stockLimit.name)
                                  .arg(stockLimit.price));
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QApplication::quit();
+}
