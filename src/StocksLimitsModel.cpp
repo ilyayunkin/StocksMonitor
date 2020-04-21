@@ -210,6 +210,21 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
             ret = brushForColor(colors.at(row));
         }
     }
+    if (role == Qt::ToolTipRole)
+    {
+        if(row < stockLimits.size())
+        {
+            auto stock = stocksModel->getStock(stockLimits.at(row).ticker);
+            ret = QString("%1 | %2 | %3 | %4 | %5 | %6 | %7")
+                    .arg(stock.name)
+                    .arg(QString(stock.ticker))
+                    .arg(stock.price)
+                    .arg(stock.derivation)
+                    .arg(stock.derivationWeek)
+                    .arg(stock.derivationMonth)
+                    .arg(stock.derivationYear);
+        }
+    }
     return ret;
 }
 
