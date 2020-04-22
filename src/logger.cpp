@@ -1,4 +1,5 @@
 #include "logger.h"
+#include <QDebug>
 
 Logger::Logger() :
     f{QString("log.txt")},
@@ -16,5 +17,6 @@ Logger& Logger::instance()
 void Logger::log(const QString &text)
 {
     s << text << "\r\n";
+    qDebug() << text;
     s.flush();
 }

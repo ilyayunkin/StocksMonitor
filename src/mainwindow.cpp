@@ -12,6 +12,7 @@
 #include <QApplication>
 
 #include "PopUpWindow.h"
+#include "logger.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -134,9 +135,11 @@ void MainWindow::lastTime(const QByteArray &time)
 
 void MainWindow::crossedLimit(const StockLimit &stockLimit)
 {
-    PopUpWindow::showPopUpWindow(QString("%1\n%2")
-                                 .arg(stockLimit.name)
-                                 .arg(stockLimit.price));
+    QString logMessage = QString("%1\n%2")
+            .arg(stockLimit.name)
+            .arg(stockLimit.price);
+    Logger::instance().log(logMessage);
+    PopUpWindow::showPopUpWindow(logMessage);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
