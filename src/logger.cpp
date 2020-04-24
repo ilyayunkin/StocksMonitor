@@ -1,8 +1,10 @@
 #include "logger.h"
+
 #include <QDebug>
+#include <QDateTime>
 
 Logger::Logger() :
-    f{QString("log.txt")},
+    f{QString("log_%1.txt").arg(QDateTime::currentDateTime().toString("yyyy.MM.dd"))},
     s{&f}
 {
     f.open(QIODevice::Append);
