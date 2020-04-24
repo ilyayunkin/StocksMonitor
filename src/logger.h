@@ -3,6 +3,7 @@
 
 #include <QFile>
 #include <QTextStream>
+
 class Logger
 {
     QFile f;
@@ -11,6 +12,7 @@ class Logger
 public:
     static Logger &instance();
     void log(const QString &text);
+    QString getLog()const;
 };
 
 #endif // LOGGER_H

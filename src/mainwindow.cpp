@@ -13,6 +13,7 @@
 
 #include "PopUpWindow.h"
 #include "logger.h"
+#include "StoryWidget.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -59,9 +60,20 @@ MainWindow::MainWindow(QWidget *parent)
     {
         QMenuBar *bar = new QMenuBar;
         setMenuBar(bar);
-        QMenu *fileMenu = bar->addMenu(tr("File"));
-        QAction *saveAction = fileMenu->addAction(tr("Save limits"));
-        connect(saveAction, &QAction::triggered, this, &MainWindow::save);
+        {
+            QMenu *fileMenu = bar->addMenu(tr("File"));
+            {
+                QAction *saveAction = fileMenu->addAction(tr("Save limits"));
+                connect(saveAction, &QAction::triggered, this, &MainWindow::save);
+            }
+        }
+        {
+            QMenu *ToolsMenu = bar->addMenu(tr("Tools"));
+            {
+                QAction *storyAction = ToolsMenu->addAction(tr("Show history"));
+                connect(storyAction, &QAction::triggered, &StoryWidget::showStory);
+            }
+        }
     }
 
     connect(stocksTableView, &QAbstractItemView::doubleClicked,

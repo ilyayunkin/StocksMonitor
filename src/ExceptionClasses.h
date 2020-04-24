@@ -28,4 +28,9 @@ public:
     EmptyTableException() : std::runtime_error("EmptyTableException") { }
 };
 
+class FileUnavailibleException : public std::runtime_error {
+public:
+    FileUnavailibleException() : std::runtime_error("FileUnavailibleException") { }
+};
+
 #endif // EXCEPTIONCLASSES_H

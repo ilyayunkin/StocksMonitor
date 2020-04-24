@@ -22,6 +22,7 @@ SOURCES += \
     SmartLabParser.cpp \
     StocksLimitsModel.cpp \
     StocksModel.cpp \
+    StoryWidget.cpp \
     abstractstocksmodel.cpp \
     logger.cpp \
     main.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     StocksLimitsModel.h \
     StocksList.h \
     StocksModel.h \
+    StoryWidget.h \
     abstractstocksmodel.h \
     logger.h \
     mainwindow.h \
