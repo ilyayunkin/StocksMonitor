@@ -14,6 +14,7 @@ after_build:
   - windeployqt src/release/StocksMonitor.exe
   - rm src/release/*.o
   - rm src/release/*.cpp
+  - rm src/release/*.h
 
 #Note: artifacts path should be from root directory
 artifacts:
