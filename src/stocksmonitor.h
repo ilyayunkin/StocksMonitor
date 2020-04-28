@@ -7,6 +7,7 @@
 #include <QNetworkReply>
 
 #include "abstractstocksmodel.h"
+#include "AbstractParser.h"
 
 class StocksMonitor : public QObject
 {
@@ -15,8 +16,13 @@ class StocksMonitor : public QObject
 
     QByteArray time;
     QNetworkAccessManager m_WebCtrl;
+    AbstractParser::Ptr parser;
+    const QUrl url;
 public:
-    explicit StocksMonitor(AbstractStocksModel &model, QObject *parent = nullptr);
+    explicit StocksMonitor(AbstractStocksModel &model,
+                           AbstractParser::Ptr parser,
+                           const QUrl url,
+                           QObject *parent = nullptr);
 public slots:
     void requestWordsFromTheInternet();
     void fileDownloaded(QNetworkReply*r);

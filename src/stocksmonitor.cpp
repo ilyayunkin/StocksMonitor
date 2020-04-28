@@ -9,16 +9,22 @@
 #include <assert.h>
 
 #include "ExceptionClasses.h"
-#include "SmartLabParser.h"
 #include "logger.h"
 
 #define WRITE_DEBUG_FILES 0
 #define DEBUG_PRINT 0
 
 
-StocksMonitor::StocksMonitor(AbstractStocksModel &model, QObject *parent) : QObject(parent),
-    model(model)
+StocksMonitor::StocksMonitor(AbstractStocksModel &model,
+                             AbstractParser::Ptr parser,
+                             const QUrl url,
+                             QObject *parent) : QObject(parent),
+    model(model),
+    parser(parser),
+    url(url)
 {
+    assert(parser.get() != nullptr);
+
     connect(&m_WebCtrl, &QNetworkAccessManager::finished,
             this, &StocksMonitor::fileDownloaded);
     requestWordsFromTheInternet();
@@ -51,7 +57,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
         QByteArray t;
         StocksList stocks;
         stocks.reserve(500);
-        SmartLabParser::parse(m_DownloadeAwholeDocumentdData, stocks, t);
+    parser->parse(m_DownloadeAwholeDocumentdData, stocks, t);
 
 #if DEBUG_PRINT
         qDebug() << __PRETTY_FUNCTION__ << "time" << t;

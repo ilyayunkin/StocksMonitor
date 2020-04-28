@@ -33,4 +33,9 @@ public:
     FileUnavailibleException() : std::runtime_error("FileUnavailibleException") { }
 };
 
+class NoPluginsException : public std::runtime_error {
+public:
+    NoPluginsException() : std::runtime_error("NoPluginsException") { }
+};
+
 #endif // EXCEPTIONCLASSES_H

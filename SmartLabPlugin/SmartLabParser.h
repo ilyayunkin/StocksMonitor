@@ -5,8 +5,9 @@
 #include <QByteArrayList>
 
 #include "StocksList.h"
+#include "AbstractParser.h"
 
-class SmartLabParser
+class SmartLabParser : public AbstractParser
 {
     static QByteArray getDiv(const QByteArray &wholeDocument);
     static QByteArray getTable(const QByteArray &div);
@@ -15,9 +16,9 @@ class SmartLabParser
     static QByteArray getA(const QByteArray &tableCol);
     static float getPercentage(const QByteArray &tableCol);
 public:
-    static void parse(const QByteArray &m_DownloadeAwholeDocumentdData,
+    void parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                       StocksList &stocks,
-                      QByteArray &time);
+                      QByteArray &time) override;
 };
 
 #endif // SMARTLABPARSER_H
