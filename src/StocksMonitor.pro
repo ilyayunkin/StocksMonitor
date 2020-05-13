@@ -45,6 +45,7 @@ HEADERS += \
 INCLUDEPATH+=../include/
 DESTDIR= ../bin
 win32{
+RC_ICONS = ../img/icon.ico
 QMAKE_POST_LINK = windeployqt ${DESTDIR_TARGET}
 }
 
