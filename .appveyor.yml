@@ -11,12 +11,9 @@ build_script:
   - mingw32-make
   
 after_build:
-  - windeployqt src/release/StocksMonitor.exe
-  - rm src/release/*.o
-  - rm src/release/*.cpp
-  - rm src/release/*.h
+  - windeployqt bin/StocksMonitor.exe
 
 #Note: artifacts path should be from root directory
 artifacts:
-  - path: src/release
+  - path: bin
     type: zip

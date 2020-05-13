@@ -29,6 +29,8 @@ HEADERS += \
 
 INCLUDEPATH+=../include/
 
+DESTDIR= ../bin
+
 # Default rules for deployment.
 unix {
     target.path = /usr/lib

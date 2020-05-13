@@ -5,10 +5,15 @@
 #include <QDateTime>
 #include <QDebug>
 
-#include "ExceptionClasses.h"
-
 #define WRITE_DEBUG_FILES 0
 #define DEBUG_PRINT 0
+
+#if WRITE_DEBUG_FILES
+#include <QFile>
+#endif
+
+#include "ExceptionClasses.h"
+
 namespace  {
 const QString htmlName = "stocks.html";
 const QString txtName = "stocks.txt";

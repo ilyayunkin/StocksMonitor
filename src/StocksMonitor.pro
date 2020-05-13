@@ -43,6 +43,10 @@ HEADERS += \
     stocksmonitor.h
 
 INCLUDEPATH+=../include/
+DESTDIR= ../bin
+win32{
+QMAKE_POST_LINK = windeployqt ${DESTDIR_TARGET}
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
