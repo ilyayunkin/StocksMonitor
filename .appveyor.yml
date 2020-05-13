@@ -24,15 +24,16 @@ install:
 build_script:
   - qmake StocksMonitor.pro
   - mingw32-make
-  - curl https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1c-win32-mingw.zip -o ssl.zip -LO
-  - 7z e ssl.zip
-  - dir
-  - cp *.dll bin/
   
 after_build:
   - windeployqt bin/StocksMonitor.exe
+  - curl https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1c-win32-mingw.zip -o ssl.zip -LO
+  - 7z e ssl.zip
+  - dir
+  - mv *.dll bin/
+  - mv bin StocksMonitor
 
 #Note: artifacts path should be from root directory
 artifacts:
-  - path: bin
+  - path: StocksMonitor
     type: zip
