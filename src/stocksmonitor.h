@@ -24,7 +24,7 @@ public:
                            const QUrl url,
                            QObject *parent = nullptr);
 public slots:
-    void requestWordsFromTheInternet();
+    void requestFileFromTheInternet();
     void fileDownloaded(QNetworkReply*r);
 
 signals:    

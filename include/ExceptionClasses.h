@@ -38,4 +38,9 @@ public:
     NoPluginsException() : std::runtime_error("NoPluginsException") { }
 };
 
+class DistributionCorruptedException : public std::runtime_error {
+public:
+    DistributionCorruptedException() : std::runtime_error("DistributionCorruptedException") { }
+};
+
 #endif // EXCEPTIONCLASSES_H

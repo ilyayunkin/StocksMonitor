@@ -25,18 +25,30 @@ StocksMonitor::StocksMonitor(AbstractStocksModel &model,
 {
     assert(parser.get() != nullptr);
 
+    {
+        bool ssl = QSslSocket::supportsSsl();
+        qDebug() << "Supports SSL: " << ssl
+                 << QSslSocket::sslLibraryBuildVersionString()
+                 << QSslSocket::sslLibraryVersionString();
+
+        if(!ssl)
+        {
+            throw DistributionCorruptedException();
+        }
+    }
+
     connect(&m_WebCtrl, &QNetworkAccessManager::finished,
             this, &StocksMonitor::fileDownloaded);
-    requestWordsFromTheInternet();
+    requestFileFromTheInternet();
     {
         QTimer *t = new QTimer(this);
-        connect(t, &QTimer::timeout, this, &StocksMonitor::requestWordsFromTheInternet);
+        connect(t, &QTimer::timeout, this, &StocksMonitor::requestFileFromTheInternet);
         t->start(5000);
     }
 }
 
 
-void StocksMonitor::requestWordsFromTheInternet()
+void StocksMonitor::requestFileFromTheInternet()
 {
 #if DEBUG_PRINT
     qDebug() << __PRETTY_FUNCTION__;
@@ -57,7 +69,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
         QByteArray t;
         StocksList stocks;
         stocks.reserve(500);
-    parser->parse(m_DownloadeAwholeDocumentdData, stocks, t);
+        parser->parse(m_DownloadeAwholeDocumentdData, stocks, t);
 
 #if DEBUG_PRINT
         qDebug() << __PRETTY_FUNCTION__ << "time" << t;
