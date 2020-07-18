@@ -29,7 +29,7 @@ HEADERS += \
 
 INCLUDEPATH+=../include/
 
-DESTDIR= ../bin
+DESTDIR= ../bin/plugins
 
 # Default rules for deployment.
 unix {

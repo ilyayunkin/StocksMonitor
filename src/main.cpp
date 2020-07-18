@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
         MainWindow w;
         w.showMaximized();
 
-        QDir pluginsDir( "." );
+        QDir pluginsDir( "./plugins" );
         SourcePluginInterface* plugin = nullptr;
 
         if(pluginsDir.entryList( QDir::Files ).isEmpty())
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
             throw NoPluginsException();
         }
 
-        foreach( const QString& fileName, pluginsDir.entryList( QDir::Files ) )
+        foreach( const QString& fileName, pluginsDir.entryList(QStringList("*.dll"), QDir::Files ) )
         {
             qDebug() << "===============================================================================";
             qDebug() << "Found:" << fileName;
