@@ -10,6 +10,7 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QApplication>
+#include <QSettings>
 
 #include "PopUpWindow.h"
 #include "logger.h"
@@ -73,7 +74,18 @@ MainWindow::MainWindow(QWidget *parent)
                 QAction *storyAction = ToolsMenu->addAction(tr("Show history"));
                 connect(storyAction, &QAction::triggered, &StoryWidget::showStory);
             }
+            {
+                QAction *setupSoundAction = ToolsMenu->addAction(tr("Setup sound"));
+                connect(setupSoundAction, &QAction::triggered, this, &MainWindow::selectSoundFile);
+            }
         }
+    }
+
+    {
+        QSettings settings;
+        QString filename = settings.value("sound").toString();
+        qDebug() << filename;
+        setupFile(filename);
     }
 
     connect(stocksTableView, &QAbstractItemView::doubleClicked,
@@ -84,8 +96,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&limitsModel, &StocksLimitsModel::crossedLimit,
             this, &MainWindow::crossedLimit);
-
-    speaker.setRate(0.3);
 }
 
 MainWindow::~MainWindow()
@@ -101,6 +111,25 @@ void MainWindow::stockDoubleClicked(const QModelIndex &index)
     if(ok)
     {
         limitsModel.addStock(StockLimit{stock, basePrice});
+    }
+}
+
+void MainWindow::selectSoundFile()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Select sound"), QString(), "*.wav");
+    qDebug() << filename;
+    setupFile(filename);
+    if(!filename.isEmpty())
+    {
+        QSettings settings;
+        settings.setValue("sound", filename);
+    }
+}
+
+void MainWindow::setupFile(const QString &filename)
+{
+    if(!filename.isEmpty()){
+        sound = std::make_shared<QSound>(filename);
     }
 }
 
@@ -136,7 +165,9 @@ void MainWindow::save()
 void MainWindow::signalize()
 {
     QApplication::alert(this);
-    speaker.say("Woop woop! Woop woop! Woop woop!");
+    if(sound.get() != nullptr){
+        sound->play();
+    }
 }
 
 void MainWindow::lastTime(const QByteArray &time)

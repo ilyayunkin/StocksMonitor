@@ -13,6 +13,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    a.setOrganizationName("Ilya");
+    a.setApplicationName("StocksMonitor");
+
     int ret = -1;
 
     try

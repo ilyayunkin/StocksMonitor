@@ -4,18 +4,18 @@
 #include <QMainWindow>
 #include <QTableView>
 #include <QLabel>
+#include <QSound>
 
 #include "StocksModel.h"
 #include "StocksLimitsModel.h"
 
-#include <QTextToSpeech>
-
+#include <memory>
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    QTextToSpeech speaker;
+    std::shared_ptr<QSound> sound;
 
     StocksModel model;
     StocksLimitsModel limitsModel;
@@ -24,6 +24,8 @@ class MainWindow : public QMainWindow
     QLabel *statusLabel;
 
     void stockDoubleClicked(const QModelIndex &index);
+    void selectSoundFile();
+    void setupFile(const QString &filename);
     void signalize();
     void crossedLimit(const StockLimit &stockLimit);
     void closeEvent(QCloseEvent *event);
