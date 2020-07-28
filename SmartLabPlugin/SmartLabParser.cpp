@@ -154,7 +154,7 @@ QByteArray SmartLabParser::getDiv(const QByteArray &wholeDocument)
         throw NoDivisionException();
     }
 
-    QByteArray paragraph = wholeDocument.mid(fieldBegin, fieldEnd - fieldBegin);
+    QByteArray paragraph = wholeDocument.mid(fieldBegin);
     paragraph.replace("\t", "");
     paragraph.replace("\r", "");
     paragraph.replace("\n", "");
