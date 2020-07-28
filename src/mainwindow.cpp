@@ -15,6 +15,7 @@
 #include "PopUpWindow.h"
 #include "logger.h"
 #include "StoryWidget.h"
+#include "SoundDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -116,7 +117,7 @@ void MainWindow::stockDoubleClicked(const QModelIndex &index)
 
 void MainWindow::selectSoundFile()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Select sound"), QString(), "*.wav");
+    QString filename = SoundDialog::getSoundFileName();
     qDebug() << filename;
     setupFile(filename);
     if(!filename.isEmpty())

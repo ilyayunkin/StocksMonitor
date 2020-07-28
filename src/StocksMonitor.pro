@@ -19,6 +19,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     PopUpWindow.cpp \
+    SoundDialog.cpp \
     StocksLimitsModel.cpp \
     StocksModel.cpp \
     StoryWidget.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     ../include/SourcePluginInterface.h \
     ../include/ExceptionClasses.h \
     PopUpWindow.h \
+    SoundDialog.h \
     StocksLimitsModel.h \
     ../include/StocksList.h \
     StocksModel.h \
@@ -53,3 +55,6 @@ QMAKE_POST_LINK = windeployqt ${DESTDIR_TARGET}
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    SoundDialog.ui
