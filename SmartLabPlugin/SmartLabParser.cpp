@@ -74,8 +74,7 @@ void SmartLabParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
 
     QByteArrayList tableRows;
     {
-        QByteArray div = getDiv(m_DownloadeAwholeDocumentdData);
-        QByteArray table = getTable(div);
+        QByteArray table = getTable(m_DownloadeAwholeDocumentdData);
 #if WRITE_DEBUG_FILES
         {
             QFile f(tableName);
@@ -135,31 +134,6 @@ void SmartLabParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
 
     if(stocks.empty())
         throw EmptyTableException();
-}
-
-QByteArray SmartLabParser::getDiv(const QByteArray &wholeDocument)
-{
-    constexpr char divBegin[] = "<div style=\"display: inline-block\">";
-    constexpr char divEnd[] = "</div>";
-
-    const int fieldBegin = wholeDocument.indexOf(divBegin);
-    if(fieldBegin == -1)
-    {
-        throw NoDivisionException();
-    }
-
-    const int fieldEnd = wholeDocument.indexOf(divEnd, fieldBegin);
-    if(fieldEnd == -1)
-    {
-        throw NoDivisionException();
-    }
-
-    QByteArray paragraph = wholeDocument.mid(fieldBegin);
-    paragraph.replace("\t", "");
-    paragraph.replace("\r", "");
-    paragraph.replace("\n", "");
-
-    return paragraph;
 }
 
 QByteArray SmartLabParser::getTable(const QByteArray &div)
