@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-	SmartLabPlugin \
-	src/StocksMonitor.pro
+        SmartLabMmvbPlugin \
+        SmartLabUsaPlugin \
+        src/StocksMonitor.pro

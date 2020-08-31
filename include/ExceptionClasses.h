@@ -43,4 +43,9 @@ public:
     DistributionCorruptedException() : std::runtime_error("DistributionCorruptedException") { }
 };
 
+class EmptyTimestampException : public std::runtime_error {
+public:
+    EmptyTimestampException() : std::runtime_error("EmptyTimestampException") { }
+};
+
 #endif // EXCEPTIONCLASSES_H

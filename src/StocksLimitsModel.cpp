@@ -8,13 +8,14 @@
 #include <algorithm>
 #include <assert.h>
 
-StocksLimitsModel::StocksLimitsModel(bool autoupdate, QObject *parent) :
-    QAbstractTableModel(parent)
+StocksLimitsModel::StocksLimitsModel(QString name, bool autoupdate, QObject *parent) :
+    QAbstractTableModel(parent),
+    name(name)
 {
     stockLimits.reserve(100);
     colors.reserve(100);
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("db_name.sqlite");
+    db = QSqlDatabase::addDatabase("QSQLITE", name);
+    db.setDatabaseName(name + ".sqlite");
 
     if (!db.open()) {
         qDebug() << db.lastError().text();

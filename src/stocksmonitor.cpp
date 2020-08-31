@@ -47,13 +47,12 @@ StocksMonitor::StocksMonitor(AbstractStocksModel &model,
     }
 }
 
-
 void StocksMonitor::requestFileFromTheInternet()
 {
 #if DEBUG_PRINT
     qDebug() << __PRETTY_FUNCTION__;
 #endif
-    QNetworkRequest request(QUrl("https://smart-lab.ru/q/shares/order_by_last_to_prev_price/asc/"));
+    QNetworkRequest request(url);
     m_WebCtrl.get(request);
 }
 
@@ -68,12 +67,19 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
     try {
         QByteArray t;
         StocksList stocks;
-        stocks.reserve(500);
+        static int reserveSize = 500;
+        stocks.reserve(reserveSize);
         parser->parse(m_DownloadeAwholeDocumentdData, stocks, t);
+        reserveSize = std::max<int>(reserveSize, stocks.size());
 
 #if DEBUG_PRINT
         qDebug() << __PRETTY_FUNCTION__ << "time" << t;
 #endif
+        if(t.isEmpty())
+        {
+            throw EmptyTimestampException();
+        }
+
         if(t == time)
         {
 #if DEBUG_PRINT

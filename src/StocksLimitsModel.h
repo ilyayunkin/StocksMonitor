@@ -46,6 +46,7 @@ class StocksLimitsModel final: public QAbstractTableModel
     StockLimitsList stockLimits;
     ColorsList colors;
     AbstractStocksModel *stocksModel = nullptr;
+    QString name = "noname";
 
     static Color colorForDistance(float d)
     {
@@ -96,7 +97,9 @@ public:
 
         COL_COUNT
     };
-    explicit StocksLimitsModel(bool autoupdate = true, QObject *parent = 0);
+    explicit StocksLimitsModel(QString name,
+                               bool autoupdate = true,
+                               QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;

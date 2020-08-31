@@ -1,4 +1,4 @@
-#include "SmartLabParser.h"
+#include "SmartLabMmvbParser.h"
 
 #include <assert.h>
 
@@ -45,7 +45,7 @@ enum
 };
 }
 
-void SmartLabParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
+void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                           StocksList &stocks,
                           QByteArray &time)
 {
@@ -136,7 +136,7 @@ void SmartLabParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
         throw EmptyTableException();
 }
 
-QByteArray SmartLabParser::getTable(const QByteArray &div)
+QByteArray SmartLabMmvbParser::getTable(const QByteArray &div)
 {
     constexpr char divBegin[] = "<table class=\"simple-little-table trades-table\" cellspacing=\"0\">";
     constexpr char divEnd[] = "</table>";
@@ -159,7 +159,7 @@ QByteArray SmartLabParser::getTable(const QByteArray &div)
 
 }
 
-QByteArrayList SmartLabParser::getRows(const QByteArray &table)
+QByteArrayList SmartLabMmvbParser::getRows(const QByteArray &table)
 {
     QByteArrayList ret;
     constexpr char divBegin[] = "<tr";
@@ -195,13 +195,12 @@ QByteArrayList SmartLabParser::getRows(const QByteArray &table)
         }
 #endif
         ++i;
-        assert(i < 500);
     }
 
     return ret;
 }
 
-QByteArrayList SmartLabParser::getCols(const QByteArray &table)
+QByteArrayList SmartLabMmvbParser::getCols(const QByteArray &table)
 {
     QByteArrayList ret;
     constexpr char divBegin[] = "<td";
@@ -235,7 +234,7 @@ QByteArrayList SmartLabParser::getCols(const QByteArray &table)
     return ret;
 }
 
-QByteArray SmartLabParser::getA(const QByteArray &tableCol)
+QByteArray SmartLabMmvbParser::getA(const QByteArray &tableCol)
 {
     QByteArray ret = tableCol;
     constexpr char divBegin[] = "<a";
@@ -266,7 +265,7 @@ QByteArray SmartLabParser::getA(const QByteArray &tableCol)
     return ret;
 }
 
-float SmartLabParser::getPercentage(const QByteArray &tableCol)
+float SmartLabMmvbParser::getPercentage(const QByteArray &tableCol)
 {
     return QString(tableCol).replace('%', ' ').toDouble();
 }

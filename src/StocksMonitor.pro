@@ -22,6 +22,7 @@ SOURCES += \
     SoundDialog.cpp \
     StocksLimitsModel.cpp \
     StocksModel.cpp \
+    StocksModelsWidget.cpp \
     StoryWidget.cpp \
     abstractstocksmodel.cpp \
     logger.cpp \
@@ -33,11 +34,13 @@ HEADERS += \
     ../include/AbstractParser.h \
     ../include/SourcePluginInterface.h \
     ../include/ExceptionClasses.h \
+    ModelsReference.h \
     PopUpWindow.h \
     SoundDialog.h \
     StocksLimitsModel.h \
     ../include/StocksList.h \
     StocksModel.h \
+    StocksModelsWidget.h \
     StoryWidget.h \
     abstractstocksmodel.h \
     logger.h \
@@ -57,4 +60,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
-    SoundDialog.ui
+    SoundDialog.ui \
+    StocksModelsWidget.ui

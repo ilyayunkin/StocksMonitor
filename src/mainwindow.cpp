@@ -5,10 +5,12 @@
 #include <QHeaderView>
 #include <QDebug>
 #include <QInputDialog>
+#include <QFileDialog>
 #include <QMenuBar>
+#include <QTabWidget>
+
 #include <QFile>
 #include <QTextStream>
-#include <QFileDialog>
 #include <QApplication>
 #include <QSettings>
 
@@ -16,10 +18,11 @@
 #include "logger.h"
 #include "StoryWidget.h"
 #include "SoundDialog.h"
+#include "StocksModelsWidget.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(ModelsReferenceList &modelsRefs, QWidget *parent)
     : QMainWindow(parent),
-      limitsModel(false)
+      models(modelsRefs)
 {
     QWidget *w = new QWidget;
     setCentralWidget(w);
@@ -30,27 +33,20 @@ MainWindow::MainWindow(QWidget *parent)
             QHBoxLayout *hlay = new QHBoxLayout;
             vlay->addLayout(hlay);
             {
-                stocksTableView = new QTableView;
-                hlay->addWidget(stocksTableView);
-                stocksTableView->setModel(&model);
+                QTabWidget *tabWidget = new QTabWidget;
+                hlay->addWidget(tabWidget);
+                for(auto modelsRef : modelsRefs)
+                {
+                    StocksModelsWidget *w = new StocksModelsWidget(modelsRef);
+                    QHBoxLayout *viewLay = new QHBoxLayout;
+                    viewLay->setMargin(0);
 
-                QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
-                proxyModel->setSourceModel(&model);
-                stocksTableView->setModel(proxyModel);
-                stocksTableView->setSortingEnabled(true);
-                stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-                stocksTableView->sortByColumn(StocksModel::NUM, Qt::AscendingOrder);
-            }
-            {
-                stocksLimitsTableView = new QTableView;
-                hlay->addWidget(stocksLimitsTableView);
-
-                QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
-                proxyModel->setSourceModel(&limitsModel);
-                stocksLimitsTableView->setModel(proxyModel);
-                stocksLimitsTableView->setSortingEnabled(true);
-                stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-                stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
+                    tabWidget->addTab(w, modelsRef.name);
+                    connect(modelsRef.limitsModel.get(), &StocksLimitsModel::boundCrossed,
+                            this, &MainWindow::signalize);
+                    connect(modelsRef.limitsModel.get(), &StocksLimitsModel::crossedLimit,
+                            this, &MainWindow::crossedLimit);
+                }
             }
         }
         {
@@ -58,17 +54,16 @@ MainWindow::MainWindow(QWidget *parent)
             vlay->addWidget(statusLabel);
         }
     }
-    limitsModel.setStocksModel(&model);
     {
         QMenuBar *bar = new QMenuBar;
         setMenuBar(bar);
-        {
-            QMenu *fileMenu = bar->addMenu(tr("File"));
-            {
-                QAction *saveAction = fileMenu->addAction(tr("Save limits"));
-                connect(saveAction, &QAction::triggered, this, &MainWindow::save);
-            }
-        }
+//        {
+//            QMenu *fileMenu = bar->addMenu(tr("File"));
+//            {
+//                QAction *saveAction = fileMenu->addAction(tr("Save limits"));
+//                connect(saveAction, &QAction::triggered, this, &MainWindow::save);
+//            }
+//        }
         {
             QMenu *ToolsMenu = bar->addMenu(tr("Tools"));
             {
@@ -88,31 +83,10 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << filename;
         setupFile(filename);
     }
-
-    connect(stocksTableView, &QAbstractItemView::doubleClicked,
-            this, &MainWindow::stockDoubleClicked);
-
-    connect(&limitsModel, &StocksLimitsModel::boundCrossed,
-            this, &MainWindow::signalize);
-
-    connect(&limitsModel, &StocksLimitsModel::crossedLimit,
-            this, &MainWindow::crossedLimit);
 }
 
 MainWindow::~MainWindow()
 {
-}
-
-void MainWindow::stockDoubleClicked(const QModelIndex &index)
-{
-    qDebug() << __PRETTY_FUNCTION__;
-    Stock stock = model.getStock(static_cast<QSortFilterProxyModel *>(stocksTableView->model())->mapToSource(index).row());
-    bool ok;
-    float basePrice = QInputDialog::getDouble(this, stock.name, tr("Price"), stock.price, 0, 100000, 10, &ok);
-    if(ok)
-    {
-        limitsModel.addStock(StockLimit{stock, basePrice});
-    }
 }
 
 void MainWindow::selectSoundFile()
@@ -136,6 +110,7 @@ void MainWindow::setupFile(const QString &filename)
 
 void MainWindow::save()
 {
+#if 0
     qDebug() << __PRETTY_FUNCTION__;
     QString filename = QFileDialog::getSaveFileName(this, tr("Save"));
     if(!filename.isNull())
@@ -161,6 +136,7 @@ void MainWindow::save()
             f.close();
         }
     }
+#endif
 }
 
 void MainWindow::signalize()
@@ -174,7 +150,7 @@ void MainWindow::signalize()
 void MainWindow::lastTime(const QByteArray &time)
 {
     statusLabel->setText(QString(time));
-    limitsModel.update();
+    //limitsModel.update();
 }
 
 void MainWindow::crossedLimit(const StockLimit &stockLimit)

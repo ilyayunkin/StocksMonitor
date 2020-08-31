@@ -7,7 +7,7 @@
 #include "StocksList.h"
 #include "AbstractParser.h"
 
-class SmartLabParser : public AbstractParser
+class SmartLabUsaParser : public AbstractParser
 {
     static QByteArray getDiv(const QByteArray &wholeDocument);
     static QByteArray getTable(const QByteArray &div);
