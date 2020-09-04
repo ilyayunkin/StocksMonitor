@@ -11,6 +11,8 @@ class StocksModel final: public QAbstractTableModel, public AbstractStocksModel
 {
     Q_OBJECT
 
+    const QString _pluginName;
+    const QByteArray _currencyCode;
     StocksList stocks;
 public:
     enum
@@ -26,7 +28,9 @@ public:
 
         COL_COUNT
     };
-    explicit StocksModel(QObject *parent = 0);
+    explicit StocksModel(const QString &plugin, const QByteArray &currencyCode, QObject *parent = 0);
+    QString pluginName() const override;
+    QByteArray currencyCode() const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;

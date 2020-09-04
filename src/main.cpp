@@ -12,6 +12,7 @@
 #include "SourcePluginInterface.h"
 #include "ExceptionClasses.h"
 #include "ModelsReference.h"
+#include "PocketModel.h"
 
 int main(int argc, char *argv[])
 {
@@ -72,15 +73,19 @@ int main(int argc, char *argv[])
         ModelsReferenceList models;
         for(PluginsList::size_type i = 0; i < plugins.size(); ++i)
         {
-            auto name = plugins[i]->getName();
+            auto plugin = plugins.at(i);
+            auto name = plugin->getName();
             ModelsReference ref{name,
-                        std::make_shared<StocksModel>(),
+                        QByteArray(),
+                        std::make_shared<StocksModel>(name, plugin->getCurrencyCode()),
                         std::make_shared<StocksLimitsModel>(name)};
             ref.limitsModel->setStocksModel(ref.stocksModel.get());
             models.push_back(ref);
         }
 
-        MainWindow w(models);
+        PocketModel pocketModel(models);
+
+        MainWindow w(pocketModel, models);
         w.showMaximized();
 
         std::vector<std::shared_ptr<StocksMonitor>> monitors;
@@ -93,7 +98,7 @@ int main(int argc, char *argv[])
                                                            plugin->getUrl());
             monitors.push_back(monitor);
             QObject::connect(monitor.get(), &StocksMonitor::downloaded,
-                             &w, &MainWindow::lastTime);
+                             [&models, i](const QByteArray t){models[i].time = t;});
         }
 
         ret = a.exec();

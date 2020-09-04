@@ -15,6 +15,7 @@ public:
     virtual ~SourcePluginInterface() { }
 
     virtual QString getName() const = 0;
+    virtual QByteArray getCurrencyCode() const = 0;
     virtual AbstractParser::Ptr createParser() const = 0;
     virtual QUrl getUrl() const = 0;
 };

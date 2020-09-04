@@ -11,6 +11,7 @@
 struct ModelsReference
 {
     QString name;
+    QByteArray time;
     std::shared_ptr<StocksModel> stocksModel;
     std::shared_ptr<StocksLimitsModel> limitsModel;
 };

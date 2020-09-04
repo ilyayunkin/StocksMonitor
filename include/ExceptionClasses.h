@@ -48,4 +48,9 @@ public:
     EmptyTimestampException() : std::runtime_error("EmptyTimestampException") { }
 };
 
+class NoSuchPluginException : public std::runtime_error {
+public:
+    NoSuchPluginException() : std::runtime_error("NoSuchPluginException") { }
+};
+
 #endif // EXCEPTIONCLASSES_H

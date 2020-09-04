@@ -9,13 +9,15 @@ namespace Ui {
 class StocksModelsWidget;
 }
 
+class AbstractPocket;
+
 class StocksModelsWidget : public QWidget
 {
     Q_OBJECT
-    ModelsReference models;
+    ModelsReference &models;
 
 public:
-    explicit StocksModelsWidget(ModelsReference models, QWidget *parent = nullptr);
+    explicit StocksModelsWidget(ModelsReference &models, AbstractPocket &pocket, QWidget *parent = nullptr);
     ~StocksModelsWidget();
 
 private:

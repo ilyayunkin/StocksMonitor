@@ -6,6 +6,8 @@
 class AbstractStocksModel
 {
 public:
+    virtual QString pluginName() const = 0;
+    virtual QByteArray currencyCode() const = 0;
     virtual void setStocks(StocksList &&stocks) = 0;
     virtual size_t size() const = 0;
     virtual Stock getStock(const QByteArray &ticker) const = 0;

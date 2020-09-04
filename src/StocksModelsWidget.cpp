@@ -3,7 +3,11 @@
 
 #include <QInputDialog>
 
-StocksModelsWidget::StocksModelsWidget(ModelsReference models, QWidget *parent) :
+#include <QTimer>
+
+#include <StocksEventFilter.h>
+
+StocksModelsWidget::StocksModelsWidget(ModelsReference &models, AbstractPocket &pocket, QWidget *parent) :
     QWidget(parent),
     models(models),
     ui(new Ui::StocksModelsWidget)
@@ -16,6 +20,7 @@ StocksModelsWidget::StocksModelsWidget(ModelsReference models, QWidget *parent) 
         ui->stocksTableView->setSortingEnabled(true);
         ui->stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         ui->stocksTableView->sortByColumn(StocksModel::NUM, Qt::AscendingOrder);
+        new StocksEventFilter(models.stocksModel->pluginName(), pocket, ui->stocksTableView);
     }
     {
         QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
@@ -38,6 +43,11 @@ StocksModelsWidget::StocksModelsWidget(ModelsReference models, QWidget *parent) 
             this->models.limitsModel->addStock(StockLimit{stock, basePrice});
         }
     });
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout,
+            [this, &models]{this->ui->timeLabel->setText(models.time);});
+    timer->start(1000);
 }
 
 StocksModelsWidget::~StocksModelsWidget()

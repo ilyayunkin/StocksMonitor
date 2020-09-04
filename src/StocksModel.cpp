@@ -4,9 +4,21 @@
 
 #include <algorithm>
 
-StocksModel::StocksModel(QObject *parent) :
-    QAbstractTableModel(parent)
+StocksModel::StocksModel(const QString &plugin, const QByteArray &currencyCode, QObject *parent) :
+    QAbstractTableModel(parent),
+    _pluginName(plugin),
+    _currencyCode(currencyCode)
 {
+}
+
+QString StocksModel::pluginName() const
+{
+    return _pluginName;
+}
+
+QByteArray StocksModel::currencyCode() const
+{
+    return _currencyCode;
 }
 
 int StocksModel::rowCount(const QModelIndex &parent) const

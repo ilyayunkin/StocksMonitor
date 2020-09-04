@@ -39,6 +39,7 @@ PopUpWindow::PopUpWindow(const QString &text, int timeMs)
 
 void PopUpWindow::mousePressEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
     deleteLater();
 }
 

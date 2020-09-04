@@ -18,13 +18,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    PocketModel.cpp \
+    PocketWidget.cpp \
     PopUpWindow.cpp \
     SoundDialog.cpp \
+    StocksEventFilter.cpp \
     StocksLimitsModel.cpp \
     StocksModel.cpp \
     StocksModelsWidget.cpp \
     StoryWidget.cpp \
-    abstractstocksmodel.cpp \
     logger.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -34,9 +36,13 @@ HEADERS += \
     ../include/AbstractParser.h \
     ../include/SourcePluginInterface.h \
     ../include/ExceptionClasses.h \
+    AbstractPocket.h \
     ModelsReference.h \
+    PocketModel.h \
+    PocketWidget.h \
     PopUpWindow.h \
     SoundDialog.h \
+    StocksEventFilter.h \
     StocksLimitsModel.h \
     ../include/StocksList.h \
     StocksModel.h \
@@ -60,5 +66,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
+    PocketWidget.ui \
     SoundDialog.ui \
     StocksModelsWidget.ui

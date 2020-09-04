@@ -87,7 +87,6 @@ StocksLimitsModel::StocksLimitsModel(QString name, bool autoupdate, QObject *par
 
 void StocksLimitsModel::update()
 {
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__;
     bool boundCross = false;
     if(stocksModel != nullptr)
     {

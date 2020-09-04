@@ -19,9 +19,11 @@
 #include "StoryWidget.h"
 #include "SoundDialog.h"
 #include "StocksModelsWidget.h"
+#include "PocketWidget.h"
 
-MainWindow::MainWindow(ModelsReferenceList &modelsRefs, QWidget *parent)
+MainWindow::MainWindow(PocketModel &pocketModel, ModelsReferenceList &modelsRefs, QWidget *parent)
     : QMainWindow(parent),
+      pocketModel(pocketModel),
       models(modelsRefs)
 {
     QWidget *w = new QWidget;
@@ -35,9 +37,9 @@ MainWindow::MainWindow(ModelsReferenceList &modelsRefs, QWidget *parent)
             {
                 QTabWidget *tabWidget = new QTabWidget;
                 hlay->addWidget(tabWidget);
-                for(auto modelsRef : modelsRefs)
+                for(auto &modelsRef : modelsRefs)
                 {
-                    StocksModelsWidget *w = new StocksModelsWidget(modelsRef);
+                    StocksModelsWidget *w = new StocksModelsWidget(modelsRef, pocketModel);
                     QHBoxLayout *viewLay = new QHBoxLayout;
                     viewLay->setMargin(0);
 
@@ -47,11 +49,11 @@ MainWindow::MainWindow(ModelsReferenceList &modelsRefs, QWidget *parent)
                     connect(modelsRef.limitsModel.get(), &StocksLimitsModel::crossedLimit,
                             this, &MainWindow::crossedLimit);
                 }
+                {
+                    PocketWidget *pocketWidget = new PocketWidget(&pocketModel);
+                    tabWidget->addTab(pocketWidget, tr("Pocket"));
+                }
             }
-        }
-        {
-            statusLabel = new QLabel;
-            vlay->addWidget(statusLabel);
         }
     }
     {
@@ -147,12 +149,6 @@ void MainWindow::signalize()
     }
 }
 
-void MainWindow::lastTime(const QByteArray &time)
-{
-    statusLabel->setText(QString(time));
-    //limitsModel.update();
-}
-
 void MainWindow::crossedLimit(const StockLimit &stockLimit)
 {
     QString logMessage = QString("%1\n%2")
@@ -164,5 +160,6 @@ void MainWindow::crossedLimit(const StockLimit &stockLimit)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    Q_UNUSED(event);
     QApplication::quit();
 }

@@ -2,10 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QLabel>
 #include <QSound>
 
 #include "ModelsReference.h"
+#include "PocketModel.h"
 
 #include <memory>
 
@@ -15,8 +15,8 @@ class MainWindow : public QMainWindow
 
     std::shared_ptr<QSound> sound;
 
+    PocketModel &pocketModel;
     ModelsReferenceList &models;
-    QLabel *statusLabel;
 
     void selectSoundFile();
     void setupFile(const QString &filename);
@@ -24,10 +24,8 @@ class MainWindow : public QMainWindow
     void crossedLimit(const StockLimit &stockLimit);
     void closeEvent(QCloseEvent *event);
 public:
-    MainWindow(ModelsReferenceList &models, QWidget *parent = nullptr);
-//    AbstractStocksModel &getModel(){return model;}
+    MainWindow(PocketModel &pocketModel, ModelsReferenceList &models, QWidget *parent = nullptr);
     ~MainWindow();
     void save();
-    void lastTime(const QByteArray &time);
 };
 #endif // MAINWINDOW_H
