@@ -12,30 +12,6 @@ namespace  {
 QString tableName = "Pocket";
 }
 
-struct Counter
-{
-    QByteArray currency;
-    double sum;
-    Counter(const QByteArray &currency) : currency(currency), sum(0){}
-    Counter(const QByteArray &currency, const double sum) : currency(currency), sum(sum){}
-};
-
-struct CountersList
-{
-    std::vector<Counter> list;
-    void add(const QByteArray &currency, const double val)
-    {
-        auto it = std::find_if(list.begin(), list.end(), [currency](Counter &c){return currency == c.currency;});
-        if(it != list.end())
-        {
-            it->sum+= val;
-        }else
-        {
-            list.push_back(Counter(currency, val));
-        }
-    }
-};
-
 QSqlQuery PocketModel::executeQuery(const QString &query)
 {
 
@@ -49,7 +25,7 @@ QSqlQuery PocketModel::executeQuery(const QString &query)
 
 void PocketModel::update()
 {
-    CountersList counters;
+    CurrencyCountersList counters;
     for(auto &e : entries)
     {
         Stock stock = e.model->getStock(e.ticker);
@@ -64,11 +40,7 @@ void PocketModel::update()
     }
     emit dataChanged(createIndex(0, 0),
                      createIndex(entries.size() - 1, COL_COUNT - 1));
-    sumStr = QString();
-    for(Counter &c : counters.list)
-    {
-        sumStr+= QString::number(c.sum) + " " + c.currency + " ";
-    }
+    currencyCounters = counters;
 }
 
 PocketModel::PocketModel(ModelsReferenceList &models, QObject *parent) :
@@ -345,7 +317,7 @@ void PocketModel::addStock(QString plugin, QByteArray ticker, int quantity)
     }
 }
 
-QString PocketModel::sum() const
+CurrencyCountersList PocketModel::sum() const
 {
-    return sumStr;
+    return currencyCounters;
 }

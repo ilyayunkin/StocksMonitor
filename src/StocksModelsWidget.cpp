@@ -5,7 +5,7 @@
 
 #include <QInputDialog>
 
-#include <StocksEventFilter.h>
+#include "StocksEventFilter.h"
 
 StocksModelsWidget::StocksModelsWidget(ModelsReference &models, AbstractPocket &pocket, QWidget *parent) :
     QWidget(parent),
@@ -20,9 +20,7 @@ StocksModelsWidget::StocksModelsWidget(ModelsReference &models, AbstractPocket &
         ui->stocksTableView->setSortingEnabled(true);
         ui->stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         ui->stocksTableView->sortByColumn(StocksModel::NUM, Qt::AscendingOrder);
-        new StocksEventFilter(models,
-                              pocket,
-                              ui->stocksTableView);
+        new StocksEventFilter(models, pocket, ui->stocksTableView);
     }
     {
         QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);

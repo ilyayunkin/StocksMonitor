@@ -4,16 +4,31 @@
 #include <QTimer>
 #include <QClipboard>
 
+#include <QInputDialog>
+#include <QMessageBox>
+#include <QSortFilterProxyModel>
+
+#include <algorithm>
+#include <set>
+#include <assert.h>
+
+#include "CurrencyPresenter.h"
+#include "CurrencyConverter.h"
+
 PocketWidget::PocketWidget(PocketModel *model, QWidget *parent) :
     QWidget(parent),
+    model(*model),
     ui(new Ui::PocketWidget)
 {
     ui->setupUi(this);
-    ui->tableView->setModel(model);
+    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(model);
+    ui->tableView->setModel(proxyModel);
+    ui->tableView->setSortingEnabled(true);
     {
         QTimer *t = new QTimer(this);
         connect(t, &QTimer::timeout,
-                [this, model](){ui->sumTextEdit->setText(model->sum());});
+                [this, model](){ui->sumTextEdit->setText(CurrencyPresenter::toText(model->sum()));});
         t->start(5000);
     }
 }
@@ -27,4 +42,33 @@ void PocketWidget::on_clipBoardButton_clicked()
 {
     QClipboard* clipboard = QApplication::clipboard();
     clipboard->setText(ui->sumTextEdit->text());
+}
+
+void PocketWidget::on_convertButton_clicked()
+{
+    auto counters = model.sum();
+
+    assert(!counters.list.empty());
+
+    std::set<QByteArray> currencySet;
+    for(const auto &c : counters.list)
+    {
+        currencySet.insert(c.currency);
+    }
+    QStringList items;
+    std::transform(currencySet.begin(), currencySet.end(), std::back_inserter(items),
+                   [](const QString &str){return str;});
+    bool ok;
+    QByteArray targetCurrency =
+            QInputDialog::getItem(0,
+                                  QObject::tr("Select currency"),
+                                  QObject::tr("Currency"),
+                                  items, 0, false, &ok).toLatin1();
+    if(ok)
+    {
+        auto convertedCounters = CurrencyPresenter::toText(CurrencyConverter::convert(targetCurrency, counters));
+        QMessageBox::information(this,
+                                 tr("Portfolio in %1").arg(QString(targetCurrency)),
+                                 convertedCounters);
+    }
 }

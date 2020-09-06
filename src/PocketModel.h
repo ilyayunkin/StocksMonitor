@@ -30,7 +30,7 @@ class PocketModel : public QAbstractTableModel, public AbstractPocket
     PocketEntryList entries;
     QSqlDatabase db;
     ModelsReferenceList &models;
-    QString sumStr;
+    CurrencyCountersList currencyCounters;
 
     QSqlQuery executeQuery(const QString &query);
     void update();
@@ -57,7 +57,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     void addStock(QString plugin, QByteArray ticker, int quantity) override;
-    QString sum() const override;
+    CurrencyCountersList sum() const override;
 };
 
 #endif // POCKETMODEL_H

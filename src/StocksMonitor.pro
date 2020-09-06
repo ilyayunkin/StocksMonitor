@@ -18,6 +18,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    CurrencyConverter.cpp \
+    CurrencyCounter.cpp \
+    CurrencyPresenter.cpp \
     PocketModel.cpp \
     PocketWidget.cpp \
     PopUpWindow.cpp \
@@ -37,6 +40,9 @@ HEADERS += \
     ../include/SourcePluginInterface.h \
     ../include/ExceptionClasses.h \
     AbstractPocket.h \
+    CurrencyConverter.h \
+    CurrencyCounter.h \
+    CurrencyPresenter.h \
     ModelsReference.h \
     PocketModel.h \
     PocketWidget.h \
