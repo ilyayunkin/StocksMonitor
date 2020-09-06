@@ -224,7 +224,7 @@ bool PocketModel::setData(const QModelIndex &index, const QVariant &value, int r
                                  "SET quantity = '%2' "
                                  "WHERE ticker = '%3';")
                          .arg(tableName)
-                         .arg(entry.quantity)
+                         .arg(quantity)
                          .arg(QString(entry.ticker)));
             entry.quantity = quantity;
             entry.sum = quantity * entry.priceBaseCurrency;
