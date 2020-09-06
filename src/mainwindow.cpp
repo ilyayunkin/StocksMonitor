@@ -51,7 +51,7 @@ MainWindow::MainWindow(PocketModel &pocketModel, ModelsReferenceList &modelsRefs
                 }
                 {
                     PocketWidget *pocketWidget = new PocketWidget(&pocketModel);
-                    tabWidget->addTab(pocketWidget, tr("Pocket"));
+                    tabWidget->addTab(pocketWidget, tr("Portfolio"));
                 }
             }
         }
