@@ -1,9 +1,9 @@
 #include "StocksModelsWidget.h"
 #include "ui_StocksModelsWidget.h"
 
-#include <QInputDialog>
-
 #include <QTimer>
+
+#include <QInputDialog>
 
 #include <StocksEventFilter.h>
 
@@ -20,7 +20,9 @@ StocksModelsWidget::StocksModelsWidget(ModelsReference &models, AbstractPocket &
         ui->stocksTableView->setSortingEnabled(true);
         ui->stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         ui->stocksTableView->sortByColumn(StocksModel::NUM, Qt::AscendingOrder);
-        new StocksEventFilter(models.stocksModel->pluginName(), pocket, ui->stocksTableView);
+        new StocksEventFilter(models,
+                              pocket,
+                              ui->stocksTableView);
     }
     {
         QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
@@ -30,19 +32,6 @@ StocksModelsWidget::StocksModelsWidget(ModelsReference &models, AbstractPocket &
         ui->stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         ui->stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
     }
-
-    connect(ui->stocksTableView, &QAbstractItemView::doubleClicked,
-            [this](const QModelIndex &index)
-    {
-        qDebug() << __PRETTY_FUNCTION__;
-        Stock stock = this->models.stocksModel->getStock(static_cast<QSortFilterProxyModel *>(ui->stocksTableView->model())->mapToSource(index).row());
-        bool ok;
-        float basePrice = QInputDialog::getDouble(this, stock.name, tr("Price"), stock.price, 0, 100000, 10, &ok);
-        if(ok)
-        {
-            this->models.limitsModel->addStock(StockLimit{stock, basePrice});
-        }
-    });
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout,

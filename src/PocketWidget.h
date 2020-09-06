@@ -16,6 +16,9 @@ public:
     explicit PocketWidget(PocketModel *model, QWidget *parent = nullptr);
     ~PocketWidget();
 
+private slots:
+    void on_clipBoardButton_clicked();
+
 private:
     Ui::PocketWidget *ui;
 };
