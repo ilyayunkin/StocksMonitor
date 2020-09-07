@@ -25,7 +25,7 @@ StocksEventFilter::StocksEventFilter(ModelsReference &limitsModel,
 {
     table->installEventFilter(this);
     menu = new QMenu;
-    pocketAction = new QAction("To pocket", this);
+    pocketAction = new QAction("To Portfolio", this);
     limitsAction = new QAction("Set limit", this);
     menu->addAction(pocketAction);
     menu->addAction(limitsAction);
