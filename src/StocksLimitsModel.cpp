@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <assert.h>
 
+#include "StockHint.h"
+
 StocksLimitsModel::StocksLimitsModel(QString name, bool autoupdate, QObject *parent) :
     QAbstractTableModel(parent),
     name(name)
@@ -216,14 +218,7 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
         if(row < stockLimits.size())
         {
             auto stock = stocksModel->getStock(stockLimits.at(row).ticker);
-            ret = QString("%1 | %2 | %3 | %4 | %5 | %6 | %7")
-                    .arg(stock.name)
-                    .arg(QString(stock.ticker))
-                    .arg(stock.price)
-                    .arg(stock.derivation)
-                    .arg(stock.derivationWeek)
-                    .arg(stock.derivationMonth)
-                    .arg(stock.derivationYear);
+            ret = StockHint::getHint(stock);
         }
     }
     return ret;

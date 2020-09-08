@@ -7,6 +7,7 @@
 #include <QTimer>
 
 #include "ExceptionClasses.h"
+#include "StockHint.h"
 
 namespace  {
 QString tableName = "Pocket";
@@ -195,14 +196,7 @@ QVariant PocketModel::data(const QModelIndex &index, int role) const
             if(it != models.end())
             {
                 auto stock = it->stocksModel->getStock(entry.ticker);
-                ret = QString("%1 | %2 | %3 | %4 | %5 | %6 | %7")
-                        .arg(stock.name)
-                        .arg(QString(stock.ticker))
-                        .arg(stock.price)
-                        .arg(stock.derivation)
-                        .arg(stock.derivationWeek)
-                        .arg(stock.derivationMonth)
-                        .arg(stock.derivationYear);
+                ret = StockHint::getHint(stock);
             }
         }
     }

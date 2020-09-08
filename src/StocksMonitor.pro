@@ -25,6 +25,7 @@ SOURCES += \
     PocketWidget.cpp \
     PopUpWindow.cpp \
     SoundDialog.cpp \
+    StockHint.cpp \
     StocksEventFilter.cpp \
     StocksLimitsModel.cpp \
     StocksModel.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
     PocketWidget.h \
     PopUpWindow.h \
     SoundDialog.h \
+    StockHint.h \
     StocksEventFilter.h \
     StocksLimitsModel.h \
     ../include/StocksList.h \
