@@ -7,7 +7,7 @@
 #include <QTimer>
 
 #include "ExceptionClasses.h"
-#include "StockHint.h"
+#include "Presenters/StockHint.h"
 
 namespace  {
 QString tableName = "Pocket";

@@ -20,12 +20,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     CurrencyConverter.cpp \
     CurrencyCounter.cpp \
-    CurrencyPresenter.cpp \
+    Presenters/CurrencyPresenter.cpp \
     PocketModel.cpp \
     PocketWidget.cpp \
     PopUpWindow.cpp \
     SoundDialog.cpp \
-    StockHint.cpp \
+    Presenters/StockHint.cpp \
     StocksEventFilter.cpp \
     StocksLimitsModel.cpp \
     StocksModel.cpp \
@@ -43,13 +43,13 @@ HEADERS += \
     AbstractPocket.h \
     CurrencyConverter.h \
     CurrencyCounter.h \
-    CurrencyPresenter.h \
+    Presenters/CurrencyPresenter.h \
     ModelsReference.h \
     PocketModel.h \
     PocketWidget.h \
     PopUpWindow.h \
     SoundDialog.h \
-    StockHint.h \
+    Presenters/StockHint.h \
     StocksEventFilter.h \
     StocksLimitsModel.h \
     ../include/StocksList.h \

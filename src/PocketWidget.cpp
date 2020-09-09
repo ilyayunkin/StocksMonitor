@@ -12,7 +12,7 @@
 #include <set>
 #include <assert.h>
 
-#include "CurrencyPresenter.h"
+#include "Presenters/CurrencyPresenter.h"
 #include "CurrencyConverter.h"
 
 PocketWidget::PocketWidget(PocketModel *model, QWidget *parent) :
