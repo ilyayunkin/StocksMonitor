@@ -2,9 +2,6 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include <QHeaderView>
-#include <QDebug>
-#include <QInputDialog>
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QTabWidget>
@@ -12,7 +9,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QApplication>
-#include <QSettings>
 
 #include "StoryWidget.h"
 #include "StocksModelsWidget.h"
@@ -84,7 +80,6 @@ MainWindow::~MainWindow()
 void MainWindow::save()
 {
 #if 0
-    qDebug() << __PRETTY_FUNCTION__;
     QString filename = QFileDialog::getSaveFileName(this, tr("Save"));
     if(!filename.isNull())
     {
