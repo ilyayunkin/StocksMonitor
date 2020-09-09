@@ -211,9 +211,9 @@ bool PocketModel::setData(const QModelIndex &index, const QVariant &value, int r
     if ((role == Qt::EditRole) && (col == QUANTITY) && (row < entries.size()))
     {
         int quantity = value.toInt();
-        PocketEntry &entry = entries[row];
         if(quantity > 0)
         {
+            PocketEntry &entry = entries[row];
             executeQuery(QString("UPDATE %1 "
                                  "SET quantity = '%2' "
                                  "WHERE ticker = '%3';")
@@ -226,6 +226,7 @@ bool PocketModel::setData(const QModelIndex &index, const QVariant &value, int r
                              createIndex(row, COL_COUNT - 1));
         }else
         {
+            const PocketEntry entry = entries[row];
             bool answer =
                     QMessageBox::question(0,
                                           tr("Delete?"),
@@ -235,12 +236,12 @@ bool PocketModel::setData(const QModelIndex &index, const QVariant &value, int r
             if(answer)
             {
                 beginRemoveRows(QModelIndex(), row, row);
-                std::remove_if(entries.begin(), entries.end(),
-                               [&entry](PocketEntry &e){return entry.ticker == e.ticker;});
                 executeQuery(QString("DELETE FROM %1 "
                                      "WHERE ticker = '%2';")
                              .arg(tableName)
                              .arg(QString(entry.ticker)));
+                std::remove_if(entries.begin(), entries.end(),
+                               [&entry](PocketEntry &e){return entry.ticker == e.ticker;});
                 endRemoveRows();
             }
         }
