@@ -77,3 +77,6 @@ FORMS += \
     PocketWidget.ui \
     SoundDialog.ui \
     StocksModelsWidget.ui
+
+RESOURCES += \
+    res.qrc

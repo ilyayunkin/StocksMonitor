@@ -51,7 +51,7 @@ MainWindow::MainWindow(PocketModel &pocketModel, ModelsReferenceList &modelsRefs
                 }
                 {
                     PocketWidget *pocketWidget = new PocketWidget(&pocketModel);
-                    tabWidget->addTab(pocketWidget, tr("Portfolio"));
+                    tabWidget->addTab(pocketWidget, QIcon("://img/portfolio.png"), tr("Portfolio"));
                 }
             }
         }
