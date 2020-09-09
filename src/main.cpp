@@ -13,6 +13,8 @@
 #include "ExceptionClasses.h"
 #include "ModelsReference.h"
 #include "PocketModel.h"
+#include "Sounds/Signalizer.h"
+#include "PopUpWindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -70,6 +72,8 @@ int main(int argc, char *argv[])
             throw NoPluginsException();
         }
 
+        Signalizer signalizer;
+
         ModelsReferenceList models;
         for(PluginsList::size_type i = 0; i < plugins.size(); ++i)
         {
@@ -80,12 +84,28 @@ int main(int argc, char *argv[])
                         std::make_shared<StocksModel>(name, plugin->getCurrencyCode()),
                         std::make_shared<StocksLimitsModel>(name)};
             ref.limitsModel->setStocksModel(ref.stocksModel.get());
+            QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::boundCrossed,
+                             [&signalizer]{signalizer.signalize();});
+            QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::crossedLimit,
+                             [](const StockLimit &stockLimit)
+            {
+                QString logMessage = QString("%1\n%2")
+                        .arg(stockLimit.name)
+                        .arg(stockLimit.price);
+                Logger::instance().log(logMessage);
+                PopUpWindow::showPopUpWindow(logMessage);
+            });
             models.push_back(ref);
         }
 
         PocketModel pocketModel(models);
 
-        MainWindow w(pocketModel, models);
+        MainWindow w(pocketModel, models, signalizer);
+        for(auto &ref : models)
+        {
+            QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::boundCrossed,
+                             [&w](){QApplication::alert(&w);});
+        }
         w.showMaximized();
 
         std::vector<std::shared_ptr<StocksMonitor>> monitors;

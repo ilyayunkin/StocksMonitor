@@ -24,7 +24,8 @@ SOURCES += \
     PocketModel.cpp \
     PocketWidget.cpp \
     PopUpWindow.cpp \
-    SoundDialog.cpp \
+    Sounds/Signalizer.cpp \
+    Sounds/SoundDialog.cpp \
     Presenters/StockHint.cpp \
     StocksEventFilter.cpp \
     StocksLimitsModel.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     ../include/SourcePluginInterface.h \
     ../include/ExceptionClasses.h \
     AbstractPocket.h \
+    Sounds/AbstractSignalizer.h \
     CurrencyConverter.h \
     CurrencyCounter.h \
     Presenters/CurrencyPresenter.h \
@@ -48,7 +50,8 @@ HEADERS += \
     PocketModel.h \
     PocketWidget.h \
     PopUpWindow.h \
-    SoundDialog.h \
+    Sounds/Signalizer.h \
+    Sounds/SoundDialog.h \
     Presenters/StockHint.h \
     StocksEventFilter.h \
     StocksLimitsModel.h \

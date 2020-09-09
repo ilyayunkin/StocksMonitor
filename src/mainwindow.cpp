@@ -14,14 +14,14 @@
 #include <QApplication>
 #include <QSettings>
 
-#include "PopUpWindow.h"
-#include "logger.h"
 #include "StoryWidget.h"
-#include "SoundDialog.h"
 #include "StocksModelsWidget.h"
 #include "PocketWidget.h"
 
-MainWindow::MainWindow(PocketModel &pocketModel, ModelsReferenceList &modelsRefs, QWidget *parent)
+MainWindow::MainWindow(PocketModel &pocketModel,
+                       ModelsReferenceList &modelsRefs,
+                       AbstractSignalizer &signalizer,
+                       QWidget *parent)
     : QMainWindow(parent),
       pocketModel(pocketModel),
       models(modelsRefs)
@@ -44,10 +44,6 @@ MainWindow::MainWindow(PocketModel &pocketModel, ModelsReferenceList &modelsRefs
                     viewLay->setMargin(0);
 
                     tabWidget->addTab(w, modelsRef.name);
-                    connect(modelsRef.limitsModel.get(), &StocksLimitsModel::boundCrossed,
-                            this, &MainWindow::signalize);
-                    connect(modelsRef.limitsModel.get(), &StocksLimitsModel::crossedLimit,
-                            this, &MainWindow::crossedLimit);
                 }
                 {
                     PocketWidget *pocketWidget = new PocketWidget(&pocketModel);
@@ -74,40 +70,15 @@ MainWindow::MainWindow(PocketModel &pocketModel, ModelsReferenceList &modelsRefs
             }
             {
                 QAction *setupSoundAction = ToolsMenu->addAction(tr("Setup sound"));
-                connect(setupSoundAction, &QAction::triggered, this, &MainWindow::selectSoundFile);
+                connect(setupSoundAction, &QAction::triggered,
+                        [&signalizer](){signalizer.changeSound();});
             }
         }
-    }
-
-    {
-        QSettings settings;
-        QString filename = settings.value("sound").toString();
-        qDebug() << filename;
-        setupFile(filename);
     }
 }
 
 MainWindow::~MainWindow()
 {
-}
-
-void MainWindow::selectSoundFile()
-{
-    QString filename = SoundDialog::getSoundFileName();
-    qDebug() << filename;
-    setupFile(filename);
-    if(!filename.isEmpty())
-    {
-        QSettings settings;
-        settings.setValue("sound", filename);
-    }
-}
-
-void MainWindow::setupFile(const QString &filename)
-{
-    if(!filename.isEmpty()){
-        sound = std::make_shared<QSound>(filename);
-    }
 }
 
 void MainWindow::save()
@@ -139,23 +110,6 @@ void MainWindow::save()
         }
     }
 #endif
-}
-
-void MainWindow::signalize()
-{
-    QApplication::alert(this);
-    if(sound.get() != nullptr){
-        sound->play();
-    }
-}
-
-void MainWindow::crossedLimit(const StockLimit &stockLimit)
-{
-    QString logMessage = QString("%1\n%2")
-            .arg(stockLimit.name)
-            .arg(stockLimit.price);
-    Logger::instance().log(logMessage);
-    PopUpWindow::showPopUpWindow(logMessage);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
