@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <PocketModel.h>
+#include "AbstractCurrencyConverter.h"
 
 namespace Ui {
 class PocketWidget;
@@ -12,8 +13,11 @@ class PocketWidget : public QWidget
 {
     Q_OBJECT
     PocketModel &model;
+    AbstractCurrencyConverter &currencyConverter;
 public:
-    explicit PocketWidget(PocketModel *model, QWidget *parent = nullptr);
+    explicit PocketWidget(PocketModel *model,
+                          AbstractCurrencyConverter &currencyConverter,
+                          QWidget *parent = nullptr);
     ~PocketWidget();
 
 private slots:

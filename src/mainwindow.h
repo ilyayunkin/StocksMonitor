@@ -7,6 +7,8 @@
 #include "PocketModel.h"
 #include "Sounds/AbstractSignalizer.h"
 
+class AbstractCurrencyConverter;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -21,6 +23,7 @@ public:
     MainWindow(PocketModel &pocketModel,
                ModelsReferenceList &models,
                AbstractSignalizer &signalizer,
+               AbstractCurrencyConverter &converter,
                QWidget *parent = nullptr);
     ~MainWindow();
     void save();

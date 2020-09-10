@@ -15,6 +15,15 @@ struct Stock
     float derivationWeek;
     float derivationMonth;
     float derivationYear;
+
+    Stock() :
+        rowNum(-1),
+        price(-1),
+        derivation(-1),
+        derivationWeek(-1),
+        derivationMonth(-1),
+        derivationYear(-1)
+    {}
 };
 typedef std::vector<Stock> StocksList;
 

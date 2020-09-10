@@ -15,9 +15,12 @@
 #include "Presenters/CurrencyPresenter.h"
 #include "CurrencyConverter.h"
 
-PocketWidget::PocketWidget(PocketModel *model, QWidget *parent) :
+PocketWidget::PocketWidget(PocketModel *model,
+                           AbstractCurrencyConverter &currencyConverter,
+                           QWidget *parent) :
     QWidget(parent),
     model(*model),
+    currencyConverter(currencyConverter),
     ui(new Ui::PocketWidget)
 {
     ui->setupUi(this);
@@ -25,6 +28,7 @@ PocketWidget::PocketWidget(PocketModel *model, QWidget *parent) :
     proxyModel->setSourceModel(model);
     ui->tableView->setModel(proxyModel);
     ui->tableView->setSortingEnabled(true);
+    ui->tableView->sortByColumn(PocketModel::NAME, Qt::AscendingOrder);
     {
         QTimer *t = new QTimer(this);
         connect(t, &QTimer::timeout,
@@ -66,7 +70,7 @@ void PocketWidget::on_convertButton_clicked()
                                   items, 0, false, &ok).toLatin1();
     if(ok)
     {
-        auto convertedCounters = CurrencyPresenter::toText(CurrencyConverter::convert(targetCurrency, counters));
+        auto convertedCounters = CurrencyPresenter::toText(currencyConverter.convert(targetCurrency, counters));
         QMessageBox::information(this,
                                  tr("Portfolio in %1").arg(QString(targetCurrency)),
                                  convertedCounters);

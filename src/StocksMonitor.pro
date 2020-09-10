@@ -41,6 +41,7 @@ HEADERS += \
     ../include/AbstractParser.h \
     ../include/SourcePluginInterface.h \
     ../include/ExceptionClasses.h \
+    AbstractCurrencyConverter.h \
     AbstractPocket.h \
     Sounds/AbstractSignalizer.h \
     CurrencyConverter.h \

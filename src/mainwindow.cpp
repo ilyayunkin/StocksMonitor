@@ -17,6 +17,7 @@
 MainWindow::MainWindow(PocketModel &pocketModel,
                        ModelsReferenceList &modelsRefs,
                        AbstractSignalizer &signalizer,
+                       AbstractCurrencyConverter &converter,
                        QWidget *parent)
     : QMainWindow(parent),
       pocketModel(pocketModel),
@@ -42,7 +43,7 @@ MainWindow::MainWindow(PocketModel &pocketModel,
                     tabWidget->addTab(w, modelsRef.name);
                 }
                 {
-                    PocketWidget *pocketWidget = new PocketWidget(&pocketModel);
+                    PocketWidget *pocketWidget = new PocketWidget(&pocketModel, converter);
                     tabWidget->addTab(pocketWidget, QIcon("://img/portfolio.png"), tr("Portfolio"));
                 }
             }

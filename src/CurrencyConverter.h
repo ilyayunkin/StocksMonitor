@@ -1,13 +1,16 @@
 #ifndef CURRENCYCONVERTER_H
 #define CURRENCYCONVERTER_H
 
-#include "CurrencyCounter.h"
+#include "AbstractCurrencyConverter.h"
+#include "StocksModel.h"
 
-class CurrencyConverter
+class CurrencyConverter : public AbstractCurrencyConverter
 {
+    StocksModel * const currencyModel;
 public:
-    static CurrencyCountersList convert(const QByteArray &targetCurrency,
-                                        const CurrencyCountersList &counters);
+    CurrencyConverter(StocksModel *const currencyModel = nullptr);
+    CurrencyCountersList convert(const QByteArray &targetCurrency,
+                                 const CurrencyCountersList &counters) override;
 };
 
 #endif // CURRENCYCONVERTER_H

@@ -9,6 +9,12 @@
 #include <QInputDialog>
 
 #include <QDebug>
+
+CurrencyConverter::CurrencyConverter(StocksModel * const currencyModel) :
+    currencyModel(currencyModel)
+{
+}
+
 CurrencyCountersList CurrencyConverter::convert(const QByteArray &targetCurrency,
                                                 const CurrencyCountersList &counters)
 {
@@ -18,15 +24,40 @@ CurrencyCountersList CurrencyConverter::convert(const QByteArray &targetCurrency
     {
         if(currency.currency != targetCurrency)
         {
-            auto cource = QInputDialog::getDouble(0,
-                                                  QObject::tr("Input cource"),
-                                                  QObject::tr("Cource of %1 to %2")
-                                                  .arg(QString(currency.currency))
-                                                  .arg(QString(targetCurrency)),
-                                                  0,
-                                                  0,
-                                                  10000,
-                                                  8);
+            double cource = 0;
+            auto getDouble = [&currency, &targetCurrency]
+            {
+                return QInputDialog::getDouble(0,
+                                        QObject::tr("Input cource"),
+                                        QObject::tr("Cource of %1 to %2")
+                                        .arg(QString(currency.currency))
+                                        .arg(QString(targetCurrency)),
+                                        0,
+                                        0,
+                                        10000,
+                                        8);
+            };
+            if(currencyModel != nullptr)
+            {
+                const QByteArray baseCurrency = currencyModel->currencyCode();
+                if(targetCurrency == baseCurrency)
+                {
+                    Stock stock = currencyModel->getStock(currency.currency);
+                    if(stock.price != -1)
+                        cource = stock.price;
+                }else if(currency.currency == baseCurrency)
+                {
+                    Stock stock = currencyModel->getStock(targetCurrency);
+                    if(stock.price != -1)
+                        cource = 1 / stock.price;
+                }else
+                {
+                    cource = getDouble();
+                }
+            }else
+            {
+                cource = getDouble();
+            }
             qDebug() << __PRETTY_FUNCTION__ << currency.currency << cource;
             currencyCources[currency.currency] = cource;
         }

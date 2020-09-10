@@ -15,6 +15,7 @@
 #include "PocketModel.h"
 #include "Sounds/Signalizer.h"
 #include "PopUpWindow.h"
+#include "CurrencyConverter.h"
 
 int main(int argc, char *argv[])
 {
@@ -75,6 +76,7 @@ int main(int argc, char *argv[])
         Signalizer signalizer;
 
         ModelsReferenceList models;
+        StocksModel *currencyModel = nullptr;
         for(PluginsList::size_type i = 0; i < plugins.size(); ++i)
         {
             auto plugin = plugins.at(i);
@@ -84,6 +86,10 @@ int main(int argc, char *argv[])
                         std::make_shared<StocksModel>(name, plugin->getCurrencyCode()),
                         std::make_shared<StocksLimitsModel>(name)};
             ref.limitsModel->setStocksModel(ref.stocksModel.get());
+            if(name == "CBRF-Currency")
+            {
+                currencyModel = ref.stocksModel.get();
+            }
             QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::boundCrossed,
                              [&signalizer]{signalizer.signalize();});
             QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::crossedLimit,
@@ -99,8 +105,9 @@ int main(int argc, char *argv[])
         }
 
         PocketModel pocketModel(models);
+        CurrencyConverter converter(currencyModel);
 
-        MainWindow w(pocketModel, models, signalizer);
+        MainWindow w(pocketModel, models, signalizer, converter);
         for(auto &ref : models)
         {
             QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::boundCrossed,
