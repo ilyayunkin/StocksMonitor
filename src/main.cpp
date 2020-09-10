@@ -39,32 +39,31 @@ int main(int argc, char *argv[])
             throw NoPluginsException();
         }
 
-        foreach( const QString& fileName, pluginsDir.entryList(QStringList("*.dll"), QDir::Files ) )
+        foreach(const QString& fileName, pluginsDir.entryList(QStringList("*.dll"), QDir::Files ))
         {
-            qDebug() << "===============================================================================";
-            qDebug() << "Found:" << fileName;
+            Logger::instance().log(QObject::tr("File found: ")
+                                   + fileName);
 
             QPluginLoader loader( pluginsDir.absoluteFilePath( fileName ) );
-            if( loader.load() )
+            if(loader.load() )
             {
-                if( SourcePluginInterface* pluginPtr =
-                        qobject_cast< SourcePluginInterface* >( loader.instance() ) )
+                if(SourcePluginInterface* pluginPtr =
+                        qobject_cast< SourcePluginInterface* >( loader.instance() ))
                 {
-                    qDebug() << "Availible plugin: " << pluginPtr->getName();
+                    Logger::instance().log(QObject::tr("Availible plugin: ")
+                                           + pluginPtr->getName());
                     plugins.emplace_back(pluginPtr);
-                } else
+                }else
                 {
-                    qDebug() << "Failed to cast :";
-                    qDebug() << loader.errorString();
+                    Logger::instance().log(QObject::tr("Failed to cast : ")
+                                           + loader.errorString());
                     loader.unload();
                 }
             } else
             {
-                qDebug() << "Failed to load :(";
-                qDebug() << loader.errorString();
+                Logger::instance().log(QObject::tr("Failed to load : ")
+                                       + loader.errorString());
             }
-
-            qDebug() << "";
         }
 
         if(plugins.empty())
