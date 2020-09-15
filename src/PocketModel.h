@@ -11,23 +11,25 @@
 
 #include "ModelsReference.h"
 
+struct PortfolioEntry
+{
+    QString plugin;
+    QString name;
+    QByteArray ticker;
+    int quantity;
+    float price;
+    float sellPrice;
+    float sum;
+    QByteArray currency;
+    StocksModel *model;
+};
+typedef std::vector<PortfolioEntry> PortfolioEntryList;
+
 class PocketModel : public QAbstractTableModel, public AbstractPocket
 {
     Q_OBJECT
 
-    struct PocketEntry
-    {
-        QString plugin;
-        QString name;
-        QByteArray ticker;
-        int quantity;
-        double priceBaseCurrency;
-        double sum;
-        QByteArray currency;
-        StocksModel *model;
-    };
-    typedef std::vector<PocketEntry> PocketEntryList;
-    PocketEntryList entries;
+    PortfolioEntryList entries;
     QSqlDatabase db;
     ModelsReferenceList &models;
     CurrencyCountersList currencyCounters;
@@ -43,6 +45,7 @@ public:
         PRICE_BASE_CURRENCY,
         CURRENCY,
         SUM,
+        SELL_PRICE,
 
         COL_COUNT
     };
@@ -58,6 +61,9 @@ public:
 
     void addStock(QString plugin, QByteArray ticker, int quantity) override;
     CurrencyCountersList sum() const override;
+signals:
+    void boundCrossed();
+    void crossedLimit(const PortfolioEntry &stockLimit);
 };
 
 #endif // POCKETMODEL_H

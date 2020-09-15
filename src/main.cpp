@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::crossedLimit,
                              [](const StockLimit &stockLimit)
             {
-                QString logMessage = QString("%1\n%2")
+                QString logMessage = QObject::tr("Stock cheapened:\n%1 %2")
                         .arg(stockLimit.name)
                         .arg(stockLimit.price);
                 Logger::instance().log(logMessage);
@@ -104,6 +104,20 @@ int main(int argc, char *argv[])
         }
 
         PocketModel pocketModel(models);
+        {
+            QObject::connect(&pocketModel, &PocketModel::boundCrossed,
+                             [&signalizer]{signalizer.signalize();});
+            QObject::connect(&pocketModel, &PocketModel::crossedLimit,
+                             [](const PortfolioEntry &entry)
+            {
+                QString logMessage = QObject::tr("Portfolio sell price reached:\n"
+                                                 "%1 %2")
+                        .arg(entry.name)
+                        .arg(entry.price);
+                Logger::instance().log(logMessage);
+                PopUpWindow::showPopUpWindow(logMessage);
+            });
+        }
         CurrencyConverter converter(currencyModel);
 
         MainWindow w(pocketModel, models, signalizer, converter);

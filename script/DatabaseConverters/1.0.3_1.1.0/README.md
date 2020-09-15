@@ -1,0 +1,1 @@
+Run App.py from the dirrectory with the program.
