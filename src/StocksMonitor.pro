@@ -69,7 +69,7 @@ INCLUDEPATH+=../include/
 DESTDIR= ../bin
 win32{
 RC_ICONS = img/icon.ico
-QMAKE_POST_LINK = windeployqt ${DESTDIR_TARGET}
+QMAKE_POST_LINK = windeployqt ${DESTDIR_TARGET} ..\bin\plugins\CbrfCurrencyPlugin.dll
 }
 
 # Default rules for deployment.
