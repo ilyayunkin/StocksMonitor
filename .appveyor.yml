@@ -30,7 +30,7 @@ after_build:
   - curl https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1c-win32-mingw.zip -o ssl.zip -LO
   - 7z e ssl.zip
   - dir
-  - copy .\script .\bin\script
+  - cp -r ./script ./bin/script
   - mv *.dll bin/
   - mv bin StocksMonitor
 
