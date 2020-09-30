@@ -240,16 +240,19 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
     if ((role == Qt::EditRole) && (col == BASE_PRICE) && (row < stockLimits.size()))
     {
         float v = value.toFloat();
-        stockLimits[row].basePrice = v;
-        colors[row] = colorForDistance(distance(stockLimits[row]));
+        if(v > 0)
         {
-            executeQuery(QString("UPDATE Limits "
-                                 "SET base_price = '%1' "
-                                 "WHERE ticker = '%2';")
-                         .arg(stockLimits[row].basePrice).arg(QString(stockLimits[row].ticker)));
-            emit dataChanged(createIndex(row, 0), createIndex(row, COL_COUNT - 1));
+            stockLimits[row].basePrice = v;
+            colors[row] = colorForDistance(distance(stockLimits[row]));
+            {
+                executeQuery(QString("UPDATE Limits "
+                                     "SET base_price = '%1' "
+                                     "WHERE ticker = '%2';")
+                             .arg(stockLimits[row].basePrice).arg(QString(stockLimits[row].ticker)));
+                emit dataChanged(createIndex(row, 0), createIndex(row, COL_COUNT - 1));
+            }
+            return true;
         }
-        return true;
     }
     return false;
 }
