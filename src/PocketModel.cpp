@@ -78,7 +78,7 @@ PocketModel::PocketModel(ModelsReferenceList &models, QObject *parent) :
                 auto ticker = q.value(rec.indexOf("ticker")).toByteArray();
                 auto plugin = q.value(rec.indexOf("plugin")).toByteArray();
                 auto quantity = q.value(rec.indexOf("quantity")).toInt();
-                auto sellPrice = q.value(rec.indexOf("sell_price")).toDouble();
+                auto sellPrice = q.value(rec.indexOf("sell_price")).toFloat();
 
                 ModelsReferenceList::iterator modelsIt =
                         std::find_if(models.begin(), models.end(),
