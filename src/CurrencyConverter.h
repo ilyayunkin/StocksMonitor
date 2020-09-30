@@ -2,7 +2,8 @@
 #define CURRENCYCONVERTER_H
 
 #include "AbstractCurrencyConverter.h"
-#include "StocksModel.h"
+
+class StocksModel;
 
 class CurrencyConverter : public AbstractCurrencyConverter
 {

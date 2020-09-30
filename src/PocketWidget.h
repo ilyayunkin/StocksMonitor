@@ -2,12 +2,13 @@
 #define POCKETWIDGET_H
 
 #include <QWidget>
-#include <PocketModel.h>
 #include "AbstractCurrencyConverter.h"
 
 namespace Ui {
 class PocketWidget;
 }
+
+class PocketModel;
 
 class PocketWidget : public QWidget
 {

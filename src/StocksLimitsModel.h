@@ -7,7 +7,9 @@
 
 #include <vector>
 
-#include "abstractstocksmodel.h"
+#include "StocksList.h"
+
+class AbstractStocksModel;
 
 struct StockLimit
 {

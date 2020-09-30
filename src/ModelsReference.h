@@ -2,11 +2,12 @@
 #define MODELSREFERENCE_H
 
 #include <memory>
+#include <vector>
 
 #include <QString>
 
-#include "StocksModel.h"
-#include "StocksLimitsModel.h"
+class StocksModel;
+class StocksLimitsModel;
 
 struct ModelsReference
 {

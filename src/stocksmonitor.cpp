@@ -10,6 +10,7 @@
 
 #include "ExceptionClasses.h"
 #include "logger.h"
+#include "abstractstocksmodel.h"
 
 #define WRITE_DEBUG_FILES 0
 #define DEBUG_PRINT 0

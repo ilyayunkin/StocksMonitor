@@ -10,7 +10,8 @@
 #include <QAction>
 #include <QInputDialog>
 
-#include <StocksModel.h>
+#include "StocksModel.h"
+#include "StocksLimitsModel.h"
 
 #include "AbstractPocket.h"
 #include "ModelsReference.h"

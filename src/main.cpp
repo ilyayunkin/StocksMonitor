@@ -12,6 +12,8 @@
 #include "SourcePluginInterface.h"
 #include "ExceptionClasses.h"
 #include "ModelsReference.h"
+#include "StocksLimitsModel.h"
+#include "StocksModel.h"
 #include "PocketModel.h"
 #include "Sounds/Signalizer.h"
 #include "PopUpWindow.h"

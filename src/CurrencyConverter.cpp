@@ -10,6 +10,8 @@
 
 #include <QDebug>
 
+#include "StocksModel.h"
+
 CurrencyConverter::CurrencyConverter(StocksModel * const currencyModel) :
     currencyModel(currencyModel)
 {

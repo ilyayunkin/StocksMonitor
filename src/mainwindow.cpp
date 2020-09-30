@@ -13,6 +13,7 @@
 #include "StoryWidget.h"
 #include "StocksModelsWidget.h"
 #include "PocketWidget.h"
+#include "PocketModel.h"
 
 MainWindow::MainWindow(PocketModel &pocketModel,
                        ModelsReferenceList &modelsRefs,

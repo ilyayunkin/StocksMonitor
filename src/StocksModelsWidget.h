@@ -3,11 +3,11 @@
 
 #include <QWidget>
 
-#include "ModelsReference.h"
-
 namespace Ui {
 class StocksModelsWidget;
 }
+
+class ModelsReference;
 
 class AbstractPocket;
 

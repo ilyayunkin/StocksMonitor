@@ -4,10 +4,10 @@
 #include <QMainWindow>
 
 #include "ModelsReference.h"
-#include "PocketModel.h"
 #include "Sounds/AbstractSignalizer.h"
 
 class AbstractCurrencyConverter;
+class PocketModel;
 
 class MainWindow : public QMainWindow
 {

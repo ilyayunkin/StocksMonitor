@@ -9,6 +9,7 @@
 #include <assert.h>
 
 #include "Presenters/StockHint.h"
+#include "abstractstocksmodel.h"
 
 StocksLimitsModel::StocksLimitsModel(QString name, bool autoupdate, QObject *parent) :
     QAbstractTableModel(parent),

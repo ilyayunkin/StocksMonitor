@@ -6,8 +6,9 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-#include "abstractstocksmodel.h"
 #include "AbstractParser.h"
+
+class AbstractStocksModel;
 
 class StocksMonitor : public QObject
 {

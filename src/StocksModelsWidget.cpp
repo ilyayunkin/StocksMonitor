@@ -2,10 +2,14 @@
 #include "ui_StocksModelsWidget.h"
 
 #include <QTimer>
+#include <QSortFilterProxyModel>
 
 #include <QInputDialog>
 
 #include "StocksEventFilter.h"
+#include "ModelsReference.h"
+#include "StocksModel.h"
+#include "StocksLimitsModel.h"
 
 StocksModelsWidget::StocksModelsWidget(ModelsReference &models, AbstractPocket &pocket, QWidget *parent) :
     QWidget(parent),

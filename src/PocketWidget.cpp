@@ -14,6 +14,7 @@
 
 #include "Presenters/CurrencyPresenter.h"
 #include "CurrencyConverter.h"
+#include "PocketModel.h"
 
 PocketWidget::PocketWidget(PocketModel *model,
                            AbstractCurrencyConverter &currencyConverter,

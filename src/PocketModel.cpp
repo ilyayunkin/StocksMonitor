@@ -8,6 +8,7 @@
 
 #include "ExceptionClasses.h"
 #include "Presenters/StockHint.h"
+#include "StocksModel.h"
 
 namespace  {
 QString tableName = "Pocket";
