@@ -8,6 +8,8 @@ enum class Color
     YELLOW,
     GREEN,
     BLUE,
+    PURPLE,
+
     NO_COLOR
 };
 
