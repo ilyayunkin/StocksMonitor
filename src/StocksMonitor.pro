@@ -24,6 +24,7 @@ SOURCES += \
     PocketModel.cpp \
     PocketWidget.cpp \
     PopUpWindow.cpp \
+    Presenters/LimitBackgrounColor.cpp \
     Sounds/Signalizer.cpp \
     Sounds/SoundDialog.cpp \
     Presenters/StockHint.cpp \
@@ -43,6 +44,8 @@ HEADERS += \
     ../include/ExceptionClasses.h \
     AbstractCurrencyConverter.h \
     AbstractPocket.h \
+    Color.h \
+    Presenters/LimitBackgrounColor.h \
     Sounds/AbstractSignalizer.h \
     CurrencyConverter.h \
     CurrencyCounter.h \

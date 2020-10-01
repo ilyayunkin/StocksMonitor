@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "StocksList.h"
+#include "Color.h"
 
 class AbstractStocksModel;
 
@@ -32,15 +33,6 @@ typedef std::vector<StockLimit> StockLimitsList;
 class StocksLimitsModel final: public QAbstractTableModel
 {
     Q_OBJECT
-    enum class Color
-    {
-        RED,
-        ORANGE,
-        YELLOW,
-        GREEN,
-        BLUE,
-        NO_COLOR
-    };
     typedef std::vector<Color> ColorsList;
 
     QSqlDatabase db;
@@ -50,38 +42,6 @@ class StocksLimitsModel final: public QAbstractTableModel
     AbstractStocksModel *stocksModel = nullptr;
     QString name = "noname";
 
-    static Color colorForDistance(float d)
-    {
-        if(d < 0.01)
-            return Color::RED;
-        if(d < 0.03)
-            return Color::ORANGE;
-        else if(d < 0.05)
-            return Color::YELLOW;
-        else if(d < 0.08)
-            return Color::GREEN;
-        else if(d < 0.1)
-            return Color::BLUE;
-        else
-            return Color::NO_COLOR;
-    }
-    static Color colorForDistance(const StockLimit &limit)
-    {
-        float d = (limit.price - limit.basePrice) / limit.basePrice;
-        return colorForDistance(d);
-    }
-    static QBrush brushForColor(const Color c)
-    {
-        switch (c) {
-        case Color::RED: return QBrush(Qt::GlobalColor::red);
-        case Color::ORANGE: return QBrush(QColor::fromRgb(255, 200, 0, 255));
-        case Color::YELLOW: return QBrush(Qt::GlobalColor::yellow);
-        case Color::GREEN: return QBrush(Qt::GlobalColor::green);
-        case Color::BLUE: return QBrush(QColor::fromRgb(0, 200, 255, 255));
-        default:
-        case Color::NO_COLOR: return QBrush();
-        }
-    }
     static float distance(const StockLimit &stock)
     {
         return (stock.price - stock.basePrice) / stock.basePrice;

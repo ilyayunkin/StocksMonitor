@@ -9,6 +9,7 @@
 #include <assert.h>
 
 #include "Presenters/StockHint.h"
+#include "Presenters/LimitBackgrounColor.h"
 #include "abstractstocksmodel.h"
 
 StocksLimitsModel::StocksLimitsModel(QString name, bool autoupdate, QObject *parent) :
@@ -102,7 +103,7 @@ void StocksLimitsModel::update()
                 limit.price = price;
                 emit dataChanged(createIndex(i, 0), createIndex(i, COL_COUNT - 1));
 
-                const Color c = colorForDistance(distance(stockLimits[i]));
+                const Color c = LimitBackgrounColor::colorForDistance(distance(stockLimits[i]));
                 if(c < colors[i])
                 {
                     boundCross = true;
@@ -211,7 +212,7 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     {
         if(row < stockLimits.size())
         {
-            ret = QBrush(brushForColor(colors.at(row)));
+            ret = QBrush(LimitBackgrounColor::brushForColor(colors.at(row)));
         }
     }
     if (role == Qt::ToolTipRole)
@@ -244,7 +245,7 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
         if(v > 0)
         {
             stockLimits[row].basePrice = v;
-            colors[row] = colorForDistance(distance(stockLimits[row]));
+            colors[row] = LimitBackgrounColor::colorForDistance(distance(stockLimits[row]));
             {
                 executeQuery(QString("UPDATE Limits "
                                      "SET base_price = '%1' "
@@ -293,7 +294,7 @@ void StocksLimitsModel::addStock(const StockLimit &stockLimit)
         beginInsertRows(QModelIndex(), size, size);
 
         stockLimits.push_back(stockLimit);
-        colors.push_back(colorForDistance(distance(stockLimit)));
+        colors.push_back(LimitBackgrounColor::colorForDistance(distance(stockLimit)));
 
         endInsertRows();
         assert(stockLimits.size() == colors.size());
