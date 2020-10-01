@@ -19,8 +19,6 @@ class LimitsEventFilter : public QObject
     QAction *urlAction;
     ModelsReference &models;
     AbstractPocket &pocket;
-
-    void addLimit(const QModelIndex &index);
 public:
     explicit LimitsEventFilter(ModelsReference &models,
                                AbstractPocket &pocket,

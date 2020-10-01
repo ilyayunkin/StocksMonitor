@@ -31,9 +31,6 @@ LimitsEventFilter::LimitsEventFilter(ModelsReference &limitsModel,
     urlAction = new QAction("Open in the Internet", this);
     menu->addAction(pocketAction);
     menu->addAction(urlAction);
-
-    connect(table, &QAbstractItemView::doubleClicked,
-            this, &LimitsEventFilter::addLimit);
 }
 
 bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
@@ -91,22 +88,4 @@ bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
         break;
     }
     return QObject::eventFilter(obj, event);
-}
-
-void LimitsEventFilter::addLimit(const QModelIndex &sortModelIndex)
-{
-    qDebug() << __PRETTY_FUNCTION__;
-    Stock stock = this->models.stocksModel->getStock(
-                static_cast<QSortFilterProxyModel *>(
-                    table->model())->mapToSource(sortModelIndex).row());
-    bool ok;
-    float basePrice = QInputDialog::getDouble(table,
-                                              stock.name,
-                                              tr("Price"),
-                                              stock.price,
-                                              0, 100000, 10, &ok);
-    if(ok)
-    {
-        this->models.limitsModel->addStock(StockLimit{stock, basePrice});
-    }
 }
