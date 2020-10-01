@@ -43,6 +43,161 @@ enum
     // Two last columns are icons with site's controls
     COL_COUNT_TOTAL = COL_COUNT + 2
 };
+
+QByteArray getTable(const QByteArray &div)
+{
+    constexpr char divBegin[] = "<table";
+    constexpr char divEnd[] = "</table>";
+
+    const int fieldBegin = div.indexOf(divBegin);
+    if(fieldBegin == -1)
+    {
+        throw NoTableException();
+    }
+
+    const int fieldEnd = div.indexOf(divEnd, fieldBegin);
+    if(fieldEnd == -1)
+    {
+        throw NoTableException();
+    }
+
+    QByteArray paragraph = div.mid(fieldBegin, fieldEnd - fieldBegin);
+
+    return paragraph;
+
+}
+
+QByteArrayList getRows(const QByteArray &table)
+{
+    QByteArrayList ret;
+    constexpr char divBegin[] = "<tr";
+    constexpr char divEnd[] = "</tr>";
+    int beginPos = 0;
+    int i = 0;
+
+    while((beginPos = table.indexOf(divBegin, beginPos)) != -1)
+    {
+        const int fieldBegin = beginPos;
+        if(fieldBegin == -1)
+        {
+        }
+
+        const int fieldEnd = beginPos = table.indexOf(divEnd, fieldBegin);
+        if(fieldEnd == -1)
+        {
+        }
+
+        QByteArray tableRow = table.mid(fieldBegin, fieldEnd - fieldBegin);
+        ret.push_back(tableRow);
+#if WRITE_DEBUG_FILES
+        {
+            QFile f(QString::number(i) +".txt");
+            f.open(QIODevice::WriteOnly);
+            if(f.isOpen())
+            {
+                auto count = f.write(tableRow);
+                qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "written" << count << f.size();
+                f.flush();
+                f.close();
+            }
+        }
+#endif
+        ++i;
+    }
+
+    return ret;
+}
+
+QByteArrayList getCols(const QByteArray &table)
+{
+    QByteArrayList ret;
+    constexpr char divBegin[] = "<td";
+    constexpr char divEnd[] = "</td>";
+    int beginPos = 0;
+    int i = 0;
+
+    while((beginPos = table.indexOf(divBegin, beginPos)) != -1)
+    {
+        int fieldBegin = table.indexOf(">", beginPos);
+        if(fieldBegin == -1)
+        {
+        }
+        ++fieldBegin;
+
+        const int fieldEnd = beginPos = table.indexOf(divEnd, fieldBegin);
+        if(fieldEnd == -1)
+        {
+        }
+
+        QByteArray tableCol = table.mid(fieldBegin, fieldEnd - fieldBegin);
+        ret.push_back(tableCol);
+
+        ++i;
+        if(i > COL_COUNT_TOTAL)
+        {
+            throw TooManyColsException();
+        }
+    }
+
+    return ret;
+}
+
+void getA(const QByteArray &tableCol, QString &name, QByteArray &url)
+{
+    QByteArray ret = tableCol;
+    constexpr char divBegin[] = "<a";
+    constexpr char divEnd[] = "</a>";
+
+    const int beginPos = tableCol.indexOf(divBegin);
+    // There could be unformated text like <td>ИСУ ГК-3</td>
+    if(beginPos == -1)
+    {
+        return;
+    }
+    {
+        const QByteArray hrefBegin = "href=\"";
+        const int hrefPos = tableCol.indexOf(hrefBegin, beginPos);
+        if(hrefPos !=-1)
+        {
+            const int quoteClosePos = tableCol.indexOf("\"", hrefPos + hrefBegin.length());
+            if(quoteClosePos != -1)
+            {
+                auto urlTmp = tableCol.mid(hrefPos + hrefBegin.length(), quoteClosePos - hrefPos - hrefBegin.length());
+                if(!urlTmp.isEmpty())
+                {
+                    urlTmp.prepend("https://smart-lab.ru");
+                    url = urlTmp;
+#if DEBUG_PRINT
+                    qDebug() << url;
+#endif
+                }
+            }
+        }
+    }
+
+    int fieldBegin = tableCol.indexOf(">", beginPos);
+    if(fieldBegin == -1)
+    {
+        return;
+    }
+    ++fieldBegin;
+
+    const int fieldEnd = tableCol.indexOf(divEnd, fieldBegin);
+    if(fieldEnd == -1)
+    {
+        return;
+    }
+
+    ret = tableCol.mid(fieldBegin, fieldEnd - fieldBegin);
+
+    name = QString(ret);
+}
+
+float getPercentage(const QByteArray &tableCol)
+{
+    return QString(tableCol).replace('%', ' ').toDouble();
+}
+
 }
 
 void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
@@ -105,7 +260,7 @@ void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                 {
                     Stock stock;
                     stock.rowNum = rowNum;
-                    stock.name = QString(getA(tableCols.at(NAME)));
+                    getA(tableCols.at(NAME), stock.name, stock.url);
                     stock.ticker = tableCols.at(TICKER);
                     stock.price = QString(tableCols.at(PRICE)).toDouble();
                     stock.derivation = getPercentage(tableCols.at(DERIVATION_PC));
@@ -134,139 +289,3 @@ void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
     if(stocks.empty())
         throw EmptyTableException();
 }
-
-QByteArray SmartLabUsaParser::getTable(const QByteArray &div)
-{
-    constexpr char divBegin[] = "<table";
-    constexpr char divEnd[] = "</table>";
-
-    const int fieldBegin = div.indexOf(divBegin);
-    if(fieldBegin == -1)
-    {
-        throw NoTableException();
-    }
-
-    const int fieldEnd = div.indexOf(divEnd, fieldBegin);
-    if(fieldEnd == -1)
-    {
-        throw NoTableException();
-    }
-
-    QByteArray paragraph = div.mid(fieldBegin, fieldEnd - fieldBegin);
-
-    return paragraph;
-
-}
-
-QByteArrayList SmartLabUsaParser::getRows(const QByteArray &table)
-{
-    QByteArrayList ret;
-    constexpr char divBegin[] = "<tr";
-    constexpr char divEnd[] = "</tr>";
-    int beginPos = 0;
-    int i = 0;
-
-    while((beginPos = table.indexOf(divBegin, beginPos)) != -1)
-    {
-        const int fieldBegin = beginPos;
-        if(fieldBegin == -1)
-        {
-        }
-
-        const int fieldEnd = beginPos = table.indexOf(divEnd, fieldBegin);
-        if(fieldEnd == -1)
-        {
-        }
-
-        QByteArray tableRow = table.mid(fieldBegin, fieldEnd - fieldBegin);
-        ret.push_back(tableRow);
-#if WRITE_DEBUG_FILES
-        {
-            QFile f(QString::number(i) +".txt");
-            f.open(QIODevice::WriteOnly);
-            if(f.isOpen())
-            {
-                auto count = f.write(tableRow);
-                qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "written" << count << f.size();
-                f.flush();
-                f.close();
-            }
-        }
-#endif
-        ++i;
-    }
-
-    return ret;
-}
-
-QByteArrayList SmartLabUsaParser::getCols(const QByteArray &table)
-{
-    QByteArrayList ret;
-    constexpr char divBegin[] = "<td";
-    constexpr char divEnd[] = "</td>";
-    int beginPos = 0;
-    int i = 0;
-
-    while((beginPos = table.indexOf(divBegin, beginPos)) != -1)
-    {
-        int fieldBegin = table.indexOf(">", beginPos);
-        if(fieldBegin == -1)
-        {
-        }
-        ++fieldBegin;
-
-        const int fieldEnd = beginPos = table.indexOf(divEnd, fieldBegin);
-        if(fieldEnd == -1)
-        {
-        }
-
-        QByteArray tableCol = table.mid(fieldBegin, fieldEnd - fieldBegin);
-        ret.push_back(tableCol);
-
-        ++i;
-        if(i > COL_COUNT_TOTAL)
-        {
-            throw TooManyColsException();
-        }
-    }
-
-    return ret;
-}
-
-QByteArray SmartLabUsaParser::getA(const QByteArray &tableCol)
-{
-    QByteArray ret = tableCol;
-    constexpr char divBegin[] = "<a";
-    constexpr char divEnd[] = "</a>";
-
-    const int beginPos = tableCol.indexOf(divBegin);
-    // There could be unformated text like <td>ИСУ ГК-3</td>
-    if(beginPos == -1)
-    {
-        return ret;
-    }
-
-    int fieldBegin = tableCol.indexOf(">", beginPos);
-    if(fieldBegin == -1)
-    {
-        return ret;
-    }
-    ++fieldBegin;
-
-    const int fieldEnd = tableCol.indexOf(divEnd, fieldBegin);
-    if(fieldEnd == -1)
-    {
-        return ret;
-    }
-
-    ret = tableCol.mid(fieldBegin, fieldEnd - fieldBegin);
-
-    return ret;
-}
-
-float SmartLabUsaParser::getPercentage(const QByteArray &tableCol)
-{
-    return QString(tableCol).replace('%', ' ').toDouble();
-}
-
-

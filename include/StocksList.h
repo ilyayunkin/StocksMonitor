@@ -10,6 +10,7 @@ struct Stock
     int rowNum;
     QString name;
     QByteArray ticker;
+    QByteArray url;
     float price;
     float derivation;
     float derivationWeek;

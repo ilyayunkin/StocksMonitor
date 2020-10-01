@@ -17,6 +17,7 @@ class StocksEventFilter : public QObject
     QMenu *menu;
     QAction *pocketAction;
     QAction *limitsAction;
+    QAction *urlAction;
     ModelsReference &models;
     AbstractPocket &pocket;
 

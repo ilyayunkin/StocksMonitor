@@ -9,6 +9,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QInputDialog>
+#include <QDesktopServices>
 
 #include "StocksModel.h"
 #include "StocksLimitsModel.h"
@@ -28,8 +29,10 @@ StocksEventFilter::StocksEventFilter(ModelsReference &limitsModel,
     menu = new QMenu;
     pocketAction = new QAction("To Portfolio", this);
     limitsAction = new QAction("Set limit", this);
+    urlAction = new QAction("Open in the Internet", this);
     menu->addAction(pocketAction);
     menu->addAction(limitsAction);
+    menu->addAction(urlAction);
 
     connect(table, &QAbstractItemView::doubleClicked,
             this, &StocksEventFilter::addLimit);
@@ -58,6 +61,13 @@ bool StocksEventFilter::eventFilter(QObject *obj, QEvent *event)
                 }else if(selected == limitsAction)
                 {
                     addLimit(sortModelIndex);
+                }else if(selected == urlAction)
+                {
+                    const auto stock = models.stocksModel->getStock(ticker);
+                    if(!stock.url.isEmpty())
+                    {
+                        QDesktopServices::openUrl(QUrl(stock.url));
+                    }
                 }
             }
         }
