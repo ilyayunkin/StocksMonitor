@@ -20,6 +20,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     CurrencyConverter.cpp \
     CurrencyCounter.cpp \
+    LimitsEventFilter.cpp \
     Presenters/CurrencyPresenter.cpp \
     PocketModel.cpp \
     PocketWidget.cpp \
@@ -45,6 +46,7 @@ HEADERS += \
     AbstractCurrencyConverter.h \
     AbstractPocket.h \
     Color.h \
+    LimitsEventFilter.h \
     Presenters/LimitBackgrounColor.h \
     Sounds/AbstractSignalizer.h \
     CurrencyConverter.h \

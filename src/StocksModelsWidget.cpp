@@ -7,6 +7,7 @@
 #include <QInputDialog>
 
 #include "StocksEventFilter.h"
+#include "LimitsEventFilter.h"
 #include "ModelsReference.h"
 #include "StocksModel.h"
 #include "StocksLimitsModel.h"
@@ -33,6 +34,7 @@ StocksModelsWidget::StocksModelsWidget(ModelsReference &models, AbstractPocket &
         ui->stocksLimitsTableView->setSortingEnabled(true);
         ui->stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         ui->stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
+        new LimitsEventFilter(models, pocket, ui->stocksLimitsTableView);
     }
 
     QTimer *timer = new QTimer(this);
