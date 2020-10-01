@@ -7,7 +7,7 @@
 #include <QTimer>
 
 #include "ExceptionClasses.h"
-#include "Presenters/StockHint.h"
+#include "WidgetsUi/Presenters/StockHint.h"
 #include "StocksModel.h"
 
 namespace  {

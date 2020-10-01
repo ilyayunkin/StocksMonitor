@@ -20,54 +20,54 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     CurrencyConverter.cpp \
     CurrencyCounter.cpp \
-    LimitsEventFilter.cpp \
-    Presenters/CurrencyPresenter.cpp \
+    WidgetsUi/LimitsEventFilter.cpp \
+    WidgetsUi/PocketWidget.cpp \
+    WidgetsUi/PopUpWindow.cpp \
+    WidgetsUi/Presenters/LimitBackgrounColor.cpp \
+    WidgetsUi/Presenters/StockHint.cpp \
+    WidgetsUi/Presenters/CurrencyPresenter.cpp \
+    WidgetsUi/Sounds/Signalizer.cpp \
+    WidgetsUi/Sounds/SoundDialog.cpp \
+    WidgetsUi/StocksEventFilter.cpp \
+    WidgetsUi/StoryWidget.cpp \
+    WidgetsUi/StocksModelsWidget.cpp \
+    WidgetsUi/mainwindow.cpp \
     PocketModel.cpp \
-    PocketWidget.cpp \
-    PopUpWindow.cpp \
-    Presenters/LimitBackgrounColor.cpp \
-    Sounds/Signalizer.cpp \
-    Sounds/SoundDialog.cpp \
-    Presenters/StockHint.cpp \
-    StocksEventFilter.cpp \
     StocksLimitsModel.cpp \
     StocksModel.cpp \
-    StocksModelsWidget.cpp \
-    StoryWidget.cpp \
     logger.cpp \
     main.cpp \
-    mainwindow.cpp \
     stocksmonitor.cpp
 
 HEADERS += \
     ../include/AbstractParser.h \
     ../include/SourcePluginInterface.h \
     ../include/ExceptionClasses.h \
+    ../include/StocksList.h \
     AbstractCurrencyConverter.h \
     AbstractPocket.h \
     Color.h \
-    LimitsEventFilter.h \
-    Presenters/LimitBackgrounColor.h \
-    Sounds/AbstractSignalizer.h \
+    WidgetsUi/LimitsEventFilter.h \
+    WidgetsUi/Presenters/LimitBackgrounColor.h \
+    WidgetsUi/Presenters/StockHint.h \
+    WidgetsUi/Presenters/CurrencyPresenter.h \
+    WidgetsUi/Sounds/AbstractSignalizer.h \
+    WidgetsUi/Sounds/Signalizer.h \
+    WidgetsUi/Sounds/SoundDialog.h \
+    WidgetsUi/PocketWidget.h \
+    WidgetsUi/StocksEventFilter.h \
+    WidgetsUi/StocksModelsWidget.h \
+    WidgetsUi/StoryWidget.h \
+    WidgetsUi/mainwindow.h \
+    WidgetsUi/PopUpWindow.h \
     CurrencyConverter.h \
     CurrencyCounter.h \
-    Presenters/CurrencyPresenter.h \
     ModelsReference.h \
     PocketModel.h \
-    PocketWidget.h \
-    PopUpWindow.h \
-    Sounds/Signalizer.h \
-    Sounds/SoundDialog.h \
-    Presenters/StockHint.h \
-    StocksEventFilter.h \
     StocksLimitsModel.h \
-    ../include/StocksList.h \
     StocksModel.h \
-    StocksModelsWidget.h \
-    StoryWidget.h \
     abstractstocksmodel.h \
     logger.h \
-    mainwindow.h \
     stocksmonitor.h
 
 INCLUDEPATH+=../include/
@@ -83,9 +83,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
-    PocketWidget.ui \
-    SoundDialog.ui \
-    StocksModelsWidget.ui
+    WidgetsUi/PocketWidget.ui \
+    WidgetsUi/Sounds/SoundDialog.ui \
+    WidgetsUi/StocksModelsWidget.ui
 
 RESOURCES += \
     res.qrc

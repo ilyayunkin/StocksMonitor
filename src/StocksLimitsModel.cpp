@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <assert.h>
 
-#include "Presenters/StockHint.h"
-#include "Presenters/LimitBackgrounColor.h"
+#include "WidgetsUi/Presenters/StockHint.h"
+#include "WidgetsUi/Presenters/LimitBackgrounColor.h"
 #include "abstractstocksmodel.h"
 
 StocksLimitsModel::StocksLimitsModel(QString name, bool autoupdate, QObject *parent) :

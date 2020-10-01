@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "WidgetsUi/mainwindow.h"
 
 #include <QApplication>
 #include <QDir>
@@ -15,8 +15,8 @@
 #include "StocksLimitsModel.h"
 #include "StocksModel.h"
 #include "PocketModel.h"
-#include "Sounds/Signalizer.h"
-#include "PopUpWindow.h"
+#include "WidgetsUi/Sounds/Signalizer.h"
+#include "WidgetsUi/PopUpWindow.h"
 #include "CurrencyConverter.h"
 
 int main(int argc, char *argv[])
