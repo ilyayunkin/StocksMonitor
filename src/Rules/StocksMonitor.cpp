@@ -1,4 +1,4 @@
-#include "stocksmonitor.h"
+#include "StocksMonitor.h"
 
 #include <QFile>
 #include <QDateTime>
