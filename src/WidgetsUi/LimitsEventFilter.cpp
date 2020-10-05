@@ -14,8 +14,8 @@
 #include "StocksModel.h"
 #include "StocksLimitsModel.h"
 
-#include "AbstractPocket.h"
-#include "ModelsReference.h"
+#include "Rules/AbstractPocket.h"
+#include "Rules/ModelsReference.h"
 
 LimitsEventFilter::LimitsEventFilter(ModelsReference &limitsModel,
                                      AbstractPocket &pocket,

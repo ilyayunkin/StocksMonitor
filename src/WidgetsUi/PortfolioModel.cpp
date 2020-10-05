@@ -1,4 +1,4 @@
-#include "PocketModel.h"
+#include "PortfolioModel.h"
 
 #include <QMessageBox>
 
@@ -7,14 +7,14 @@
 #include <QTimer>
 
 #include "ExceptionClasses.h"
-#include "WidgetsUi/Presenters/StockHint.h"
-#include "StocksModel.h"
+#include "Presenters/StockHint.h"
+#include "Rules/AbstractStocksModel.h"
 
 namespace  {
 QString tableName = "Pocket";
 }
 
-QSqlQuery PocketModel::executeQuery(const QString &query)
+QSqlQuery PortfolioModel::executeQuery(const QString &query)
 {
 
     QSqlQuery q = db.exec(query);
@@ -25,7 +25,7 @@ QSqlQuery PocketModel::executeQuery(const QString &query)
     return q;
 }
 
-void PocketModel::update()
+void PortfolioModel::update()
 {
     CurrencyCountersList counters;
     for(auto &e : entries)
@@ -53,7 +53,7 @@ void PocketModel::update()
     currencyCounters = counters;
 }
 
-PocketModel::PocketModel(ModelsReferenceList &models, QObject *parent) :
+PortfolioModel::PortfolioModel(ModelsReferenceList &models, QObject *parent) :
     QAbstractTableModel(parent),
     models(models)
 {
@@ -85,7 +85,7 @@ PocketModel::PocketModel(ModelsReferenceList &models, QObject *parent) :
                                      [&](const ModelsReference &ref){return ref.stocksModel->pluginName() == plugin;});
                 if(modelsIt != models.end())
                 {
-                    StocksModel *stockModel = modelsIt->stocksModel.get();
+                    AbstractStocksModel *stockModel = modelsIt->stocksModel.get();
                     Stock stock = stockModel->getStock(ticker);
 
                     PortfolioEntry newEntry{plugin, stock.name, ticker, quantity,
@@ -98,24 +98,24 @@ PocketModel::PocketModel(ModelsReferenceList &models, QObject *parent) :
     }
     {
         QTimer *t = new QTimer(this);
-        connect(t, &QTimer::timeout, this, &PocketModel::update);
+        connect(t, &QTimer::timeout, this, &PortfolioModel::update);
         t->start(5000);
     }
 }
 
-int PocketModel::rowCount(const QModelIndex &parent) const
+int PortfolioModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return entries.size();
 }
 
-int PocketModel::columnCount(const QModelIndex &parent) const
+int PortfolioModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return COL_COUNT;
 }
 
-Qt::ItemFlags PocketModel::flags(const QModelIndex &index) const
+Qt::ItemFlags PortfolioModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags ret =QAbstractTableModel::flags(index) |
             Qt::ItemIsEnabled |
@@ -129,7 +129,7 @@ Qt::ItemFlags PocketModel::flags(const QModelIndex &index) const
     return ret;
 }
 
-QVariant PocketModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant PortfolioModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     QVariant ret;
     if (role == Qt::DisplayRole)
@@ -166,7 +166,7 @@ QVariant PocketModel::headerData(int section, Qt::Orientation orientation, int r
     return ret;
 }
 
-QVariant PocketModel::data(const QModelIndex &index, int role) const
+QVariant PortfolioModel::data(const QModelIndex &index, int role) const
 {
 
     QVariant ret;
@@ -233,7 +233,7 @@ QVariant PocketModel::data(const QModelIndex &index, int role) const
     return ret;
 }
 
-bool PocketModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool PortfolioModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     int row = index.row();
     int col = index.column();
@@ -297,7 +297,7 @@ bool PocketModel::setData(const QModelIndex &index, const QVariant &value, int r
     return false;
 }
 
-void PocketModel::addStock(QString plugin, QByteArray ticker, int quantity)
+void PortfolioModel::addStock(QString plugin, QByteArray ticker, int quantity)
 {
     qDebug() << __PRETTY_FUNCTION__ << __LINE__ ;
     {
@@ -339,7 +339,7 @@ void PocketModel::addStock(QString plugin, QByteArray ticker, int quantity)
                              .arg(QString(ticker))
                              .arg(quantity));
             }
-            StocksModel *stockModel = modelsIt->stocksModel.get();
+            AbstractStocksModel *stockModel = modelsIt->stocksModel.get();
             Stock stock = stockModel->getStock(ticker);
 
             PortfolioEntry newEntry{plugin, stock.name, ticker, quantity,
@@ -359,7 +359,7 @@ void PocketModel::addStock(QString plugin, QByteArray ticker, int quantity)
     }
 }
 
-CurrencyCountersList PocketModel::sum() const
+CurrencyCountersList PortfolioModel::sum() const
 {
     return currencyCounters;
 }

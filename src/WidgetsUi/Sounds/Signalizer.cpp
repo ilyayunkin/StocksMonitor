@@ -12,7 +12,8 @@ void Signalizer::setupFile(const QString &filename)
     }
 }
 
-Signalizer::Signalizer()
+Signalizer::Signalizer(QObject *parent) :
+    QObject(parent)
 {
     QSettings settings;
     QString filename = settings.value("sound").toString();

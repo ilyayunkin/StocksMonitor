@@ -2,18 +2,18 @@
 #define StocksModel_H
 
 #include <QAbstractTableModel>
-#include "abstractstocksmodel.h"
+#include "Rules/AbstractStocksModel.h"
+#include "Rules/AbstractStocksView.h"
 /**
  * @brief Класс Модели (архитектура Модель/Представление), реализующей
  * хранение вычисленных значений моментов.
  */
-class StocksModel final: public QAbstractTableModel, public AbstractStocksModel
+class StocksModel final: public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
 
-    const QString _pluginName;
-    const QByteArray _currencyCode;
-    StocksList stocks;
+    AbstractStocksModel &stocks;
+    mutable size_t size = 0;
 public:
     enum
     {
@@ -28,9 +28,7 @@ public:
 
         COL_COUNT
     };
-    explicit StocksModel(const QString &plugin, const QByteArray &currencyCode, QObject *parent = 0);
-    QString pluginName() const override;
-    QByteArray currencyCode() const override;
+    explicit StocksModel(AbstractStocksModel &stocks, QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
@@ -39,12 +37,7 @@ public:
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    void setStocks(StocksList &&stocks) override;
-    size_t size() const override
-    { return stocks.size(); }
-    Stock getStock(const QByteArray &ticker) const override;
-    Stock getStock(const size_t i) const override;
-    float getStockPrice(const QByteArray &ticker) const override;
+    void stocksUpdated() override;
 };
 
 #endif // StocksModel_H

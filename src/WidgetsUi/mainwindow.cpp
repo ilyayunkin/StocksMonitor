@@ -13,16 +13,15 @@
 #include "StoryWidget.h"
 #include "StocksModelsWidget.h"
 #include "PocketWidget.h"
-#include "PocketModel.h"
+#include "PortfolioModel.h"
+#include "StocksLimitsModel.h"
+#include "StocksModel.h"
+#include "Sounds/Signalizer.h"
 
-MainWindow::MainWindow(PocketModel &pocketModel,
-                       ModelsReferenceList &modelsRefs,
-                       AbstractSignalizer &signalizer,
-                       AbstractCurrencyConverter &converter,
+MainWindow::MainWindow(Application &application,
                        QWidget *parent)
     : QMainWindow(parent),
-      pocketModel(pocketModel),
-      models(modelsRefs)
+      application(application)
 {
     QWidget *w = new QWidget;
     setCentralWidget(w);
@@ -35,17 +34,22 @@ MainWindow::MainWindow(PocketModel &pocketModel,
             {
                 QTabWidget *tabWidget = new QTabWidget;
                 hlay->addWidget(tabWidget);
-                for(auto &modelsRef : modelsRefs)
+                for(auto &modelsRef : application.modelsReferences())
                 {
-                    StocksModelsWidget *w = new StocksModelsWidget(modelsRef, pocketModel);
+                    StocksModelsWidget *w = new StocksModelsWidget(modelsRef, *(application.getPortfolio()));
                     QHBoxLayout *viewLay = new QHBoxLayout;
                     viewLay->setMargin(0);
 
                     tabWidget->addTab(w, modelsRef.name);
                 }
                 {
-                    PocketWidget *pocketWidget = new PocketWidget(&pocketModel, converter);
+                    PocketWidget *pocketWidget = new PocketWidget(application.getPortfolio(), application);
                     tabWidget->addTab(pocketWidget, QIcon("://img/portfolio.png"), tr("Portfolio"));
+                }
+                for(auto &ref : application.modelsReferences())
+                {
+                    QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::boundCrossed,
+                                     [this](){QApplication::alert(this);});
                 }
             }
         }
@@ -69,7 +73,7 @@ MainWindow::MainWindow(PocketModel &pocketModel,
             {
                 QAction *setupSoundAction = ToolsMenu->addAction(tr("Setup sound"));
                 connect(setupSoundAction, &QAction::triggered,
-                        [&signalizer](){signalizer.changeSound();});
+                        [this](){this->application.getSignalizer()->changeSound();});
             }
         }
     }

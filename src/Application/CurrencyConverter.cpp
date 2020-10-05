@@ -10,9 +10,9 @@
 
 #include <QDebug>
 
-#include "StocksModel.h"
+#include "Rules/AbstractStocksModel.h"
 
-CurrencyConverter::CurrencyConverter(StocksModel * const currencyModel) :
+CurrencyConverter::CurrencyConverter(AbstractStocksModel * const currencyModel) :
     currencyModel(currencyModel)
 {
 }

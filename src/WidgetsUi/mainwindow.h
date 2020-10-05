@@ -3,27 +3,24 @@
 
 #include <QMainWindow>
 
-#include "ModelsReference.h"
+#include "Application/Application.h"
 #include "Sounds/AbstractSignalizer.h"
 
 class AbstractCurrencyConverter;
-class PocketModel;
+class PortfolioModel;
+class RulesFasade;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    PocketModel &pocketModel;
-    ModelsReferenceList &models;
+    Application &application;
 
     void selectSoundFile();
     void setupFile(const QString &filename);
     void closeEvent(QCloseEvent *event);
 public:
-    MainWindow(PocketModel &pocketModel,
-               ModelsReferenceList &models,
-               AbstractSignalizer &signalizer,
-               AbstractCurrencyConverter &converter,
+    MainWindow(Application &application,
                QWidget *parent = nullptr);
     ~MainWindow();
     void save();

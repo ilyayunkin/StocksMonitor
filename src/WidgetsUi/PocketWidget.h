@@ -2,22 +2,23 @@
 #define POCKETWIDGET_H
 
 #include <QWidget>
-#include "AbstractCurrencyConverter.h"
+#include "Rules/AbstractCurrencyConverter.h"
 
 namespace Ui {
 class PocketWidget;
 }
 
-class PocketModel;
+class PortfolioModel;
+class Application;
 
 class PocketWidget : public QWidget
 {
     Q_OBJECT
-    PocketModel &model;
-    AbstractCurrencyConverter &currencyConverter;
+    PortfolioModel &model;
+    Application &rules;
 public:
-    explicit PocketWidget(PocketModel *model,
-                          AbstractCurrencyConverter &currencyConverter,
+    explicit PocketWidget(PortfolioModel *model,
+                          Application &rules,
                           QWidget *parent = nullptr);
     ~PocketWidget();
 

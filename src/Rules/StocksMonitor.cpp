@@ -10,7 +10,7 @@
 
 #include "ExceptionClasses.h"
 #include "logger.h"
-#include "abstractstocksmodel.h"
+#include "AbstractStocksModel.h"
 
 #define WRITE_DEBUG_FILES 0
 #define DEBUG_PRINT 0
@@ -46,6 +46,11 @@ StocksMonitor::StocksMonitor(AbstractStocksModel &model,
         connect(t, &QTimer::timeout, this, &StocksMonitor::requestFileFromTheInternet);
         t->start(5000);
     }
+}
+
+StocksMonitor::~StocksMonitor()
+{
+    qDebug() << __PRETTY_FUNCTION__;
 }
 
 void StocksMonitor::requestFileFromTheInternet()

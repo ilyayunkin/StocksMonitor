@@ -1,7 +1,7 @@
 #ifndef POCKETMODEL_H
 #define POCKETMODEL_H
 
-#include <AbstractPocket.h>
+#include "Rules/AbstractPocket.h"
 
 #include <vector>
 
@@ -9,7 +9,7 @@
 
 #include <QtSql>
 
-#include "ModelsReference.h"
+#include "Rules/ModelsReference.h"
 
 struct PortfolioEntry
 {
@@ -21,11 +21,11 @@ struct PortfolioEntry
     float sellPrice;
     float sum;
     QByteArray currency;
-    StocksModel *model;
+    AbstractStocksModel *model;
 };
 typedef std::vector<PortfolioEntry> PortfolioEntryList;
 
-class PocketModel : public QAbstractTableModel, public AbstractPocket
+class PortfolioModel : public QAbstractTableModel, public AbstractPocket
 {
     Q_OBJECT
 
@@ -49,7 +49,7 @@ public:
 
         COL_COUNT
     };
-    explicit PocketModel(ModelsReferenceList &models, QObject *parent = 0);
+    explicit PortfolioModel(ModelsReferenceList &models, QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;

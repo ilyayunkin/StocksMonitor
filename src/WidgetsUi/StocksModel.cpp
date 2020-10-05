@@ -4,21 +4,10 @@
 
 #include <algorithm>
 
-StocksModel::StocksModel(const QString &plugin, const QByteArray &currencyCode, QObject *parent) :
+StocksModel::StocksModel(AbstractStocksModel &stocks, QObject *parent) :
     QAbstractTableModel(parent),
-    _pluginName(plugin),
-    _currencyCode(currencyCode)
+    stocks(stocks)
 {
-}
-
-QString StocksModel::pluginName() const
-{
-    return _pluginName;
-}
-
-QByteArray StocksModel::currencyCode() const
-{
-    return _currencyCode;
 }
 
 int StocksModel::rowCount(const QModelIndex &parent) const
@@ -88,9 +77,9 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
     {
         int row = index.row();
         int col = index.column();
-        if(row < stocks.size())
+        if(row < (size = stocks.size()))
         {
-            const Stock &stock = stocks.at(row);
+            const Stock &stock = stocks.getStock(row);
             switch (col) {
             case NUM:
                 ret = stock.rowNum;
@@ -125,9 +114,9 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
     {
         int row = index.row();
         int col = index.column();
-        if(row < stocks.size())
+        if(row < (size = stocks.size()))
         {
-            const Stock &stock = stocks.at(row);
+            const Stock &stock = stocks.getStock(row);
             float number = 0.0;
             switch (col) {
             case DERIVATION:
@@ -158,58 +147,22 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
     return ret;
 }
 
-void StocksModel::setStocks(StocksList &&stocks)
+void StocksModel::stocksUpdated()
 {
-    if(!this->stocks.empty() && (stocks.size() == this->stocks.size()))
+    if(size != 0)
     {
-        this->stocks = stocks;
-        emit dataChanged(createIndex(0, 0), createIndex(stocks.size() - 1, COL_COUNT - 1));
+        emit dataChanged(createIndex(0, 0), createIndex((size = stocks.size()) - 1, COL_COUNT - 1));
     }else
     {
-        if(!this->stocks.empty())
+        if(size != 0)
         {
-            beginRemoveRows(QModelIndex(), 0, this->stocks.size() - 1);
+            beginRemoveRows(QModelIndex(), 0, size  - 1);
             endRemoveRows();
         }
-        if(!stocks.empty())
+        if(stocks.size() != 0)
         {
-            beginInsertRows(QModelIndex(), 0, stocks.size() - 1);
-            this->stocks = stocks;
+            beginInsertRows(QModelIndex(), 0, (size = stocks.size()) - 1);
             endInsertRows();
         }
     }
-}
-
-Stock StocksModel::getStock(const QByteArray &ticker) const
-{
-    Stock ret{};
-    auto cit = std::find_if(stocks.begin(), stocks.end(),
-                            [&](const Stock &stock){return stock.ticker == ticker;});
-    if(cit != stocks.cend())
-    {
-        ret = *cit;
-    }
-    return ret;
-}
-
-Stock StocksModel::getStock(const size_t i) const
-{
-    Stock ret{};
-    if(i < stocks.size())
-    {
-        ret = stocks.at(i);
-    }
-    return ret;
-}
-
-float StocksModel::getStockPrice(const QByteArray &ticker) const
-{
-    float ret{};
-    auto cit = std::find_if(stocks.begin(), stocks.end(),
-                            [&](const Stock &stock){return stock.ticker == ticker;});
-    if(cit != stocks.cend())
-    {
-        ret = cit->price;
-    }
-    return ret;
 }

@@ -8,27 +8,10 @@
 #include <vector>
 
 #include "StocksList.h"
+#include "Rules/StockLimit.h"
 #include "Color.h"
 
 class AbstractStocksModel;
-
-struct StockLimit
-{
-    QString name;
-    QByteArray ticker;
-    float price;
-    float basePrice;
-    StockLimit() = default;
-    StockLimit(const Stock &stock, float basePrice) :
-        name(stock.name), ticker(stock.ticker), price(stock.price), basePrice(basePrice)
-    {}
-    bool operator ==(const StockLimit &other)
-    {
-        return (ticker == other.ticker)
-                && (basePrice == other.basePrice);
-    }
-};
-typedef std::vector<StockLimit> StockLimitsList;
 
 class StocksLimitsModel final: public QAbstractTableModel
 {

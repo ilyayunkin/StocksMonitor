@@ -18,39 +18,52 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    CurrencyConverter.cpp \
-    CurrencyCounter.cpp \
+    Application/Application.cpp \
+    Application/StocksDatabase.cpp \
+    Application/CurrencyConverter.cpp \
+    Rules/RulesFasade.cpp \
+    Rules/CurrencyCounter.cpp \
+    Presenters/LimitBackgrounColor.cpp \
+    Presenters/StockHint.cpp \
+    Presenters/CurrencyPresenter.cpp \
+    Rules/StocksMonitor.cpp \
     WidgetsUi/LimitsEventFilter.cpp \
     WidgetsUi/PocketWidget.cpp \
     WidgetsUi/PopUpWindow.cpp \
-    WidgetsUi/Presenters/LimitBackgrounColor.cpp \
-    WidgetsUi/Presenters/StockHint.cpp \
-    WidgetsUi/Presenters/CurrencyPresenter.cpp \
     WidgetsUi/Sounds/Signalizer.cpp \
     WidgetsUi/Sounds/SoundDialog.cpp \
     WidgetsUi/StocksEventFilter.cpp \
     WidgetsUi/StoryWidget.cpp \
     WidgetsUi/StocksModelsWidget.cpp \
     WidgetsUi/mainwindow.cpp \
-    PocketModel.cpp \
-    StocksLimitsModel.cpp \
-    StocksModel.cpp \
+    WidgetsUi/StocksModel.cpp \
+    WidgetsUi/StocksLimitsModel.cpp \
+    WidgetsUi/PortfolioModel.cpp \
     logger.cpp \
-    main.cpp \
-    stocksmonitor.cpp
+    main.cpp
 
 HEADERS += \
     ../include/AbstractParser.h \
     ../include/SourcePluginInterface.h \
     ../include/ExceptionClasses.h \
     ../include/StocksList.h \
-    AbstractCurrencyConverter.h \
-    AbstractPocket.h \
+    Application/Application.h \
+    Application/StocksDatabase.h \
+    Application/CurrencyConverter.h \
     Color.h \
+    Rules/AbstractCurrencyConverter.h \
+    Rules/AbstractPocket.h \
+    Rules/AbstractStocksModel.h \
+    Rules/AbstractStocksView.h \
+    Rules/StockLimit.h \
+    Rules/ModelsReference.h \
+    Rules/RulesFasade.h \
+    Rules/StocksMonitor.h \
+    Rules/CurrencyCounter.h \
+    Presenters/LimitBackgrounColor.h \
+    Presenters/StockHint.h \
+    Presenters/CurrencyPresenter.h \
     WidgetsUi/LimitsEventFilter.h \
-    WidgetsUi/Presenters/LimitBackgrounColor.h \
-    WidgetsUi/Presenters/StockHint.h \
-    WidgetsUi/Presenters/CurrencyPresenter.h \
     WidgetsUi/Sounds/AbstractSignalizer.h \
     WidgetsUi/Sounds/Signalizer.h \
     WidgetsUi/Sounds/SoundDialog.h \
@@ -60,15 +73,10 @@ HEADERS += \
     WidgetsUi/StoryWidget.h \
     WidgetsUi/mainwindow.h \
     WidgetsUi/PopUpWindow.h \
-    CurrencyConverter.h \
-    CurrencyCounter.h \
-    ModelsReference.h \
-    PocketModel.h \
-    StocksLimitsModel.h \
-    StocksModel.h \
-    abstractstocksmodel.h \
-    logger.h \
-    stocksmonitor.h
+    WidgetsUi/StocksModel.h \
+    WidgetsUi/PortfolioModel.h \
+    WidgetsUi/StocksLimitsModel.h \
+    logger.h
 
 INCLUDEPATH+=../include/
 DESTDIR= ../bin

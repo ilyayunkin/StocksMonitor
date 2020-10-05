@@ -20,10 +20,11 @@ class StocksMonitor : public QObject
     AbstractParser::Ptr parser;
     const QUrl url;
 public:
-    explicit StocksMonitor(AbstractStocksModel &model,
+    StocksMonitor(AbstractStocksModel &model,
                            AbstractParser::Ptr parser,
                            const QUrl url,
                            QObject *parent = nullptr);
+    ~StocksMonitor();
 public slots:
     void requestFileFromTheInternet();
     void fileDownloaded(QNetworkReply*r);

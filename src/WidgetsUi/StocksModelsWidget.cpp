@@ -6,9 +6,11 @@
 
 #include <QInputDialog>
 
+#include "Rules/AbstractStocksModel.h"
+#include "Rules/ModelsReference.h"
+
 #include "StocksEventFilter.h"
 #include "LimitsEventFilter.h"
-#include "ModelsReference.h"
 #include "StocksModel.h"
 #include "StocksLimitsModel.h"
 
@@ -20,7 +22,9 @@ StocksModelsWidget::StocksModelsWidget(ModelsReference &models, AbstractPocket &
     ui->setupUi(this);
     {
         QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
-        proxyModel->setSourceModel(models.stocksModel.get());
+        StocksModel *model = new StocksModel(*models.stocksModel.get(), this);
+        models.stocksModel.get()->setView(model);
+        proxyModel->setSourceModel(model);
         ui->stocksTableView->setModel(proxyModel);
         ui->stocksTableView->setSortingEnabled(true);
         ui->stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);

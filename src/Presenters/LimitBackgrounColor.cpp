@@ -1,6 +1,6 @@
 #include "LimitBackgrounColor.h"
 
-#include "StocksLimitsModel.h"
+#include "Rules/StockLimit.h"
 
 namespace LimitBackgrounColor
 {
