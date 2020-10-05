@@ -38,6 +38,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void stocksUpdated() override;
+    void stocksUpdated(size_t row) override;
 };
 
 #endif // StocksModel_H

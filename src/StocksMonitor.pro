@@ -21,6 +21,7 @@ SOURCES += \
     Application/Application.cpp \
     Application/StocksDatabase.cpp \
     Application/CurrencyConverter.cpp \
+    Application/StocksLimitsDatabase.cpp \
     Rules/RulesFasade.cpp \
     Rules/CurrencyCounter.cpp \
     Presenters/LimitBackgrounColor.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     Application/Application.h \
     Application/StocksDatabase.h \
     Application/CurrencyConverter.h \
+    Application/StocksLimitsDatabase.h \
     Color.h \
     Rules/AbstractCurrencyConverter.h \
     Rules/AbstractPocket.h \

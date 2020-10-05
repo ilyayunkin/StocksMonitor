@@ -48,7 +48,7 @@ MainWindow::MainWindow(Application &application,
                 }
                 for(auto &ref : application.modelsReferences())
                 {
-                    QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::boundCrossed,
+                    QObject::connect(ref.limitsModel.get(), &StocksLimitsDatabase::boundCrossed,
                                      [this](){QApplication::alert(this);});
                 }
             }

@@ -3,34 +3,20 @@
 
 #include <QAbstractTableModel>
 
-#include <QtSql>
-
-#include <vector>
-
-#include "StocksList.h"
 #include "Rules/StockLimit.h"
+#include "Application/StocksLimitsDatabase.h"
+#include "Rules/AbstractStocksView.h"
 #include "Color.h"
 
 class AbstractStocksModel;
 
-class StocksLimitsModel final: public QAbstractTableModel
+class StocksLimitsModel final: public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
-    typedef std::vector<Color> ColorsList;
 
-    QSqlDatabase db;
+    StocksLimitsDatabase &stockLimits;
+    mutable size_t size;
 
-    StockLimitsList stockLimits;
-    ColorsList colors;
-    AbstractStocksModel *stocksModel = nullptr;
-    QString name = "noname";
-
-    static float distance(const StockLimit &stock)
-    {
-        return (stock.price - stock.basePrice) / stock.basePrice;
-    }
-
-    QSqlQuery executeQuery(const QString &query);
 public:
     enum
     {
@@ -42,8 +28,7 @@ public:
 
         COL_COUNT
     };
-    explicit StocksLimitsModel(QString name,
-                               bool autoupdate = true,
+    explicit StocksLimitsModel(StocksLimitsDatabase &stockLimits,
                                QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -54,15 +39,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    void setStocksModel(AbstractStocksModel *stocksModel);
-    void addStock(const StockLimit &stockLimit);
-    StockLimitsList getList() const {return stockLimits;}
-
-public slots:
-    void update();
-signals:
-    void boundCrossed();
-    void crossedLimit(const StockLimit &stockLimit);
+    void stocksUpdated() override;
+    void stocksUpdated(size_t row) override;
 };
 
 #endif // StocksLimitsModel_H

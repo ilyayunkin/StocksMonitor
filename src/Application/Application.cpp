@@ -10,7 +10,7 @@
 #include "Rules/RulesFasade.h"
 #include "StocksDatabase.h"
 #include "WidgetsUi/PortfolioModel.h"
-#include "WidgetsUi/StocksLimitsModel.h"
+#include "Application/StocksLimitsDatabase.h"
 
 Application::Application(QObject *parent) :
     QObject(parent)
@@ -34,15 +34,15 @@ Application::Application(QObject *parent) :
         ModelsReference ref{name,
                     QByteArray(),
                     std::shared_ptr<AbstractStocksModel>(new StocksDatabase(name, plugin->getCurrencyCode())),
-                    std::make_shared<StocksLimitsModel>(name)};
+                    std::make_shared<StocksLimitsDatabase>(name)};
         ref.limitsModel->setStocksModel(ref.stocksModel.get());
         if(name == "CBRF-Currency")
         {
             currencyModel = ref.stocksModel.get();
         }
-        QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::boundCrossed,
+        QObject::connect(ref.limitsModel.get(), &StocksLimitsDatabase::boundCrossed,
                          [this]{signalizer->signalize();});
-        QObject::connect(ref.limitsModel.get(), &StocksLimitsModel::crossedLimit,
+        QObject::connect(ref.limitsModel.get(), &StocksLimitsDatabase::crossedLimit,
                          [](const StockLimit &stockLimit)
         {
             QString logMessage = QObject::tr("Stock cheapened:\n%1 %2")

@@ -12,118 +12,17 @@
 #include "Presenters/LimitBackgrounColor.h"
 #include "Rules/AbstractStocksModel.h"
 
-StocksLimitsModel::StocksLimitsModel(QString name, bool autoupdate, QObject *parent) :
+StocksLimitsModel::StocksLimitsModel(StocksLimitsDatabase &stockLimits,
+                                     QObject *parent) :
     QAbstractTableModel(parent),
-    name(name)
+    stockLimits(stockLimits)
 {
-    stockLimits.reserve(100);
-    colors.reserve(100);
-    db = QSqlDatabase::addDatabase("QSQLITE", name);
-    db.setDatabaseName(name + ".sqlite");
-
-    if (!db.open()) {
-        qDebug() << db.lastError().text();
-    }else
-    {
-        {
-            QSqlQuery q = executeQuery(
-                        "create table if not exists "
-                        "Limits (ticker TEXT, name TEXT, base_price REAL)");
-        }
-        {
-            QSqlQuery q = executeQuery("SELECT * FROM Limits");
-            QSqlRecord rec = q.record();
-            while (q.next()) {
-                StockLimit limit{};
-                limit.ticker = q.value(rec.indexOf("ticker")).toByteArray();
-                limit.name = q.value(rec.indexOf("name")).toByteArray();
-                limit.basePrice = q.value(rec.indexOf("base_price")).toFloat();
-                stockLimits.push_back(limit);
-            }
-            {// Delete copies
-                std::sort(stockLimits.begin(), stockLimits.end(),
-                          [](const StockLimit &lhs, const StockLimit &rhs){return lhs.ticker < rhs.ticker;});
-                StockLimitsList::iterator it = stockLimits.begin();
-                while((it = std::adjacent_find(it, stockLimits.end()))
-                      != stockLimits.end())
-                {
-                    bool answer =
-                    {
-                        QMessageBox::question(0,tr("Delete double?"),
-                        QString("%1 %2\n%3 %4")
-                        .arg(QString(it->ticker))
-                        .arg(it->basePrice)
-                        .arg(QString((it + 1)->ticker))
-                        .arg((it + 1)->basePrice))
-                        == QMessageBox::Yes
-                    };
-                    if(answer)
-                    {
-                        executeQuery(QString("DELETE FROM Limits "
-                                             "WHERE ticker = '%1';")
-                                     .arg(QString(it->ticker)));
-                        executeQuery(QString("INSERT INTO Limits (ticker, name, base_price) "
-                                             "VALUES ('%1', '%2', '%3');")
-                                     .arg(QString(it->ticker))
-                                     .arg(it->name).arg(it->basePrice));
-                        it = stockLimits.erase(it);
-                    }else
-                    {
-                        ++it;
-                    }
-                }
-            }
-            for(auto const &limit : stockLimits)
-            {
-                (void)limit;
-                colors.push_back(Color::NO_COLOR);
-            }
-        }
-    }
-    if(autoupdate)
-    {
-        QTimer *t = new QTimer(this);
-        connect(t, &QTimer::timeout, this, &StocksLimitsModel::update);
-        t->start(5000);
-    }
-    assert(stockLimits.size() == colors.size());
-}
-
-void StocksLimitsModel::update()
-{
-    bool boundCross = false;
-    if(stocksModel != nullptr)
-    {
-        int i = 0;
-        for(auto &limit : stockLimits)
-        {
-            float price = stocksModel->getStockPrice(limit.ticker);
-            if(price != limit.price)
-            {
-                limit.price = price;
-                emit dataChanged(createIndex(i, 0), createIndex(i, COL_COUNT - 1));
-
-                const Color c = LimitBackgrounColor::colorForDistance(distance(stockLimits[i]));
-                if(c < colors[i])
-                {
-                    boundCross = true;
-                    emit crossedLimit(limit);
-                }
-                colors[i] = c;
-            }
-            ++i;
-        }
-    }
-    if(boundCross)
-    {
-        emit boundCrossed();
-    }
 }
 
 int StocksLimitsModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return stockLimits.size();
+    return (size = stockLimits.size());
 }
 
 int StocksLimitsModel::columnCount(const QModelIndex &parent) const
@@ -184,9 +83,9 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     int col = index.column();
     if ((role == Qt::DisplayRole) || (role == Qt::EditRole))
     {
-        if(row < stockLimits.size())
+        if(row < (size = stockLimits.size()))
         {
-            const StockLimit &stock = stockLimits.at(row);
+            const StockLimit &stock = stockLimits.getLimit(row);
             switch (col) {
             case NAME:
                 ret = stock.name;
@@ -210,47 +109,35 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::BackgroundRole)
     {
-        if(row < stockLimits.size())
+        if(row < (size = stockLimits.size()))
         {
-            ret = QBrush(LimitBackgrounColor::brushForColor(colors.at(row)));
+            ret = stockLimits.getBrush(row);
         }
     }
     if (role == Qt::ToolTipRole)
     {
-        if(row < stockLimits.size())
+        if(row < (size = stockLimits.size()))
         {
-            auto stock = stocksModel->getStock(stockLimits.at(row).ticker);
-            ret = StockHint::getHint(stock);
+            ret = stockLimits.getToolTip(row);
         }
     }
     return ret;
-}
-
-void StocksLimitsModel::setStocksModel(AbstractStocksModel *stocksModel)
-{
-    this->stocksModel = stocksModel;
 }
 
 bool StocksLimitsModel::setData(const QModelIndex &index,
                                 const QVariant &value,
                                 int role)
 {
-    assert(stockLimits.size() == colors.size());
     int row = index.row();
     int col = index.column();
 
-    if ((role == Qt::EditRole) && (col == BASE_PRICE) && (row < stockLimits.size()))
+    if ((role == Qt::EditRole) && (col == BASE_PRICE) && (row < (size = stockLimits.size())))
     {
         float v = value.toFloat();
         if(v > 0)
         {
-            stockLimits[row].basePrice = v;
-            colors[row] = LimitBackgrounColor::colorForDistance(distance(stockLimits[row]));
+            if(stockLimits.setReferencePrice(row, v))
             {
-                executeQuery(QString("UPDATE Limits "
-                                     "SET base_price = '%1' "
-                                     "WHERE ticker = '%2';")
-                             .arg(stockLimits[row].basePrice).arg(QString(stockLimits[row].ticker)));
                 emit dataChanged(createIndex(row, 0), createIndex(row, COL_COUNT - 1));
             }
             return true;
@@ -259,56 +146,27 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
     return false;
 }
 
-void StocksLimitsModel::addStock(const StockLimit &stockLimit)
+void StocksLimitsModel::stocksUpdated()
 {
+    if(size != 0)
     {
-        StockLimitsList::iterator it = std::find_if(stockLimits.begin(), stockLimits.end(),
-                                                 [&](const StockLimit &l){return l.ticker == stockLimit.ticker;});
-        if(it != stockLimits.end())
-        {
-            bool answer =
-            {
-                QMessageBox::question(0,tr("Replace?"),
-                tr("There already is %1:\n %1 %2")
-                .arg(QString(it->ticker))
-                .arg(it->basePrice))
-                == QMessageBox::Yes
-            };
-            if(answer)
-            {
-                *it = stockLimit;
-                int row = it - stockLimits.begin();
-                emit dataChanged(createIndex(row, 0), createIndex(row, COL_COUNT - 1));
-            }
-
-            return;
-        }
-    }
+        emit dataChanged(createIndex(0, 0), createIndex((size = stockLimits.size()) - 1, COL_COUNT - 1));
+    }else
     {
-        auto size = stockLimits.size();
+        if(size != 0)
         {
-            executeQuery(QString("INSERT INTO Limits (ticker, name, base_price) VALUES ('%1', '%2', '%3');")
-                         .arg(QString(stockLimit.ticker)).arg(stockLimit.name).arg(stockLimit.basePrice));
+            beginRemoveRows(QModelIndex(), 0, size  - 1);
+            endRemoveRows();
         }
-
-        beginInsertRows(QModelIndex(), size, size);
-
-        stockLimits.push_back(stockLimit);
-        colors.push_back(LimitBackgrounColor::colorForDistance(distance(stockLimit)));
-
-        endInsertRows();
-        assert(stockLimits.size() == colors.size());
+        if((size = stockLimits.size()) != 0)
+        {
+            beginInsertRows(QModelIndex(), 0, (size = stockLimits.size()) - 1);
+            endInsertRows();
+        }
     }
 }
 
-QSqlQuery StocksLimitsModel::executeQuery(const QString &query)
+void StocksLimitsModel::stocksUpdated(size_t row)
 {
-    QSqlQuery q = db.exec(query);
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastError();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.record();
-
-    return q;
+    emit dataChanged(createIndex(row, 0), createIndex(row, COL_COUNT - 1));
 }
-
-

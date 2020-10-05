@@ -7,14 +7,14 @@
 #include <QString>
 
 class AbstractStocksModel;
-class StocksLimitsModel;
+class StocksLimitsDatabase;
 
 struct ModelsReference
 {
     QString name;
     QByteArray time;
     std::shared_ptr<AbstractStocksModel> stocksModel;
-    std::shared_ptr<StocksLimitsModel> limitsModel;
+    std::shared_ptr<StocksLimitsDatabase> limitsModel;
 };
 
 typedef std::vector<ModelsReference> ModelsReferenceList;

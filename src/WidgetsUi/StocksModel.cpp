@@ -166,3 +166,8 @@ void StocksModel::stocksUpdated()
         }
     }
 }
+
+void StocksModel::stocksUpdated(size_t row)
+{
+    emit dataChanged(createIndex(row, 0), createIndex(row, COL_COUNT - 1));
+}

@@ -33,7 +33,9 @@ StocksModelsWidget::StocksModelsWidget(ModelsReference &models, AbstractPocket &
     }
     {
         QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
-        proxyModel->setSourceModel(models.limitsModel.get());
+        StocksLimitsModel *model = new StocksLimitsModel(*models.limitsModel.get(), this);
+        models.limitsModel.get()->setView(model);
+        proxyModel->setSourceModel(model);
         ui->stocksLimitsTableView->setModel(proxyModel);
         ui->stocksLimitsTableView->setSortingEnabled(true);
         ui->stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
