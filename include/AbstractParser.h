@@ -2,7 +2,6 @@
 #define ABSTRACTPARSER_H
 
 #include <QByteArray>
-#include <QByteArrayList>
 
 #include <memory>
 

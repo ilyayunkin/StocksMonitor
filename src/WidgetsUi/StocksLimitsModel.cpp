@@ -1,7 +1,6 @@
 #include "StocksLimitsModel.h"
 
 #include <QBrush>
-#include <QTimer>
 #include <QMessageBox>
 #include <QDebug>
 
@@ -10,12 +9,15 @@
 
 #include "Presenters/StockHint.h"
 #include "Presenters/LimitBackgrounColor.h"
-#include "Rules/AbstractStocksModel.h"
+#include "Rules/BuyRequestInterface.h"
+#include "Rules/StocksInterface.h"
 
-StocksLimitsModel::StocksLimitsModel(StocksLimitsDatabase &stockLimits,
+StocksLimitsModel::StocksLimitsModel(BuyRequestInterface &stockLimits,
+                                     StocksInterface &stocksInterface,
                                      QObject *parent) :
     QAbstractTableModel(parent),
-    stockLimits(stockLimits)
+    stockLimits(stockLimits),
+    stocksInterface(stocksInterface)
 {
 }
 
@@ -85,22 +87,22 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     {
         if(row < (size = stockLimits.size()))
         {
-            const StockLimit &stock = stockLimits.getLimit(row);
+            const StockLimit &limit = stockLimits.getStockBuyRequest(row);
             switch (col) {
             case NAME:
-                ret = stock.name;
+                ret = limit.name;
                 break;
             case TICKER:
-                ret = stock.ticker;
+                ret = limit.ticker;
                 break;
             case PRICE:
-                ret = stock.price;
+                ret = limit.price;
                 break;
             case BASE_PRICE:
-                ret = stock.basePrice;
+                ret = limit.basePrice;
                 break;
             case DISTANCE:
-                ret = (stock.price - stock.basePrice) / stock.basePrice;
+                ret = (limit.price - limit.basePrice) / limit.basePrice;
                 break;
             default:
                 break;
@@ -111,14 +113,19 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     {
         if(row < (size = stockLimits.size()))
         {
-            ret = stockLimits.getBrush(row);
+            const StockLimit &limit = stockLimits.getStockBuyRequest(row);
+            ret = LimitBackgrounColor::brushForColor(
+                        LimitBackgrounColor::colorForDistance(
+                            (limit.price - limit.basePrice) / limit.basePrice));
         }
     }
     if (role == Qt::ToolTipRole)
     {
         if(row < (size = stockLimits.size()))
         {
-            ret = stockLimits.getToolTip(row);
+            const StockLimit &limit = stockLimits.getStockBuyRequest(row);
+            auto stock = stocksInterface.getStock(limit.ticker);
+            ret = StockHint::getHint(stock);
         }
     }
     return ret;
@@ -133,10 +140,10 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
 
     if ((role == Qt::EditRole) && (col == BASE_PRICE) && (row < (size = stockLimits.size())))
     {
-        float v = value.toFloat();
-        if(v > 0)
+        float referencePrice = value.toFloat();
+        if(referencePrice > 0)
         {
-            if(stockLimits.setReferencePrice(row, v))
+            if(stockLimits.setReferencePrice(row, referencePrice))
             {
                 emit dataChanged(createIndex(row, 0), createIndex(row, COL_COUNT - 1));
             }
@@ -148,7 +155,8 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
 
 void StocksLimitsModel::stocksUpdated()
 {
-    if(size != 0)
+    const auto newSize = stockLimits.size();
+    if(size != 0 && (size == newSize))
     {
         emit dataChanged(createIndex(0, 0), createIndex((size = stockLimits.size()) - 1, COL_COUNT - 1));
     }else
@@ -160,7 +168,7 @@ void StocksLimitsModel::stocksUpdated()
         }
         if((size = stockLimits.size()) != 0)
         {
-            beginInsertRows(QModelIndex(), 0, (size = stockLimits.size()) - 1);
+            beginInsertRows(QModelIndex(), 0, (size = newSize) - 1);
             endInsertRows();
         }
     }

@@ -1,13 +1,20 @@
 #include "StocksModel.h"
 
 #include <QBrush>
+#include <QDebug>
 
 #include <algorithm>
 
-StocksModel::StocksModel(AbstractStocksModel &stocks, QObject *parent) :
+StocksModel::StocksModel(StocksInterface &stocks, QObject *parent) :
     QAbstractTableModel(parent),
     stocks(stocks)
 {
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__;
+}
+
+StocksModel::~StocksModel()
+{
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__;
 }
 
 int StocksModel::rowCount(const QModelIndex &parent) const
@@ -149,7 +156,8 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
 
 void StocksModel::stocksUpdated()
 {
-    if(size != 0)
+    const auto newSize = stocks.size();
+    if(size != 0 && (size == newSize))
     {
         emit dataChanged(createIndex(0, 0), createIndex((size = stocks.size()) - 1, COL_COUNT - 1));
     }else
@@ -159,12 +167,13 @@ void StocksModel::stocksUpdated()
             beginRemoveRows(QModelIndex(), 0, size  - 1);
             endRemoveRows();
         }
-        if(stocks.size() != 0)
+        if((size = stocks.size()) != 0)
         {
-            beginInsertRows(QModelIndex(), 0, (size = stocks.size()) - 1);
+            beginInsertRows(QModelIndex(), 0, (size = newSize) - 1);
             endInsertRows();
         }
     }
+    emit time(stocks.getActualizationTime());
 }
 
 void StocksModel::stocksUpdated(size_t row)

@@ -13,6 +13,7 @@
 #endif
 
 #include "ExceptionClasses.h"
+#include <QByteArrayList>
 
 namespace  {
 const QString htmlName = "stocks.html";

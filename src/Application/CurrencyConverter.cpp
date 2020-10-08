@@ -12,8 +12,10 @@
 
 #include "Rules/AbstractStocksModel.h"
 
-CurrencyConverter::CurrencyConverter(AbstractStocksModel * const currencyModel) :
-    currencyModel(currencyModel)
+CurrencyConverter::CurrencyConverter(const QByteArray &currencyCode,
+                                     StocksInterface * const currencyModel) :
+    currencyModel(currencyModel),
+    currencyCode(currencyCode)
 {
 }
 
@@ -41,7 +43,7 @@ CurrencyCountersList CurrencyConverter::convert(const QByteArray &targetCurrency
             };
             if(currencyModel != nullptr)
             {
-                const QByteArray baseCurrency = currencyModel->currencyCode();
+                const QByteArray baseCurrency = currencyCode;
                 if(targetCurrency == baseCurrency)
                 {
                     Stock stock = currencyModel->getStock(currency.currency);

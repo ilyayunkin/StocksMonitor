@@ -1,88 +1,18 @@
 #include "Application.h"
 
-#include "WidgetsUi/Sounds/Signalizer.h"
-#include "WidgetsUi/PopUpWindow.h"
-
 #include "logger.h"
 #include "ExceptionClasses.h"
 #include "SourcePluginInterface.h"
 #include "CurrencyConverter.h"
 #include "Rules/RulesFasade.h"
-#include "StocksDatabase.h"
-#include "WidgetsUi/PortfolioModel.h"
-#include "Application/StocksLimitsDatabase.h"
+#include "Rules/StocksMonitor.h"
+#include "BuyRequestDatabase.h"
+#include "PortfolioDatabase.h"
 
-Application::Application(QObject *parent) :
-    QObject(parent)
-{
-    QDir pluginsDir( "./plugins" );
-    PluginsList plugins = loadPlugins();
+namespace  {
+typedef std::vector<std::shared_ptr<SourcePluginInterface>> PluginsList;
 
-    if(plugins.empty())
-    {
-        Logger::instance().log("Plugins not found");
-        throw NoPluginsException();
-    }
-
-    signalizer = new Signalizer;
-
-    AbstractStocksModel *currencyModel = nullptr;
-    for(PluginsList::size_type i = 0; i < plugins.size(); ++i)
-    {
-        auto plugin = plugins.at(i);
-        auto name = plugin->getName();
-        ModelsReference ref{name,
-                    QByteArray(),
-                    std::shared_ptr<AbstractStocksModel>(new StocksDatabase(name, plugin->getCurrencyCode())),
-                    std::make_shared<StocksLimitsDatabase>(name)};
-        ref.limitsModel->setStocksModel(ref.stocksModel.get());
-        if(name == "CBRF-Currency")
-        {
-            currencyModel = ref.stocksModel.get();
-        }
-        QObject::connect(ref.limitsModel.get(), &StocksLimitsDatabase::boundCrossed,
-                         [this]{signalizer->signalize();});
-        QObject::connect(ref.limitsModel.get(), &StocksLimitsDatabase::crossedLimit,
-                         [](const StockLimit &stockLimit)
-        {
-            QString logMessage = QObject::tr("Stock cheapened:\n%1 %2")
-                    .arg(stockLimit.name)
-                    .arg(stockLimit.price);
-            Logger::instance().log(logMessage);
-            PopUpWindow::showPopUpWindow(logMessage);
-        });
-        models.push_back(ref);
-    }
-
-    portfolio = new PortfolioModel(models);
-    {
-        QObject::connect(portfolio, &PortfolioModel::boundCrossed,
-                         [this]{signalizer->signalize();});
-        QObject::connect(portfolio, &PortfolioModel::crossedLimit,
-                         [](const PortfolioEntry &entry)
-        {
-            QString logMessage = QObject::tr("Portfolio sell price reached:\n"
-                                             "%1 %2")
-                    .arg(entry.name)
-                    .arg(entry.price);
-            Logger::instance().log(logMessage);
-            PopUpWindow::showPopUpWindow(logMessage);
-        });
-    }
-    converter = new CurrencyConverter(currencyModel);
-
-    rules = new RulesFasade(*converter, *portfolio, plugins, models);
-}
-
-Application::~Application()
-{
-    delete rules;
-    delete signalizer;
-    delete portfolio;
-    delete converter;
-}
-
-Application::PluginsList Application::loadPlugins()
+PluginsList loadPlugins()
 {
     QDir pluginsDir("./plugins");
     PluginsList plugins;
@@ -121,10 +51,60 @@ Application::PluginsList Application::loadPlugins()
     }
     return plugins;
 }
+}
 
-ModelsReferenceList &Application::modelsReferences()
+Application::Application(QObject *parent) :
+    QObject(parent)
 {
-    return models;
+    QDir pluginsDir( "./plugins" );
+    PluginsList plugins = loadPlugins();
+
+    if(plugins.empty())
+    {
+        Logger::instance().log("Plugins not found");
+        throw NoPluginsException();
+    }
+
+    rules = new RulesFasade();
+    StocksInterface *currencyStocksInterface = nullptr;
+    for(PluginsList::size_type i = 0; i < plugins.size(); ++i)
+    {
+        auto plugin = plugins.at(i);
+        auto db = std::make_shared<BuyRequestDatabase>(plugin->getName());
+        buyRequestDatabases.push_back(db);
+        auto handler = rules->addStocksSource(
+                    StocksSource{plugin->getName(),
+                                 plugin->getCurrencyCode(),
+                                 db.get()});
+
+        auto monitor = std::make_shared<StocksMonitor>(*rules,
+                                                       handler,
+                                                       plugin->createParser(),
+                                                       plugin->getUrl());
+        monitors.push_back(monitor);
+    }
+    for(auto &interface : rules->getViewInterfaces())
+    {
+        if(interface.name == "CBRF-Currency")
+        {
+            currencyStocksInterface = &interface.stocks;
+        }
+    }
+    converter = new CurrencyConverter("RUB", currencyStocksInterface);
+    rules->setConverter(converter);
+    portfolioDatabase = std::make_shared<PortfolioDatabase>();
+    rules->setPortfolioDatabase(portfolioDatabase.get());
+}
+
+Application::~Application()
+{
+    delete rules;
+    delete converter;
+}
+
+ViewInterfaces &Application::getViewInterfaces()
+{
+    return rules->getViewInterfaces();
 }
 
 QString Application::getPortfolioPrice(const char * const currency)
@@ -142,12 +122,17 @@ QStringList Application::getAvailibleCurrencies()
     return rules->getAvailibleCurrencies();
 }
 
-Signalizer *Application::getSignalizer()
+PortfolioInterface &Application::getPortfolioInterface()
 {
-    return  signalizer;
+    return rules->getPortfolioInterface();
 }
 
-PortfolioModel *Application::getPortfolio()
+void Application::setNotifier(AbstractNotifier * const notifier)
 {
-    return portfolio;
+    rules->setNotifier(notifier);
+}
+
+void Application::setDialogs(AbstractDialogs * const dialogs)
+{
+    rules->setDialogs(dialogs);
 }

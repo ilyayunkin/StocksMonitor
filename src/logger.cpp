@@ -25,7 +25,7 @@ Logger& Logger::instance()
 
 void Logger::log(const QString &text)
 {
-    s << QDateTime::currentDateTime().toString("yyyy.MM.dd")
+    s << QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss")
       << ' '
       << text << "\r\n";
     qDebug() << text;

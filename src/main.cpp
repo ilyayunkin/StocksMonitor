@@ -9,9 +9,8 @@
 
 #include "logger.h"
 #include "ExceptionClasses.h"
-#include "WidgetsUi/Sounds/Signalizer.h"
-#include "WidgetsUi/PopUpWindow.h"
 #include "Application/Application.h"
+#include "WidgetsUi/Dialogs.h"
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +29,8 @@ int main(int argc, char *argv[])
         MainWindow w(app);
         w.showMaximized();
 
+        Dialogs dialogs(&w);
+        app.setDialogs(&dialogs);
 
         ret = a.exec();
     }catch(std::runtime_error &e)

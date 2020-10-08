@@ -14,22 +14,17 @@
 #include "StocksModel.h"
 #include "StocksLimitsModel.h"
 
-#include "Rules/AbstractPocket.h"
-#include "Rules/ModelsReference.h"
-
-LimitsEventFilter::LimitsEventFilter(ModelsReference &limitsModel,
-                                     AbstractPocket &pocket,
+LimitsEventFilter::LimitsEventFilter(StocksInterface &stocksInterface,
                                      QTableView *table) :
     QObject(table),
     table(table),
-    models(limitsModel),
-    pocket(pocket)
+    stocksInterface(stocksInterface)
 {
     table->installEventFilter(this);
     menu = new QMenu;
-    pocketAction = new QAction("To Portfolio", this);
+    portfolioAction = new QAction("To Portfolio", this);
     urlAction = new QAction("Open in the Internet", this);
-    menu->addAction(pocketAction);
+    menu->addAction(portfolioAction);
     menu->addAction(urlAction);
 }
 
@@ -49,13 +44,13 @@ bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
             {
                 auto ticker = model->data(model->index(sortModelIndex.row(), StocksLimitsModel::TICKER)).toByteArray();
                 auto selected = menu->exec(globalPos);
-                if(selected == pocketAction)
+                if(selected == portfolioAction)
                 {
                     auto quantity = QInputDialog::getInt(0, tr("Input quantity"), tr("Quantity"), 1, 1);
-                    pocket.addStock(models.stocksModel->pluginName(), ticker, quantity);
+                    stocksInterface.addToPortfolio(ticker, quantity);
                 }else if(selected == urlAction)
                 {
-                    const auto stock = models.stocksModel->getStock(ticker);
+                    const auto stock = stocksInterface.getStock(ticker);
                     if(!stock.url.isEmpty())
                     {
                         QDesktopServices::openUrl(QUrl(stock.url));

@@ -2,22 +2,24 @@
 #define STOCKSMODELSWIDGET_H
 
 #include <QWidget>
+#include "Rules/StocksInterface.h"
+#include "Rules/BuyRequestInterface.h"
+#include "Rules/PortfolioInterface.h"
 
 namespace Ui {
 class StocksModelsWidget;
 }
 
-class ModelsReference;
-
-class AbstractPocket;
-
 class StocksModelsWidget : public QWidget
 {
     Q_OBJECT
-    ModelsReference &models;
+    StocksInterface &stocksInterface;
+    BuyRequestInterface &buyRequestInterface;
 
 public:
-    explicit StocksModelsWidget(ModelsReference &models, AbstractPocket &pocket, QWidget *parent = nullptr);
+    explicit StocksModelsWidget(StocksInterface &stocksInterface,
+                                BuyRequestInterface &buyRequestInterface,
+                                QWidget *parent = nullptr);
     ~StocksModelsWidget();
 
 private:

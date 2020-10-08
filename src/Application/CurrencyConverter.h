@@ -3,14 +3,15 @@
 
 #include "Rules/AbstractCurrencyConverter.h"
 #include "Rules/CurrencyCounter.h"
-
-class AbstractStocksModel;
+#include "Rules/StocksInterface.h"
 
 class CurrencyConverter final : public AbstractCurrencyConverter
 {
-    AbstractStocksModel * const currencyModel;
+    StocksInterface * const currencyModel;
+    const QByteArray currencyCode;
 public:
-    CurrencyConverter(AbstractStocksModel *const currencyModel = nullptr);
+    CurrencyConverter(const QByteArray &currencyCode,
+                      StocksInterface *const currencyModel = nullptr);
     CurrencyCountersList convert(const QByteArray &targetCurrency,
                                  const CurrencyCountersList &counters) override;
 };

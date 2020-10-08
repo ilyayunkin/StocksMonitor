@@ -3,18 +3,20 @@
 
 #include <QAbstractTableModel>
 
-#include "Rules/StockLimit.h"
-#include "Application/StocksLimitsDatabase.h"
+#include <cstdlib>
+
 #include "Rules/AbstractStocksView.h"
 #include "Color.h"
 
-class AbstractStocksModel;
+class BuyRequestInterface;
+class StocksInterface;
 
 class StocksLimitsModel final: public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
 
-    StocksLimitsDatabase &stockLimits;
+    BuyRequestInterface &stockLimits;
+    StocksInterface &stocksInterface;
     mutable size_t size;
 
 public:
@@ -28,7 +30,8 @@ public:
 
         COL_COUNT
     };
-    explicit StocksLimitsModel(StocksLimitsDatabase &stockLimits,
+    explicit StocksLimitsModel(BuyRequestInterface &stockLimits,
+                               StocksInterface &stocksInterface,
                                QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;

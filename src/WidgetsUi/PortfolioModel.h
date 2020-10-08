@@ -1,41 +1,22 @@
-#ifndef POCKETMODEL_H
-#define POCKETMODEL_H
-
-#include "Rules/AbstractPocket.h"
+#ifndef PORTFOLIO_MODEL_H
+#define PORTFOLIO_MODEL_H
 
 #include <vector>
 
 #include <QAbstractTableModel>
 
-#include <QtSql>
+#include "Entities/PortfolioEntry.h"
+#include "Rules/PortfolioInterface.h"
+#include "Rules/AbstractStocksView.h"
 
-#include "Rules/ModelsReference.h"
-
-struct PortfolioEntry
-{
-    QString plugin;
-    QString name;
-    QByteArray ticker;
-    int quantity;
-    float price;
-    float sellPrice;
-    float sum;
-    QByteArray currency;
-    AbstractStocksModel *model;
-};
-typedef std::vector<PortfolioEntry> PortfolioEntryList;
-
-class PortfolioModel : public QAbstractTableModel, public AbstractPocket
+class PortfolioModel : public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
 
-    PortfolioEntryList entries;
-    QSqlDatabase db;
-    ModelsReferenceList &models;
-    CurrencyCountersList currencyCounters;
-
-    QSqlQuery executeQuery(const QString &query);
-    void update();
+    mutable size_t size = 0;
+    PortfolioInterface &portfolioInterface;
+    void stocksUpdated() override;
+    void stocksUpdated(size_t row) override;
 public:
     enum
     {
@@ -49,7 +30,7 @@ public:
 
         COL_COUNT
     };
-    explicit PortfolioModel(ModelsReferenceList &models, QObject *parent = 0);
+    explicit PortfolioModel(PortfolioInterface &portfolioInterface, QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
@@ -59,11 +40,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    void addStock(QString plugin, QByteArray ticker, int quantity) override;
-    CurrencyCountersList sum() const override;
 signals:
-    void boundCrossed();
-    void crossedLimit(const PortfolioEntry &stockLimit);
+    void updated();
 };
 
-#endif // POCKETMODEL_H
+#endif // PORTFOLIO_MODEL_H

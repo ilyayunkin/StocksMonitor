@@ -6,8 +6,8 @@
 class QTableView;
 class QMenu;
 class QAction;
-class AbstractPocket;
-class ModelsReference;
+class StocksInterface;
+class BuyRequestInterface;
 
 class StocksEventFilter : public QObject
 {
@@ -15,16 +15,14 @@ class StocksEventFilter : public QObject
 
     QTableView *table;
     QMenu *menu;
-    QAction *pocketAction;
+    QAction *portfolioAction;
     QAction *limitsAction;
     QAction *urlAction;
-    ModelsReference &models;
-    AbstractPocket &pocket;
+    StocksInterface &stocksInterface;
 
     void addLimit(const QModelIndex &index);
 public:
-    explicit StocksEventFilter(ModelsReference &models,
-                               AbstractPocket &pocket,
+    explicit StocksEventFilter(StocksInterface &stocksInterface,
                                QTableView *table);
     bool eventFilter(QObject *obj, QEvent *event) override;
 };

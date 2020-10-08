@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PocketWidget</class>
- <widget class="QWidget" name="PocketWidget">
+ <class>PortfolioWidget</class>
+ <widget class="QWidget" name="PortfolioWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

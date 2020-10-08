@@ -4,109 +4,49 @@
 
 #include <QDebug>
 
-#include <QTimer>
-
 #include "ExceptionClasses.h"
 #include "Presenters/StockHint.h"
 #include "Rules/AbstractStocksModel.h"
 
-namespace  {
-QString tableName = "Pocket";
-}
-
-QSqlQuery PortfolioModel::executeQuery(const QString &query)
-{
-
-    QSqlQuery q = db.exec(query);
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastError();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.record();
-
-    return q;
-}
-
-void PortfolioModel::update()
-{
-    CurrencyCountersList counters;
-    for(auto &e : entries)
+void PortfolioModel::stocksUpdated()
+{    
+    const auto newSize = portfolioInterface.size();
+    if(size != 0 && (size == newSize))
     {
-        Stock stock = e.model->getStock(e.ticker);
-        auto cross = e.sellPrice > 0
-                && e.price < e.sellPrice
-                && stock.price >= e.sellPrice;
-        e.price = stock.price;
-        e.sum = e.price * e.quantity;
-        if(e.name.isEmpty())
-        {
-            e.name = stock.name;
-        }
-
-        counters.add(e.currency, e.sum);
-        if(cross)
-        {
-            emit boundCrossed();
-            emit crossedLimit(e);
-        }
-    }
-    emit dataChanged(createIndex(0, 0),
-                     createIndex(entries.size() - 1, COL_COUNT - 1));
-    currencyCounters = counters;
-}
-
-PortfolioModel::PortfolioModel(ModelsReferenceList &models, QObject *parent) :
-    QAbstractTableModel(parent),
-    models(models)
-{
-    entries.reserve(100);
-    db = QSqlDatabase::addDatabase("QSQLITE", "pocket");
-    db.setDatabaseName("pocket.sqlite");
-    if (!db.open()) {
-        qDebug() << __PRETTY_FUNCTION__ << db.lastError().text();
+        emit dataChanged(createIndex(0, 0), createIndex((size = portfolioInterface.size()) - 1, COL_COUNT - 1));
     }else
     {
+        if(size != 0)
         {
-            QSqlQuery q = executeQuery(
-                        QString("create table if not exists "
-                                "%1 (plugin TEXT, ticker TEXT, quantity INTEGER,"
-                                " sell_price REAL)")
-                        .arg(tableName));
+            beginRemoveRows(QModelIndex(), 0, size  - 1);
+            endRemoveRows();
         }
+        if((size = portfolioInterface.size()) != 0)
         {
-            QSqlQuery q = executeQuery(QString("SELECT * FROM %1").arg(tableName));
-            QSqlRecord rec = q.record();
-            while (q.next()) {
-                auto ticker = q.value(rec.indexOf("ticker")).toByteArray();
-                auto plugin = q.value(rec.indexOf("plugin")).toByteArray();
-                auto quantity = q.value(rec.indexOf("quantity")).toInt();
-                auto sellPrice = q.value(rec.indexOf("sell_price")).toFloat();
-
-                ModelsReferenceList::iterator modelsIt =
-                        std::find_if(models.begin(), models.end(),
-                                     [&](const ModelsReference &ref){return ref.stocksModel->pluginName() == plugin;});
-                if(modelsIt != models.end())
-                {
-                    AbstractStocksModel *stockModel = modelsIt->stocksModel.get();
-                    Stock stock = stockModel->getStock(ticker);
-
-                    PortfolioEntry newEntry{plugin, stock.name, ticker, quantity,
-                                stock.price, sellPrice, stock.price * quantity,
-                                stockModel->currencyCode(), stockModel};
-                    entries.push_back(newEntry);
-                }
-            }
+            beginInsertRows(QModelIndex(), 0, (size = newSize) - 1);
+            endInsertRows();
         }
     }
-    {
-        QTimer *t = new QTimer(this);
-        connect(t, &QTimer::timeout, this, &PortfolioModel::update);
-        t->start(5000);
-    }
+    emit updated();
+}
+
+void PortfolioModel::stocksUpdated(size_t row)
+{
+    emit dataChanged(createIndex(row, 0),
+                     createIndex(row, COL_COUNT - 1));
+    emit updated();
+}
+
+PortfolioModel::PortfolioModel(PortfolioInterface &portfolioInterface, QObject *parent) :
+    QAbstractTableModel(parent),
+    portfolioInterface(portfolioInterface)
+{
 }
 
 int PortfolioModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return entries.size();
+    return size = portfolioInterface.size();
 }
 
 int PortfolioModel::columnCount(const QModelIndex &parent) const
@@ -174,9 +114,9 @@ QVariant PortfolioModel::data(const QModelIndex &index, int role) const
     int col = index.column();
     if ((role == Qt::DisplayRole) || (role == Qt::EditRole))
     {
-        if(row < entries.size())
+        if(row < (size = portfolioInterface.size()))
         {
-            const PortfolioEntry &entry = entries.at(row);
+            const PortfolioEntry &entry = portfolioInterface.getPortfolioEntry(row);
             switch (col) {
             case NAME:
                 ret = entry.name;
@@ -206,23 +146,17 @@ QVariant PortfolioModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::ToolTipRole)
     {
-        if(row < entries.size())
+        if(row < (size = portfolioInterface.size()))
         {
-            const PortfolioEntry &entry = entries.at(row);
-            auto it = std::find_if(models.begin(), models.end(),
-                                   [entry](const ModelsReference &ref){return ref.stocksModel->pluginName() == entry.plugin;});
-            if(it != models.end())
-            {
-                auto stock = it->stocksModel->getStock(entry.ticker);
-                ret = StockHint::getHint(stock);
-            }
+            auto stock = portfolioInterface.getStock(row);
+            ret = StockHint::getHint(stock);
         }
     }
     if (role == Qt::BackgroundRole)
     {
-        if(row < entries.size())
+        if(row < (size = portfolioInterface.size()))
         {
-            const PortfolioEntry &entry = entries.at(row);
+            const PortfolioEntry &entry = portfolioInterface.getPortfolioEntry(row);
             if(entry.sellPrice > 0
                     && entry.price >= entry.sellPrice)
             {
@@ -238,27 +172,19 @@ bool PortfolioModel::setData(const QModelIndex &index, const QVariant &value, in
     int row = index.row();
     int col = index.column();
 
-    if ((role == Qt::EditRole) && (row < entries.size()))
+    if ((role == Qt::EditRole) && (row < (size =portfolioInterface.size())))
     {
         if(col == QUANTITY)
         {
             int quantity = value.toInt();
             if(quantity > 0)
             {
-                PortfolioEntry &entry = entries[row];
-                executeQuery(QString("UPDATE %1 "
-                                     "SET quantity = '%2' "
-                                     "WHERE ticker = '%3';")
-                             .arg(tableName)
-                             .arg(quantity)
-                             .arg(QString(entry.ticker)));
-                entry.quantity = quantity;
-                entry.sum = quantity * entry.price;
+                portfolioInterface.setPortfolioEntryQuantity(row, quantity);
                 emit dataChanged(createIndex(row, 0),
                                  createIndex(row, COL_COUNT - 1));
             }else
             {
-                const PortfolioEntry entry = entries[row];
+                const PortfolioEntry entry = portfolioInterface.getPortfolioEntry(row);
                 bool answer =
                         QMessageBox::question(0,
                                               tr("Delete?"),
@@ -268,12 +194,7 @@ bool PortfolioModel::setData(const QModelIndex &index, const QVariant &value, in
                 if(answer)
                 {
                     beginRemoveRows(QModelIndex(), row, row);
-                    executeQuery(QString("DELETE FROM %1 "
-                                         "WHERE ticker = '%2';")
-                                 .arg(tableName)
-                                 .arg(QString(entry.ticker)));
-                    std::remove_if(entries.begin(), entries.end(),
-                                   [&entry](PortfolioEntry &e){return entry.ticker == e.ticker;});
+                    portfolioInterface.deletePortfolioEntry(row);
                     endRemoveRows();
                 }
             }
@@ -281,85 +202,10 @@ bool PortfolioModel::setData(const QModelIndex &index, const QVariant &value, in
         }else if(col == SELL_PRICE)
         {
             double sellPrice = value.toDouble();
-            PortfolioEntry &entry = entries[row];
-            executeQuery(QString("UPDATE %1 "
-                                 "SET sell_price = '%2' "
-                                 "WHERE ticker = '%3';")
-                         .arg(tableName)
-                         .arg(sellPrice)
-                         .arg(QString(entry.ticker)));
-            entry.sellPrice = sellPrice;
+            portfolioInterface.setPortfolioEntryReferencePrice(row, sellPrice);
             emit dataChanged(createIndex(row, 0),
                              createIndex(row, COL_COUNT - 1));
-
         }
     }
     return false;
-}
-
-void PortfolioModel::addStock(QString plugin, QByteArray ticker, int quantity)
-{
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ ;
-    {
-        PortfolioEntryList::iterator entryIt =
-                std::find_if(entries.begin(), entries.end(),
-                             [&](const PortfolioEntry &l){return l.ticker == ticker;});
-        if(entryIt != entries.end())
-        {
-            bool answer =
-                    QMessageBox::question(0,
-                                          tr("Add?"),
-                                          tr("There already is %1:\n %1")
-                                          .arg(QString(entryIt->ticker)))
-                    == QMessageBox::Yes;
-            if(answer)
-            {
-                entryIt->quantity+= quantity;
-                int row = entryIt - entries.begin();
-                emit dataChanged(createIndex(row, 0),
-                                 createIndex(row, COL_COUNT - 1));
-            }
-
-            return;
-        }
-    }
-    {
-        ModelsReferenceList::iterator modelsIt =
-                std::find_if(models.begin(), models.end(),
-                             [&](const ModelsReference &ref){return ref.stocksModel->pluginName() == plugin;});
-        if(modelsIt != models.end())
-        {
-            auto size = entries.size();
-            {
-                executeQuery(QString("INSERT INTO %1 "
-                                     "(plugin, ticker, quantity, sell_price) "
-                                     "VALUES ('%2', '%3', '%4', 0);")
-                             .arg(tableName)
-                             .arg(plugin)
-                             .arg(QString(ticker))
-                             .arg(quantity));
-            }
-            AbstractStocksModel *stockModel = modelsIt->stocksModel.get();
-            Stock stock = stockModel->getStock(ticker);
-
-            PortfolioEntry newEntry{plugin, stock.name, ticker, quantity,
-                        stock.price, 0.0, stock.price * quantity,
-                        stockModel->currencyCode(), stockModel};
-
-            {
-                beginInsertRows(QModelIndex(), size, size);
-                entries.push_back(newEntry);
-
-                endInsertRows();
-            }
-        }else
-        {
-            throw NoSuchPluginException();
-        }
-    }
-}
-
-CurrencyCountersList PortfolioModel::sum() const
-{
-    return currencyCounters;
 }

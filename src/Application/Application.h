@@ -8,35 +8,37 @@ class SourcePluginInterface;
 
 #include <QObject>
 
-#include "Rules/ModelsReference.h"
+#include "Rules/PortfolioInterface.h"
+#include "Rules/ViewInterfaces.h"
 
 class RulesFasade;
-class Signalizer;
-class PortfolioModel;
 class CurrencyConverter;
+class StocksMonitor;
+class BuyRequestDatabase;
+class PortfolioDatabase;
+class AbstractNotifier;
+class AbstractDialogs;
 
 class Application : public QObject
 {
     Q_OBJECT
 
-    typedef std::vector<std::shared_ptr<SourcePluginInterface>> PluginsList;
-
-    ModelsReferenceList models;
-    Signalizer *signalizer;
+    std::vector<std::shared_ptr<StocksMonitor>> monitors;
     RulesFasade *rules;
-    PortfolioModel *portfolio;
     CurrencyConverter *converter;
+    std::vector<std::shared_ptr<BuyRequestDatabase>> buyRequestDatabases;
+    std::shared_ptr<PortfolioDatabase> portfolioDatabase;
 
-    PluginsList loadPlugins();
 public:
     explicit Application(QObject *parent = nullptr);
     ~Application();
-    ModelsReferenceList &modelsReferences();
+    ViewInterfaces &getViewInterfaces();
     QString getPortfolioPrice(const char *const currency);
     QString getPortfolioPrice();
     QStringList getAvailibleCurrencies();
-    Signalizer *getSignalizer();
-    PortfolioModel *getPortfolio();
+    PortfolioInterface &getPortfolioInterface();
+    void setNotifier(AbstractNotifier *const notifier);
+    void setDialogs(AbstractDialogs *const dialogs);
 };
 
 #endif // APPLICATION_H

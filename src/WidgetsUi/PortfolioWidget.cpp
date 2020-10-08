@@ -1,7 +1,6 @@
-#include "PocketWidget.h"
-#include "ui_PocketWidget.h"
+#include "PortfolioWidget.h"
+#include "ui_PortfolioWidget.h"
 
-#include <QTimer>
 #include <QClipboard>
 
 #include <QInputDialog>
@@ -13,13 +12,13 @@
 #include "Application/Application.h"
 #include "PortfolioModel.h"
 
-PocketWidget::PocketWidget(PortfolioModel *model,
-                           Application &application,
-                           QWidget *parent) :
+PortfolioWidget::PortfolioWidget(PortfolioModel *model,
+                                 Application &application,
+                                 QWidget *parent) :
     QWidget(parent),
     model(*model),
     rules(application),
-    ui(new Ui::PocketWidget)
+    ui(new Ui::PortfolioWidget)
 {
     ui->setupUi(this);
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
@@ -28,25 +27,25 @@ PocketWidget::PocketWidget(PortfolioModel *model,
     ui->tableView->setSortingEnabled(true);
     ui->tableView->sortByColumn(PortfolioModel::NAME, Qt::AscendingOrder);
     {
-        QTimer *t = new QTimer(this);
-        connect(t, &QTimer::timeout,
-                [this, &application](){ui->sumTextEdit->setText(application.getPortfolioPrice());});
-        t->start(5000);
+        auto priceUpdater = [this, &application]()
+        {ui->sumTextEdit->setText(application.getPortfolioPrice());};
+        connect(model, &PortfolioModel::updated,
+                priceUpdater);
     }
 }
 
-PocketWidget::~PocketWidget()
+PortfolioWidget::~PortfolioWidget()
 {
     delete ui;
 }
 
-void PocketWidget::on_clipBoardButton_clicked()
+void PortfolioWidget::on_clipBoardButton_clicked()
 {
     QClipboard* clipboard = QApplication::clipboard();
     clipboard->setText(ui->sumTextEdit->text());
 }
 
-void PocketWidget::on_convertButton_clicked()
+void PortfolioWidget::on_convertButton_clicked()
 {
     QStringList items = rules.getAvailibleCurrencies();
 

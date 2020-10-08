@@ -2,7 +2,6 @@
 #define SMARTLABPARSER_H
 
 #include <QByteArray>
-#include <QByteArrayList>
 
 #include "StocksList.h"
 #include "AbstractParser.h"

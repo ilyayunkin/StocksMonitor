@@ -2,7 +2,10 @@
 #define StocksModel_H
 
 #include <QAbstractTableModel>
-#include "Rules/AbstractStocksModel.h"
+
+#include <cstdlib>
+
+#include "Rules/StocksInterface.h"
 #include "Rules/AbstractStocksView.h"
 /**
  * @brief Класс Модели (архитектура Модель/Представление), реализующей
@@ -12,7 +15,7 @@ class StocksModel final: public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
 
-    AbstractStocksModel &stocks;
+    StocksInterface &stocks;
     mutable size_t size = 0;
 public:
     enum
@@ -28,7 +31,8 @@ public:
 
         COL_COUNT
     };
-    explicit StocksModel(AbstractStocksModel &stocks, QObject *parent = 0);
+    explicit StocksModel(StocksInterface &stocks, QObject *parent = 0);
+    ~StocksModel();
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
@@ -39,6 +43,8 @@ public:
 
     void stocksUpdated() override;
     void stocksUpdated(size_t row) override;
+signals:
+    void time(QByteArray);
 };
 
 #endif // StocksModel_H

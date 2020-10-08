@@ -1,36 +1,95 @@
 #ifndef RULESFASADE_H
 #define RULESFASADE_H
 
-#include <QByteArrayList>
-
+#include <cstdlib>
 #include <memory.h>
 
 #include "SourcePluginInterface.h"
-#include "ModelsReference.h"
 #include "CurrencyCounter.h"
+#include "AbstractBuyRequestDatabase.h"
+#include "AbstractDialogs.h"
+#include "Entities/Entities.h"
+#include "AbstractStocksReceiver.h"
+#include "ViewInterfaces.h"
+#include "PortfolioInterface.h"
 
-typedef std::vector<std::shared_ptr<SourcePluginInterface>> PluginsList;
+struct StocksSource
+{
+    const QString name;
+    const QByteArray currencyCode;
+    AbstractBuyRequestDatabase *const db;
+};
+
+typedef std::vector<StocksSource> StocksSourceList;
 
 class AbstractCurrencyConverter;
-class AbstractPocket;
-class StocksMonitor;
+class AbstractPortfolioDatabase;
+class AbstractNotifier;
 
-class RulesFasade
+class RulesFasade final : public AbstractStocksReceiver
 {
-    AbstractCurrencyConverter &converter;
-    AbstractPocket &portfolio;
-    PluginsList &plugins;
+    Entities entities;
+    ViewInterfaces viewInterfaces;
+    PortfolioInterface portfolioInterface;
 
-    std::vector<std::shared_ptr<StocksMonitor>> monitors;
+    AbstractCurrencyConverter *converter = nullptr;
+    AbstractPortfolioDatabase *portfolioDb = nullptr;
+    AbstractNotifier *notifier = nullptr;
+    AbstractDialogs *dialogs = nullptr;
+
+    void updateLimitsStorage(const stocksListHandler handler);
+    void updatePortfolioStorage(const stocksListHandler handler);
+    void updateStocksView(const stocksListHandler handler);
+    void updateLimitsView(const stocksListHandler handler);
+    void updatePortfolioView();
+    void updatePortfolioView(const size_t row);
+    void registerStockSourceInPortfolio(const QString &name, const stocksListHandler handler);
+    void signalizePortfolio(const QString &name, const float price);
+    void signalizeLimit(const QString &name, const float price);
+    float getStockPrice(const stocksListHandler handler, const QByteArray &ticker);
+    CurrencyCountersList getPortfolioSum() const;
 public:
-    RulesFasade(AbstractCurrencyConverter &converter,
-                AbstractPocket &portfolio,
-                PluginsList &plugins,
-                ModelsReferenceList &models);
+    RulesFasade();
     ~RulesFasade();
+
+    ViewInterfaces &getViewInterfaces();
+    PortfolioInterface &getPortfolioInterface();
+
+    stocksListHandler addStocksSource(const StocksSource source);
+    void setConverter(AbstractCurrencyConverter *const converter);
+    void setNotifier(AbstractNotifier * const notifier);
+    void setPortfolioDatabase(AbstractPortfolioDatabase *const portfolioDb);
+    void setDialogs(AbstractDialogs *const dialogs);
+
+    size_t getPortfolioSize() const;
+    PortfolioEntry getPortfolioEntry(const size_t i) const;
+    Stock getStockForPortfolioEntry(const size_t i) const;
+    bool setPortfolioEntryQuantity(size_t row, int quantity);
+    bool setPortfolioEntryReferencePrice(size_t row, float referencePrice);
     QString getPortfolioPrice(const char *const currency);
     QString getPortfolioPrice();
+    void addToPortfolio(const stocksListHandler handler, const QByteArray &ticker, const int quantity);
+    void deletePortfolioEntry(size_t row);
     QStringList getAvailibleCurrencies();
+
+    Stock getStock(const stocksListHandler handler, const size_t i) const;
+    Stock getStock(const stocksListHandler handler, const QByteArray &ticker) const;
+    size_t getStocksCount(const stocksListHandler handler) const;
+    QByteArray getStocksActualizationTime(const stocksListHandler handler) const;
+
+    StockLimit getStockBuyRequest(const stocksListHandler handler, const size_t i) const;
+    StockLimit getStockBuyRequest(const stocksListHandler handler, const QByteArray &ticker) const;
+    size_t getStockBuyRequestsCount(const stocksListHandler handler) const;
+
+    void addLimit(const stocksListHandler handler, const QByteArray &ticker, float referencePrice);
+    bool setReferencePrice(const stocksListHandler handler, size_t row, float referencePrice);
+
+
+    // AbstractStocksReceiver interface
+public:
+    void setStocks(const stocksListHandler handler,
+                   StocksList &&stocks,
+                   const QByteArray &time) override;
 };
 
 #endif // RULESFASADE_H

@@ -10,17 +10,18 @@
 
 #include "ExceptionClasses.h"
 #include "logger.h"
-#include "AbstractStocksModel.h"
 
 #define WRITE_DEBUG_FILES 0
 #define DEBUG_PRINT 0
 
-
-StocksMonitor::StocksMonitor(AbstractStocksModel &model,
+StocksMonitor::StocksMonitor(AbstractStocksReceiver &model,
+                             const stocksListHandler handler,
                              AbstractParser::Ptr parser,
                              const QUrl url,
-                             QObject *parent) : QObject(parent),
+                             QObject *parent) :
+    QObject(parent),
     model(model),
+    handler(handler),
     parser(parser),
     url(url)
 {
@@ -94,7 +95,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
         }else
         {
             time = t;
-            model.setStocks(std::move(stocks));
+            model.setStocks(handler, std::move(stocks), time);
             emit downloaded(time);
         }
     } catch (std::runtime_error &e) {

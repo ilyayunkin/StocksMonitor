@@ -19,18 +19,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Application/Application.cpp \
-    Application/StocksDatabase.cpp \
+    Application/BuyRequestDatabase.cpp \
+    Application/PortfolioDatabase.cpp \
     Application/CurrencyConverter.cpp \
-    Application/StocksLimitsDatabase.cpp \
+    Rules/BuyRequestInterface.cpp \
+    Rules/PortfolioInterface.cpp \
     Rules/RulesFasade.cpp \
     Rules/CurrencyCounter.cpp \
     Presenters/LimitBackgrounColor.cpp \
     Presenters/StockHint.cpp \
     Presenters/CurrencyPresenter.cpp \
+    Rules/StocksInterface.cpp \
     Rules/StocksMonitor.cpp \
+    WidgetsUi/Dialogs.cpp \
     WidgetsUi/LimitsEventFilter.cpp \
-    WidgetsUi/PocketWidget.cpp \
+    WidgetsUi/Notifier.cpp \
     WidgetsUi/PopUpWindow.cpp \
+    WidgetsUi/PortfolioWidget.cpp \
     WidgetsUi/Sounds/Signalizer.cpp \
     WidgetsUi/Sounds/SoundDialog.cpp \
     WidgetsUi/StocksEventFilter.cpp \
@@ -49,27 +54,39 @@ HEADERS += \
     ../include/ExceptionClasses.h \
     ../include/StocksList.h \
     Application/Application.h \
-    Application/StocksDatabase.h \
+    Application/BuyRequestDatabase.h \
+    Application/PortfolioDatabase.h \
     Application/CurrencyConverter.h \
-    Application/StocksLimitsDatabase.h \
     Color.h \
+    Entities/Entities.h \
+    Entities/PortfolioEntry.h \
+    Entities/StocksListHandler.h \
+    Entities/StockLimit.h \
+    Rules/AbstractDialogs.h \
+    Rules/AbstractNotifier.h \
+    Rules/ViewInterfaces.h \
+    Rules/AbstractBuyRequestDatabase.h \
     Rules/AbstractCurrencyConverter.h \
-    Rules/AbstractPocket.h \
+    Rules/AbstractPortfolioDatabase.h \
     Rules/AbstractStocksModel.h \
+    Rules/AbstractStocksReceiver.h \
     Rules/AbstractStocksView.h \
-    Rules/StockLimit.h \
-    Rules/ModelsReference.h \
+    Rules/BuyRequestInterface.h \
+    Rules/PortfolioInterface.h \
     Rules/RulesFasade.h \
+    Rules/StocksInterface.h \
     Rules/StocksMonitor.h \
     Rules/CurrencyCounter.h \
     Presenters/LimitBackgrounColor.h \
     Presenters/StockHint.h \
     Presenters/CurrencyPresenter.h \
+    WidgetsUi/Dialogs.h \
     WidgetsUi/LimitsEventFilter.h \
+    WidgetsUi/Notifier.h \
+    WidgetsUi/PortfolioWidget.h \
     WidgetsUi/Sounds/AbstractSignalizer.h \
     WidgetsUi/Sounds/Signalizer.h \
     WidgetsUi/Sounds/SoundDialog.h \
-    WidgetsUi/PocketWidget.h \
     WidgetsUi/StocksEventFilter.h \
     WidgetsUi/StocksModelsWidget.h \
     WidgetsUi/StoryWidget.h \
@@ -93,7 +110,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
-    WidgetsUi/PocketWidget.ui \
+    WidgetsUi/PortfolioWidget.ui \
     WidgetsUi/Sounds/SoundDialog.ui \
     WidgetsUi/StocksModelsWidget.ui
 

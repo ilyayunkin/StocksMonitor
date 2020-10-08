@@ -12,7 +12,7 @@
 
 #include "StoryWidget.h"
 #include "StocksModelsWidget.h"
-#include "PocketWidget.h"
+#include "PortfolioWidget.h"
 #include "PortfolioModel.h"
 #include "StocksLimitsModel.h"
 #include "StocksModel.h"
@@ -24,6 +24,9 @@ MainWindow::MainWindow(Application &application,
       application(application)
 {
     QWidget *w = new QWidget;
+    signalizer = new Signalizer;
+    notifier = new Notifier(this, signalizer);
+    application.setNotifier(notifier);
     setCentralWidget(w);
 
     {
@@ -34,22 +37,22 @@ MainWindow::MainWindow(Application &application,
             {
                 QTabWidget *tabWidget = new QTabWidget;
                 hlay->addWidget(tabWidget);
-                for(auto &modelsRef : application.modelsReferences())
+                for(auto &modelsRef : application.getViewInterfaces())
                 {
-                    StocksModelsWidget *w = new StocksModelsWidget(modelsRef, *(application.getPortfolio()));
+                    StocksModelsWidget *w =
+                            new StocksModelsWidget(modelsRef.stocks,
+                                                   modelsRef.buyRequests);
                     QHBoxLayout *viewLay = new QHBoxLayout;
                     viewLay->setMargin(0);
 
                     tabWidget->addTab(w, modelsRef.name);
                 }
                 {
-                    PocketWidget *pocketWidget = new PocketWidget(application.getPortfolio(), application);
-                    tabWidget->addTab(pocketWidget, QIcon("://img/portfolio.png"), tr("Portfolio"));
-                }
-                for(auto &ref : application.modelsReferences())
-                {
-                    QObject::connect(ref.limitsModel.get(), &StocksLimitsDatabase::boundCrossed,
-                                     [this](){QApplication::alert(this);});
+                    auto portfolioModel = new PortfolioModel(application.getPortfolioInterface(), this);
+                    application.getPortfolioInterface().setView(portfolioModel);
+                    PortfolioWidget *portfolioWidget =
+                            new PortfolioWidget(portfolioModel, application);
+                    tabWidget->addTab(portfolioWidget, QIcon("://img/portfolio.png"), tr("Portfolio"));
                 }
             }
         }
@@ -57,13 +60,13 @@ MainWindow::MainWindow(Application &application,
     {
         QMenuBar *bar = new QMenuBar;
         setMenuBar(bar);
-//        {
-//            QMenu *fileMenu = bar->addMenu(tr("File"));
-//            {
-//                QAction *saveAction = fileMenu->addAction(tr("Save limits"));
-//                connect(saveAction, &QAction::triggered, this, &MainWindow::save);
-//            }
-//        }
+        //        {
+        //            QMenu *fileMenu = bar->addMenu(tr("File"));
+        //            {
+        //                QAction *saveAction = fileMenu->addAction(tr("Save limits"));
+        //                connect(saveAction, &QAction::triggered, this, &MainWindow::save);
+        //            }
+        //        }
         {
             QMenu *ToolsMenu = bar->addMenu(tr("Tools"));
             {
@@ -73,7 +76,7 @@ MainWindow::MainWindow(Application &application,
             {
                 QAction *setupSoundAction = ToolsMenu->addAction(tr("Setup sound"));
                 connect(setupSoundAction, &QAction::triggered,
-                        [this](){this->application.getSignalizer()->changeSound();});
+                        [this](){signalizer->changeSound();});
             }
         }
     }
@@ -81,6 +84,8 @@ MainWindow::MainWindow(Application &application,
 
 MainWindow::~MainWindow()
 {
+    delete notifier;
+    delete signalizer;
 }
 
 void MainWindow::save()

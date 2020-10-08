@@ -1,7 +1,7 @@
 #ifndef ABSTRACTSTOCKSVIEW_H
 #define ABSTRACTSTOCKSVIEW_H
 
-#include <stdint.h>
+#include <cstdlib>
 
 class AbstractStocksView
 {

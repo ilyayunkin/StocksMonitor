@@ -5,6 +5,8 @@
 
 #include "Application/Application.h"
 #include "Sounds/AbstractSignalizer.h"
+#include "Notifier.h"
+#include "Sounds/Signalizer.h"
 
 class AbstractCurrencyConverter;
 class PortfolioModel;
@@ -15,6 +17,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
     Application &application;
+    Signalizer *signalizer;
+    Notifier *notifier;
 
     void selectSoundFile();
     void setupFile(const QString &filename);

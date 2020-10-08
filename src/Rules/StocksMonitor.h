@@ -7,23 +7,27 @@
 #include <QNetworkReply>
 
 #include "AbstractParser.h"
+#include "Rules/AbstractStocksReceiver.h"
+#include "Entities/StocksListHandler.h"
 
 class AbstractStocksModel;
 
 class StocksMonitor : public QObject
 {
     Q_OBJECT
-    AbstractStocksModel &model;
+    AbstractStocksReceiver &model;
+    const stocksListHandler handler;
 
     QByteArray time;
     QNetworkAccessManager m_WebCtrl;
     AbstractParser::Ptr parser;
     const QUrl url;
 public:
-    StocksMonitor(AbstractStocksModel &model,
-                           AbstractParser::Ptr parser,
-                           const QUrl url,
-                           QObject *parent = nullptr);
+    StocksMonitor(AbstractStocksReceiver &model,
+                  const stocksListHandler handler,
+                  AbstractParser::Ptr parser,
+                  const QUrl url,
+                  QObject *parent = nullptr);
     ~StocksMonitor();
 public slots:
     void requestFileFromTheInternet();

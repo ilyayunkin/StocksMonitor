@@ -1,33 +1,33 @@
-#ifndef POCKETWIDGET_H
-#define POCKETWIDGET_H
+#ifndef PORTFOLIO_WIDGET_H
+#define PORTFOLIO_WIDGET_H
 
 #include <QWidget>
 #include "Rules/AbstractCurrencyConverter.h"
 
 namespace Ui {
-class PocketWidget;
+class PortfolioWidget;
 }
 
 class PortfolioModel;
 class Application;
 
-class PocketWidget : public QWidget
+class PortfolioWidget : public QWidget
 {
     Q_OBJECT
     PortfolioModel &model;
     Application &rules;
 public:
-    explicit PocketWidget(PortfolioModel *model,
+    explicit PortfolioWidget(PortfolioModel *model,
                           Application &rules,
                           QWidget *parent = nullptr);
-    ~PocketWidget();
+    ~PortfolioWidget();
 
 private slots:
     void on_clipBoardButton_clicked();
     void on_convertButton_clicked();
 
 private:
-    Ui::PocketWidget *ui;
+    Ui::PortfolioWidget *ui;
 };
 
-#endif // POCKETWIDGET_H
+#endif // PORTFOLIO_WIDGET_H
