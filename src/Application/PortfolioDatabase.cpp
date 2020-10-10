@@ -1,7 +1,5 @@
 #include "PortfolioDatabase.h"
 
-#include <QMessageBox>
-
 namespace  {
 QString tableName = "Pocket";
 }
@@ -48,7 +46,6 @@ void PortfolioDatabase::update(const PortfolioEntry &entry)
 {
     int quantity = entry.quantity;
     double sellPrice = entry.sellPrice;
-    if(quantity > 0)
     {
         executeQuery(QString("UPDATE %1 "
                              "SET quantity = '%2' "
@@ -62,21 +59,6 @@ void PortfolioDatabase::update(const PortfolioEntry &entry)
                      .arg(tableName)
                      .arg(sellPrice)
                      .arg(QString(entry.ticker)));
-    }else
-    {
-        bool answer =
-                QMessageBox::question(0,
-                                      QObject::tr("Delete?"),
-                                      QObject::tr("You've selected 0 items:\n %1")
-                                      .arg(QString(entry.ticker)))
-                == QMessageBox::Yes;
-        if(answer)
-        {
-            executeQuery(QString("DELETE FROM %1 "
-                                 "WHERE ticker = '%2';")
-                         .arg(tableName)
-                         .arg(QString(entry.ticker)));
-        }
     }
 }
 
