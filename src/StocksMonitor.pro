@@ -22,6 +22,7 @@ SOURCES += \
     Application/BuyRequestDatabase.cpp \
     Application/PortfolioDatabase.cpp \
     Application/CurrencyConverter.cpp \
+    Application/StocksMonitor.cpp \
     Rules/BuyRequestInterface.cpp \
     Rules/PortfolioInterface.cpp \
     Rules/RulesFasade.cpp \
@@ -30,7 +31,6 @@ SOURCES += \
     Presenters/StockHint.cpp \
     Presenters/CurrencyPresenter.cpp \
     Rules/StocksInterface.cpp \
-    Rules/StocksMonitor.cpp \
     WidgetsUi/Dialogs.cpp \
     WidgetsUi/LimitsEventFilter.cpp \
     WidgetsUi/Notifier.cpp \
@@ -57,6 +57,7 @@ HEADERS += \
     Application/BuyRequestDatabase.h \
     Application/PortfolioDatabase.h \
     Application/CurrencyConverter.h \
+    Application/StocksMonitor.h \
     Color.h \
     Entities/Entities.h \
     Entities/PortfolioEntry.h \
@@ -75,7 +76,6 @@ HEADERS += \
     Rules/PortfolioInterface.h \
     Rules/RulesFasade.h \
     Rules/StocksInterface.h \
-    Rules/StocksMonitor.h \
     Rules/CurrencyCounter.h \
     Presenters/LimitBackgrounColor.h \
     Presenters/StockHint.h \

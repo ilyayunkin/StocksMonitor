@@ -5,7 +5,7 @@
 #include "SourcePluginInterface.h"
 #include "CurrencyConverter.h"
 #include "Rules/RulesFasade.h"
-#include "Rules/StocksMonitor.h"
+#include "StocksMonitor.h"
 #include "BuyRequestDatabase.h"
 #include "PortfolioDatabase.h"
 
