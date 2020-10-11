@@ -24,8 +24,8 @@ class Application : public QObject
     Q_OBJECT
 
     std::vector<std::shared_ptr<StocksMonitor>> monitors;
-    RulesFasade *rules;
-    CurrencyConverter *converter;
+    std::shared_ptr<RulesFasade> rules;
+    std::shared_ptr<CurrencyConverter> converter;
     std::vector<std::shared_ptr<BuyRequestDatabase>> buyRequestDatabases;
     std::shared_ptr<PortfolioDatabase> portfolioDatabase;
 

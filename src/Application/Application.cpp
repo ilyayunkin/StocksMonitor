@@ -65,7 +65,7 @@ Application::Application(QObject *parent) :
         throw NoPluginsException();
     }
 
-    rules = new RulesFasade();
+    rules = std::make_shared<RulesFasade>();
     StocksInterface *currencyStocksInterface = nullptr;
     for(PluginsList::size_type i = 0; i < plugins.size(); ++i)
     {
@@ -90,16 +90,14 @@ Application::Application(QObject *parent) :
             currencyStocksInterface = &interface.stocks;
         }
     }
-    converter = new CurrencyConverter("RUB", currencyStocksInterface);
-    rules->setConverter(converter);
+    converter = std::make_shared<CurrencyConverter>("RUB", currencyStocksInterface);
+    rules->setConverter(converter.get());
     portfolioDatabase = std::make_shared<PortfolioDatabase>();
     rules->setPortfolioDatabase(portfolioDatabase.get());
 }
 
 Application::~Application()
 {
-    delete rules;
-    delete converter;
 }
 
 ViewInterfaces &Application::getViewInterfaces()
