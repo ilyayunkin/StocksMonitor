@@ -6,13 +6,13 @@
 
 #include "SourcePluginInterface.h"
 #include "CurrencyCounter.h"
-#include "AbstractBuyRequestDatabase.h"
 #include "AbstractDialogs.h"
 #include "Entities/Entities.h"
 #include "AbstractStocksReceiver.h"
 #include "ViewInterfaces.h"
 #include "PortfolioInterface.h"
 
+class AbstractBuyRequestDatabase;
 struct StocksSource
 {
     const QString name;
@@ -21,6 +21,7 @@ struct StocksSource
 };
 
 typedef std::vector<StocksSource> StocksSourceList;
+typedef std::vector<AbstractBuyRequestDatabase *> BuyRequestDatabasesList;
 
 class AbstractCurrencyConverter;
 class AbstractPortfolioDatabase;
@@ -31,6 +32,7 @@ class RulesFasade final : public AbstractStocksReceiver
     Entities entities;
     ViewInterfaces viewInterfaces;
     PortfolioInterface portfolioInterface;
+    BuyRequestDatabasesList buyRequestDatabases;
 
     AbstractCurrencyConverter *converter = nullptr;
     AbstractPortfolioDatabase *portfolioDb = nullptr;

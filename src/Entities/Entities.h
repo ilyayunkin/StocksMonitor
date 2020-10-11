@@ -7,8 +7,6 @@
 
 #include <vector>
 
-#include "Rules/AbstractBuyRequestDatabase.h"
-
 struct StockListsPair
 {
     const QString name;
@@ -16,13 +14,11 @@ struct StockListsPair
     StocksList stocks;
     QByteArray time;
     const QByteArray currencyCode;
-    AbstractBuyRequestDatabase *const db;
 
     StockListsPair(const QString name,
-                   AbstractBuyRequestDatabase *const db,
                    const QByteArray currencyCode,
                    StockLimitsList &&limits) :
-        name(name), limits(limits), currencyCode(currencyCode), db(db){}
+        name(name), limits(limits), currencyCode(currencyCode){}
 };
 
 struct Entities

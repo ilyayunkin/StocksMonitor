@@ -7,6 +7,7 @@
 #include <QDebug>
 
 #include "AbstractCurrencyConverter.h"
+#include "AbstractBuyRequestDatabase.h"
 #include "Presenters/CurrencyPresenter.h"
 #include "AbstractPortfolioDatabase.h"
 #include "AbstractNotifier.h"
@@ -198,7 +199,7 @@ size_t RulesFasade::getStockBuyRequestsCount(const stocksListHandler handler) co
 void RulesFasade::addLimit(const stocksListHandler handler, const QByteArray &ticker, float referencePrice)
 {
     auto &stockLimits = entities.pairs[handler].limits;
-    const auto &limitsDb = entities.pairs[handler].db;
+    const auto &limitsDb = buyRequestDatabases[handler];
 
     auto it = std::find_if(stockLimits.begin(), stockLimits.end(),
                            [&](const StockLimit &l){return l.ticker == ticker;});
@@ -230,7 +231,7 @@ bool RulesFasade::setReferencePrice(const stocksListHandler handler, size_t row,
     auto &pair = entities.pairs[handler];
     auto &limits = pair.limits;
     limits[row].basePrice = referencePrice;
-    pair.db->update(limits.at(row));
+    buyRequestDatabases[handler]->update(limits.at(row));
     return true;
 }
 
@@ -306,10 +307,9 @@ stocksListHandler RulesFasade::addStocksSource(const StocksSource source)
     stocksListHandler handler = entities.pairs.size();
 
     entities.pairs.push_back(StockListsPair{source.name,
-                                            source.db,
                                             source.currencyCode,
                                             source.db->getAll()});
-
+    buyRequestDatabases.push_back(source.db);
     viewInterfaces.push_back(ViewInterfacesPair(source.name, this, handler));
     registerStockSourceInPortfolio(source.name, handler);
     return handler;
