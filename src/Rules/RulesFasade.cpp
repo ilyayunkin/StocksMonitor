@@ -418,14 +418,11 @@ QStringList RulesFasade::getAvailibleCurrencies()
     auto counters = getPortfolioSum();
 
     assert(!counters.list.empty());
-    std::set<QByteArray> currencySet;
-    for(const auto &c : counters.list)
-    {
-        currencySet.insert(c.currency);
-    }
+
     QStringList items;
-    std::transform(currencySet.begin(), currencySet.end(), std::back_inserter(items),
-                   [](const QString &str){return str;});
+    std::transform(counters.list.begin(), counters.list.end(),
+                   std::back_inserter(items),
+                   [](const CurrencyCounter &c){return c.currency;});
 
     return items;
 }
