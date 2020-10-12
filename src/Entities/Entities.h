@@ -5,7 +5,10 @@
 #include "StocksList.h"
 #include "PortfolioEntry.h"
 
+#include <QByteArray>
+
 #include <vector>
+#include <string>
 
 struct StockListsPair
 {
@@ -13,10 +16,10 @@ struct StockListsPair
     StockLimitsList limits;
     StocksList stocks;
     QByteArray time;
-    const QByteArray currencyCode;
+    const std::string currencyCode;
 
     StockListsPair(const QString name,
-                   const QByteArray currencyCode,
+                   const std::string &currencyCode,
                    StockLimitsList &&limits) :
         name(name), limits(limits), currencyCode(currencyCode){}
 };

@@ -59,9 +59,9 @@ bool StocksEventFilter::eventFilter(QObject *obj, QEvent *event)
                 }else if(selected == urlAction)
                 {
                     const auto stock = stocksInterface.getStock(ticker.data());
-                    if(!stock.url.isEmpty())
+                    if(!stock.url.empty())
                     {
-                        QDesktopServices::openUrl(QUrl(stock.url));
+                        QDesktopServices::openUrl(QUrl(stock.url.data()));
                     }
                 }
             }
@@ -107,6 +107,6 @@ void StocksEventFilter::addLimit(const QModelIndex &sortModelIndex)
                                               0, 100000, 10, &ok);
     if(ok)
     {
-        stocksInterface.addLimit(stock.ticker, basePrice);
+        stocksInterface.addLimit(stock.ticker.data(), basePrice);
     }
 }

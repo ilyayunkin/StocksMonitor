@@ -12,7 +12,7 @@ class SmartLabMmvbPlugin : public SourcePluginInterface
 public:
     QString getName() const override
     {return "Smart-Lab-MMVB";}
-    QByteArray getCurrencyCode() const override
+    std::string getCurrencyCode() const override
     {return "RUB";}
     AbstractParser::Ptr createParser() const override
     {return AbstractParser::Ptr(new SmartLabMmvbParser);}

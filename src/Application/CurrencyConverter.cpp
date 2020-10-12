@@ -32,8 +32,8 @@ CurrencyCountersList CurrencyConverter::convert(const char *const targetCurrency
                 return QInputDialog::getDouble(0,
                                         QObject::tr("Input cource"),
                                         QObject::tr("Cource of %1 to %2")
-                                        .arg(QString(currency.currency))
-                                        .arg(QString(targetCurrency)),
+                                        .arg(currency.currency.data())
+                                        .arg(targetCurrency),
                                         0,
                                         0,
                                         10000,
@@ -42,12 +42,12 @@ CurrencyCountersList CurrencyConverter::convert(const char *const targetCurrency
             if(currencyModel != nullptr)
             {
                 const QByteArray baseCurrency = currencyCode;
-                if(targetCurrency == baseCurrency)
+                if(baseCurrency == targetCurrency)
                 {
                     Stock stock = currencyModel->getStock(currency.currency.data());
                     if(stock.price != -1)
                         cource = stock.price;
-                }else if(currency.currency == baseCurrency)
+                }else if(baseCurrency == currency.currency.data())
                 {
                     Stock stock = currencyModel->getStock(targetCurrency);
                     if(stock.price != -1)
@@ -60,8 +60,8 @@ CurrencyCountersList CurrencyConverter::convert(const char *const targetCurrency
             {
                 cource = getDouble();
             }
-            qDebug() << __PRETTY_FUNCTION__ << currency.currency << cource;
-            currencyCources[currency.currency] = cource;
+            qDebug() << __PRETTY_FUNCTION__ << currency.currency.data() << cource;
+            currencyCources[currency.currency.data()] = cource;
         }
     }
 
@@ -70,12 +70,12 @@ CurrencyCountersList CurrencyConverter::convert(const char *const targetCurrency
     {
         if(counter.currency == targetCurrency)
         {
-            qDebug() << __PRETTY_FUNCTION__ << counter.currency;
+            qDebug() << __PRETTY_FUNCTION__ << counter.currency.data();
             convertedCounters.add(targetCurrency, counter.sum);
         }else
         {
-            qDebug() << __PRETTY_FUNCTION__ << counter.currency << counter.sum * currencyCources[counter.currency];
-            convertedCounters.add(targetCurrency, counter.sum * currencyCources[counter.currency]);
+            qDebug() << __PRETTY_FUNCTION__ << counter.currency.data() << counter.sum * currencyCources[counter.currency.data()];
+            convertedCounters.add(targetCurrency, counter.sum * currencyCources[counter.currency.data()]);
         }
     }
 

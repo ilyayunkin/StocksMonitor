@@ -94,7 +94,7 @@ void CbrfCurrencyParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                         stock.name.prepend(text + " ");
                     }else  if(tag == "CharCode")
                     {
-                        stock.ticker = text.toLatin1();
+                        stock.ticker = text.toLatin1().data();
                     }else  if(tag == "Value")
                     {
                         stock.price = QLocale::system().toFloat(text);

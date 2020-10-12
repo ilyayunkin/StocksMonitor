@@ -121,7 +121,7 @@ QVariant PortfolioModel::data(const QModelIndex &index, int role) const
                 ret = entry.name;
                 break;
             case TICKER:
-                ret = entry.ticker;
+                ret = entry.ticker.data();
                 break;
             case QUANTITY:
                 ret = entry.quantity;
@@ -130,7 +130,7 @@ QVariant PortfolioModel::data(const QModelIndex &index, int role) const
                 ret = entry.price;
                 break;
             case CURRENCY:
-                ret = entry.currency;
+                ret = entry.currency.data();
                 break;
             case SUM:
                 ret = entry.sum;
@@ -188,7 +188,7 @@ bool PortfolioModel::setData(const QModelIndex &index, const QVariant &value, in
                         QMessageBox::question(0,
                                               tr("Delete?"),
                                               tr("You've selected 0 items:\n %1")
-                                              .arg(QString(entry.ticker)))
+                                              .arg(QString(entry.ticker.data())))
                         == QMessageBox::Yes;
                 if(answer)
                 {

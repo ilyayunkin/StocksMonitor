@@ -95,7 +95,7 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
                 ret = stock.name;
                 break;
             case TICKER:
-                ret = stock.ticker;
+                ret = stock.ticker.data();
                 break;
             case PRICE:
                 ret = stock.price;

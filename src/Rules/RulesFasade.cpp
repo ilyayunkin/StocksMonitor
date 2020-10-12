@@ -20,7 +20,7 @@ void RulesFasade::updateLimitsStorage(const stocksListHandler handler)
     bool anyUpdates = false;
     for(auto &limit : stockLimits)
     {
-        float price = getStockPrice(handler, limit.ticker);
+        float price = getStockPrice(handler, limit.ticker.data());
         if(price != limit.price)
         {
             anyUpdates = true;
@@ -206,7 +206,7 @@ void RulesFasade::addLimit(const stocksListHandler handler, const char * const t
 
     if(it != stockLimits.end())
     {
-        if(dialogs->askReplaceBuyRequest(it->ticker, it->basePrice))
+        if(dialogs->askReplaceBuyRequest(it->ticker.data(), it->basePrice))
         {
             it->basePrice = referencePrice;
             //                int row = it - stockLimits.begin();
@@ -242,7 +242,7 @@ void RulesFasade::addToPortfolio(const stocksListHandler handler, const char *co
                          [&](const PortfolioEntry &e){return e.ticker == ticker;});
     if(entryIt != entities.portfolio.end())
     {
-        if(dialogs->askAddQuantityToPortfolio(entryIt->ticker))
+        if(dialogs->askAddQuantityToPortfolio(entryIt->ticker.data()))
         {
             entryIt->quantity+= quantity;
             int row = entryIt - entities.portfolio.begin();
@@ -270,7 +270,7 @@ void RulesFasade::deletePortfolioEntry(size_t row)
     auto ticker = entities.portfolio.at(row).ticker;
     std::remove_if(entities.portfolio.begin(), entities.portfolio.end(),
                    [&ticker](PortfolioEntry &e){return ticker == e.ticker;});
-    portfolioDb->deleteEntry(ticker);
+    portfolioDb->deleteEntry(ticker.data());
     portfolioInterface.update();
 }
 
@@ -290,7 +290,7 @@ CurrencyCountersList RulesFasade::getPortfolioSum() const
     CurrencyCountersList counters;
     for(auto &e : entities.portfolio)
     {
-        counters.add(e.currency, e.price * e.quantity);
+        counters.add(e.currency.data(), e.price * e.quantity);
     }
 
     return counters;
@@ -362,9 +362,9 @@ bool RulesFasade::setPortfolioEntryQuantity(size_t row, int quantity)
     if(quantity == 0)
     {
         const auto ticker = entities.portfolio[row].ticker;
-        if(dialogs->askDeleteFromPortfolio(ticker))
+        if(dialogs->askDeleteFromPortfolio(ticker.data()))
         {
-            portfolioDb->deleteEntry(ticker);
+            portfolioDb->deleteEntry(ticker.data());
         }
         return true;
     }if(quantity > 0)
@@ -422,7 +422,7 @@ QStringList RulesFasade::getAvailibleCurrencies()
     QStringList items;
     std::transform(counters.list.begin(), counters.list.end(),
                    std::back_inserter(items),
-                   [](const CurrencyCounter &c){return c.currency;});
+                   [](const CurrencyCounter &c){return c.currency.data();});
 
     return items;
 }

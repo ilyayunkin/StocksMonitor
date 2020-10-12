@@ -12,7 +12,7 @@ class SmartLabUsaPlugin : public SourcePluginInterface
 public:
     QString getName() const override
     {return "Smart-Lab-Usa";}
-    QByteArray getCurrencyCode() const override
+    std::string getCurrencyCode() const override
     {return "USD";}
     AbstractParser::Ptr createParser() const override
     {return AbstractParser::Ptr(new SmartLabUsaParser);}

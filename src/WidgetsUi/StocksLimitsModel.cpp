@@ -93,7 +93,7 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
                 ret = limit.name;
                 break;
             case TICKER:
-                ret = limit.ticker;
+                ret = limit.ticker.data();
                 break;
             case PRICE:
                 ret = limit.price;

@@ -12,7 +12,7 @@ class CbrfCurrencyPlugin : public SourcePluginInterface
 public:
     QString getName() const override
     {return "CBRF-Currency";}
-    QByteArray getCurrencyCode() const override
+    std::string getCurrencyCode() const override
     {return "RUB";}
     AbstractParser::Ptr createParser() const override
     {return AbstractParser::Ptr(new CbrfCurrencyParser);}

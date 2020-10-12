@@ -52,13 +52,13 @@ void PortfolioDatabase::update(const PortfolioEntry &entry)
                              "WHERE ticker = '%3';")
                      .arg(tableName)
                      .arg(quantity)
-                     .arg(QString(entry.ticker)));
+                     .arg(QString(entry.ticker.data())));
         executeQuery(QString("UPDATE %1 "
                              "SET sell_price = '%2' "
                              "WHERE ticker = '%3';")
                      .arg(tableName)
                      .arg(sellPrice)
-                     .arg(QString(entry.ticker)));
+                     .arg(QString(entry.ticker.data())));
     }
 }
 
@@ -94,9 +94,9 @@ PortfolioEntryList PortfolioDatabase::getAll()
         //                        stock.price, sellPrice, stock.price * quantity,
         //                        stockModel->currencyCode(), stockModel};
 
-        PortfolioEntry newEntry{plugin, QString(), ticker, quantity,
+        PortfolioEntry newEntry{plugin, "", ticker.data(), quantity,
                     float(), sellPrice, float(),
-                    QByteArray(), stocksListHandler()};
+                    "", stocksListHandler()};
         entries.push_back(newEntry);
         //        }
     }

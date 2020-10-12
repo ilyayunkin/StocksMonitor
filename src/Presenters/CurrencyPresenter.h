@@ -13,7 +13,7 @@ public:
         QString text;
         for(const CurrencyCounter &c : counters.list)
         {
-            text+= QString::number(c.sum) + " " + c.currency + " ";
+            text+= QString::number(c.sum) + " " + c.currency.data() + " ";
         }
         return text;
     }

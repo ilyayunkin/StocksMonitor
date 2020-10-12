@@ -16,7 +16,7 @@ class AbstractBuyRequestDatabase;
 struct StocksSource
 {
     const QString name;
-    const QByteArray currencyCode;
+    const std::string currencyCode;
     AbstractBuyRequestDatabase *const db;
 };
 

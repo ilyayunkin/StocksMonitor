@@ -143,7 +143,7 @@ QByteArrayList getCols(const QByteArray &table)
     return ret;
 }
 
-void getA(const QByteArray &tableCol, QString &name, QByteArray &url)
+void getA(const QByteArray &tableCol, QString &name, std::string &url)
 {
     QByteArray ret = tableCol;
     constexpr char divBegin[] = "<a";
@@ -167,7 +167,7 @@ void getA(const QByteArray &tableCol, QString &name, QByteArray &url)
                 if(!urlTmp.isEmpty())
                 {
                     urlTmp.prepend("https://smart-lab.ru");
-                    url = urlTmp;
+                    url = urlTmp.data();
 #if DEBUG_PRINT
                     qDebug() << url;
 #endif
@@ -260,7 +260,7 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                     Stock stock;
                     stock.rowNum = rowNum;
                     getA(tableCols.at(NAME), stock.name, stock.url);
-                    stock.ticker = tableCols.at(TICKER);
+                    stock.ticker = tableCols.at(TICKER).data();
                     stock.price = QString(tableCols.at(PRICE)).toDouble();
                     stock.derivation = getPercentage(tableCols.at(DERIVATION_PC));
                     stock.derivationWeek = getPercentage(tableCols.at(DERIVATION_PC_WEEK));

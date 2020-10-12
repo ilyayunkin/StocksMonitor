@@ -10,7 +10,7 @@ public:
     {
         return QString("%1 | %2 | %3 | %4 | %5 | %6 | %7")
                 .arg(stock.name)
-                .arg(QString(stock.ticker))
+                .arg(QString(stock.ticker.data()))
                 .arg(stock.price)
                 .arg(stock.derivation)
                 .arg(stock.derivationWeek)

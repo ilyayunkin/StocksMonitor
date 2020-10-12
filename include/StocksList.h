@@ -4,13 +4,14 @@
 #include <QString>
 
 #include <vector>
+#include <string>
 
 struct Stock
 {
     int rowNum;
     QString name;
-    QByteArray ticker;
-    QByteArray url;
+    std::string ticker;
+    std::string url;
     float price;
     float derivation;
     float derivationWeek;
