@@ -159,7 +159,7 @@ size_t RulesFasade::getStocksCount(const stocksListHandler handler) const
 
 std::string RulesFasade::getStocksActualizationTime(const stocksListHandler handler) const
 {
-    auto &pair = entities.pairs[handler];
+    const auto &pair = entities.pairs[handler];
     return pair.time;
 }
 
@@ -269,7 +269,7 @@ void RulesFasade::deletePortfolioEntry(size_t row)
 {
     auto ticker = entities.portfolio.at(row).ticker;
     std::remove_if(entities.portfolio.begin(), entities.portfolio.end(),
-                   [&ticker](PortfolioEntry &e){return ticker == e.ticker;});
+                   [&ticker](const PortfolioEntry &e){return ticker == e.ticker;});
     portfolioDb->deleteEntry(ticker.data());
     portfolioInterface.update();
 }
@@ -302,7 +302,7 @@ RulesFasade::RulesFasade() :
     qDebug() << __PRETTY_FUNCTION__;
 }
 
-stocksListHandler RulesFasade::addStocksSource(const StocksSource source)
+stocksListHandler RulesFasade::addStocksSource(const StocksSource &source)
 {
     stocksListHandler handler = entities.pairs.size();
 

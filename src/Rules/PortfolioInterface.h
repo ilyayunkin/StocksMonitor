@@ -18,7 +18,7 @@ class PortfolioInterface
     RulesFasade *const rules;
     AbstractStocksView *view = nullptr;
 public:
-    PortfolioInterface(RulesFasade * const rules);
+    explicit PortfolioInterface(RulesFasade * const rules);
     size_t size() const;
     PortfolioEntry getPortfolioEntry(const size_t i) const;
     Stock getStock(const size_t i) const;

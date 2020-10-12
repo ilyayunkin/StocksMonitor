@@ -8,7 +8,7 @@ struct CurrencyCounter
 {
     std::string currency;
     double sum;
-    CurrencyCounter(const char *const currency) : currency(currency), sum(0){}
+    explicit CurrencyCounter(const char *const currency) : currency(currency), sum(0){}
     CurrencyCounter(const char *const currency, const double sum) : currency(currency), sum(sum){}
 };
 

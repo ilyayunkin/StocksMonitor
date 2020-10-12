@@ -57,7 +57,7 @@ public:
     ViewInterfaces &getViewInterfaces();
     PortfolioInterface &getPortfolioInterface();
 
-    stocksListHandler addStocksSource(const StocksSource source);
+    stocksListHandler addStocksSource(const StocksSource &source);
     void setConverter(AbstractCurrencyConverter *const converter);
     void setNotifier(AbstractNotifier * const notifier);
     void setPortfolioDatabase(AbstractPortfolioDatabase *const portfolioDb);

@@ -24,7 +24,7 @@ class MainWindow : public QMainWindow
     void setupFile(const QString &filename);
     void closeEvent(QCloseEvent *event);
 public:
-    MainWindow(Application &application,
+    explicit MainWindow(Application &application,
                QWidget *parent = nullptr);
     ~MainWindow();
     void save();

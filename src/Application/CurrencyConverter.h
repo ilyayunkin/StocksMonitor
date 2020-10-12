@@ -10,7 +10,7 @@ class CurrencyConverter final : public AbstractCurrencyConverter
     StocksInterface * const currencyModel;
     const QByteArray currencyCode;
 public:
-    CurrencyConverter(const char *const currencyCode,
+    explicit CurrencyConverter(const char *const currencyCode,
                       StocksInterface *const currencyModel = nullptr);
     CurrencyCountersList convert(const char *const targetCurrency,
                                  const CurrencyCountersList &counters) override;

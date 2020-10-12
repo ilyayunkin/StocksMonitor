@@ -9,7 +9,7 @@ class BuyRequestDatabase : public AbstractBuyRequestDatabase
     QSqlDatabase db;
     QSqlQuery executeQuery(const QString &query);
 public:
-    BuyRequestDatabase(const QString &name);
+    explicit BuyRequestDatabase(const QString &name);
 
 
     // AbstractBuyRequestDatabase interface

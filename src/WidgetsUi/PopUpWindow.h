@@ -7,7 +7,7 @@ class PopUpWindow : public QWidget
 {
     Q_OBJECT
 
-    PopUpWindow(const QString &text, int timeMs = 10000);
+    explicit PopUpWindow(const QString &text, int timeMs = 10000);
     void mousePressEvent(QMouseEvent *event);
 public:
     static void showPopUpWindow(const QString &text, int timeMs = 10000);
