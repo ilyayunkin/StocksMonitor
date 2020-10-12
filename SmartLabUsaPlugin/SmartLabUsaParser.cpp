@@ -203,10 +203,10 @@ float getPercentage(const QByteArray &tableCol)
 
 void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                           StocksList &stocks,
-                          QByteArray &time)
+                          std::string &time)
 {
     assert(stocks.empty());
-    time = QTime::currentTime().toString().toLatin1();
+    time = QTime::currentTime().toString().toLatin1().data();
 
     if(m_DownloadeAwholeDocumentdData.isEmpty())
     {
@@ -270,12 +270,6 @@ void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                     stock.derivationYear = getPercentage(tableCols.at(DERIVATION_PC_YEAR));
 
                     stocks.push_back(stock);
-                }
-
-                if(i == 2)
-                {
-                    QByteArray t = tableCols.at(TIME);
-                    time = t;
                 }
             }
             ++i;

@@ -202,7 +202,7 @@ float getPercentage(const QByteArray &tableCol)
 
 void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                                StocksList &stocks,
-                               QByteArray &time)
+                               std::string &time)
 {
     assert(stocks.empty());
 
@@ -270,8 +270,7 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                     stocks.push_back(stock);
                 }else if(i == 1)
                 {
-                    QByteArray t = tableCols.at(TIME);
-                    time = t;
+                    time = tableCols.at(TIME).data();
                 }
             }
             ++i;

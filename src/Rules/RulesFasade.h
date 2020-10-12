@@ -77,7 +77,7 @@ public:
     Stock getStock(const stocksListHandler handler, const size_t i) const;
     Stock getStock(const stocksListHandler handler, const char *const ticker) const;
     size_t getStocksCount(const stocksListHandler handler) const;
-    QByteArray getStocksActualizationTime(const stocksListHandler handler) const;
+    std::string getStocksActualizationTime(const stocksListHandler handler) const;
 
     StockLimit getStockBuyRequest(const stocksListHandler handler, const size_t i) const;
     StockLimit getStockBuyRequest(const stocksListHandler handler, const char *const ticker) const;

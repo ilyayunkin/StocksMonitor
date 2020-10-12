@@ -48,10 +48,10 @@ enum
 
 void CbrfCurrencyParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                                StocksList &stocks,
-                               QByteArray &time)
+                               std::string &time)
 {
     assert(stocks.empty());
-    time = QTime::currentTime().toString().toLatin1();
+    time = QTime::currentTime().toString().toLatin1().data();
 
     if(m_DownloadeAwholeDocumentdData.isEmpty())
     {

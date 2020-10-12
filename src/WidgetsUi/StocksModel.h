@@ -44,7 +44,7 @@ public:
     void stocksUpdated() override;
     void stocksUpdated(size_t row) override;
 signals:
-    void time(QByteArray);
+    void time(std::string);
 };
 
 #endif // StocksModel_H

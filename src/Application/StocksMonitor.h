@@ -16,7 +16,7 @@ class StocksMonitor : public QObject
     AbstractStocksReceiver &model;
     const stocksListHandler handler;
 
-    QByteArray time;
+    std::string time;
     QNetworkAccessManager m_WebCtrl;
     AbstractParser::Ptr parser;
     const QUrl url;
@@ -32,7 +32,7 @@ public slots:
     void fileDownloaded(QNetworkReply*r);
 
 signals:    
-    void downloaded(const QByteArray &time);
+    void downloaded(const std::string &time);
 };
 
 #endif // STOCKSMONITOR_H

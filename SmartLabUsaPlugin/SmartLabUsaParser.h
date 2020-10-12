@@ -11,7 +11,7 @@ class SmartLabUsaParser : public AbstractParser
 public:
     void parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                       StocksList &stocks,
-                      QByteArray &time) override;
+                      std::string &time) override;
 };
 
 #endif // SMARTLABPARSER_H

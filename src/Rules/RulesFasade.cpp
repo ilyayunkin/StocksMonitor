@@ -157,7 +157,7 @@ size_t RulesFasade::getStocksCount(const stocksListHandler handler) const
     return stocks.size();
 }
 
-QByteArray RulesFasade::getStocksActualizationTime(const stocksListHandler handler) const
+std::string RulesFasade::getStocksActualizationTime(const stocksListHandler handler) const
 {
     auto &pair = entities.pairs[handler];
     return pair.time;

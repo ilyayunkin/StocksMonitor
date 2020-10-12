@@ -72,7 +72,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
     qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "received" << m_DownloadeAwholeDocumentdData.size();
 #endif
     try {
-        QByteArray t;
+        std::string t;
         StocksList stocks;
         static int reserveSize = 500;
         stocks.reserve(reserveSize);
@@ -82,7 +82,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
 #if DEBUG_PRINT
         qDebug() << __PRETTY_FUNCTION__ << "time" << t;
 #endif
-        if(t.isEmpty())
+        if(t.empty())
         {
             throw EmptyTimestampException();
         }
@@ -95,7 +95,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
         }else
         {
             time = t;
-            model.setStocks(handler, std::move(stocks), time);
+            model.setStocks(handler, std::move(stocks), time.data());
             emit downloaded(time);
         }
     } catch (std::runtime_error &e) {

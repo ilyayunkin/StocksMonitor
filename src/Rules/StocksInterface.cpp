@@ -27,7 +27,7 @@ Stock StocksInterface::getStock(const char *const ticker) const
     return rules->getStock(handler, ticker);
 }
 
-QByteArray StocksInterface::getActualizationTime() const
+std::string StocksInterface::getActualizationTime() const
 {
     return rules->getStocksActualizationTime(handler);
 }
