@@ -124,7 +124,7 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
         if(row < (size = stockLimits.size()))
         {
             const StockLimit &limit = stockLimits.getStockBuyRequest(row);
-            auto stock = stocksInterface.getStock(limit.ticker);
+            auto stock = stocksInterface.getStock(limit.ticker.data());
             ret = StockHint::getHint(stock);
         }
     }

@@ -6,7 +6,6 @@
 #include <cstdlib>
 
 #include <QString>
-#include <QByteArray>
 
 #include "Entities/StockLimit.h"
 #include "Entities/StocksListHandler.h"
@@ -23,10 +22,10 @@ public:
                     const stocksListHandler handler);
     size_t size() const;
     StockLimit getStockBuyRequest(const size_t i) const;
-    StockLimit getStockBuyRequest(const QByteArray &ticker) const;
+    StockLimit getStockBuyRequest(const char *const ticker) const;
     bool setReferencePrice(size_t row, float referencePrice);
     void setView(AbstractStocksView *const view);
-    void addToPortfolio(const QByteArray &ticker, const int quantity);
+    void addToPortfolio(const char *const ticker, const int quantity);
     void update();
 };
 #endif // BUYREQUESTINTERFACE_H

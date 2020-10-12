@@ -1,4 +1,4 @@
-#ifndef STOCKSINTERFACE_H
+     #ifndef STOCKSINTERFACE_H
 #define STOCKSINTERFACE_H
 
 #include "AbstractStocksView.h"
@@ -23,11 +23,11 @@ public:
                     const stocksListHandler handler);
     size_t size() const;
     Stock getStock(const size_t i) const;
-    Stock getStock(const QByteArray &ticker) const;
+    Stock getStock(const char *const ticker) const;
     QByteArray getActualizationTime() const;
     void setView(AbstractStocksView *const view);
-    void addToPortfolio(const QByteArray &ticker, const int quantity);
-    void addLimit(const QByteArray &ticker, float limit);
+    void addToPortfolio(const char *const ticker, const int quantity);
+    void addLimit(const char *const ticker, float limit);
     void update();
 };
 

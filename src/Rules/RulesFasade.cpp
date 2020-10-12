@@ -46,7 +46,7 @@ void RulesFasade::updatePortfolioStorage(const stocksListHandler handler)
     {
         if(e.handler == handler)
         {
-            Stock stock = getStock(handler, e.ticker);
+            Stock stock = getStock(handler, e.ticker.data());
             if(e.name.isEmpty())
             {
                 e.name = stock.name;
@@ -122,7 +122,7 @@ void RulesFasade::signalizeLimit(const QString &name, const float price)
     }
 }
 
-float RulesFasade::getStockPrice(const stocksListHandler handler, const QByteArray &ticker)
+float RulesFasade::getStockPrice(const stocksListHandler handler, const char *const ticker)
 {
     const auto &stocks = entities.pairs[handler].stocks;
 
@@ -136,7 +136,7 @@ float RulesFasade::getStockPrice(const stocksListHandler handler, const QByteArr
     return ret;
 }
 
-Stock RulesFasade::getStock(const stocksListHandler handler, const QByteArray &ticker) const
+Stock RulesFasade::getStock(const stocksListHandler handler, const char *const ticker) const
 {
     const auto &stocks = entities.pairs[handler].stocks;
 
@@ -175,7 +175,7 @@ StockLimit RulesFasade::getStockBuyRequest(const stocksListHandler handler, cons
     return ret;
 }
 
-StockLimit RulesFasade::getStockBuyRequest(const stocksListHandler handler, const QByteArray &ticker) const
+StockLimit RulesFasade::getStockBuyRequest(const stocksListHandler handler, const char *const ticker) const
 {
     const auto &limits = entities.pairs[handler].limits;
 
@@ -196,7 +196,7 @@ size_t RulesFasade::getStockBuyRequestsCount(const stocksListHandler handler) co
     return limits.size();
 }
 
-void RulesFasade::addLimit(const stocksListHandler handler, const QByteArray &ticker, float referencePrice)
+void RulesFasade::addLimit(const stocksListHandler handler, const char * const ticker, float referencePrice)
 {
     auto &stockLimits = entities.pairs[handler].limits;
     const auto &limitsDb = buyRequestDatabases[handler];
@@ -235,7 +235,7 @@ bool RulesFasade::setReferencePrice(const stocksListHandler handler, size_t row,
     return true;
 }
 
-void RulesFasade::addToPortfolio(const stocksListHandler handler, const QByteArray &ticker, const int quantity)
+void RulesFasade::addToPortfolio(const stocksListHandler handler, const char *const ticker, const int quantity)
 {
     auto entryIt =
             std::find_if(entities.portfolio.begin(), entities.portfolio.end(),
@@ -354,7 +354,7 @@ PortfolioEntry RulesFasade::getPortfolioEntry(const size_t i) const
 Stock RulesFasade::getStockForPortfolioEntry(const size_t i) const
 {
     auto const &entry = entities.portfolio.at(i);
-    return getStock(entry.handler, entry.ticker);
+    return getStock(entry.handler, entry.ticker.data());
 }
 
 bool RulesFasade::setPortfolioEntryQuantity(size_t row, int quantity)
@@ -429,7 +429,7 @@ QStringList RulesFasade::getAvailibleCurrencies()
 
 void RulesFasade::setStocks(const stocksListHandler handler,
                             StocksList &&stocks,
-                            const QByteArray &time)
+                            const char *const time)
 {
     auto &pair = entities.pairs[handler];
     if(time != pair.time)

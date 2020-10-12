@@ -8,7 +8,7 @@ Dialogs::Dialogs(QWidget * const w) :
 {
 }
 
-bool Dialogs::askReplaceBuyRequest(const QByteArray &ticker, const float sellPrice)
+bool Dialogs::askReplaceBuyRequest(const char *const ticker, const float sellPrice)
 {
     return
             QMessageBox::question(w,QObject::tr("Replace?"),
@@ -18,7 +18,7 @@ bool Dialogs::askReplaceBuyRequest(const QByteArray &ticker, const float sellPri
             == QMessageBox::Yes;
 }
 
-bool Dialogs::askDeleteFromPortfolio(const QByteArray &ticker)
+bool Dialogs::askDeleteFromPortfolio(const char *const ticker)
 {
     return QMessageBox::question(w,
                                  QObject::tr("Delete?"),
@@ -27,7 +27,7 @@ bool Dialogs::askDeleteFromPortfolio(const QByteArray &ticker)
             == QMessageBox::Yes;
 }
 
-bool Dialogs::askAddQuantityToPortfolio(const QByteArray &ticker)
+bool Dialogs::askAddQuantityToPortfolio(const char *const ticker)
 {
     return QMessageBox::question(w,
                                  QObject::tr("Add?"),
@@ -36,8 +36,8 @@ bool Dialogs::askAddQuantityToPortfolio(const QByteArray &ticker)
             == QMessageBox::Yes;
 }
 
-bool Dialogs::askBuyRequestDoubleDeletion(const QByteArray &ticker1, const float basePrice1,
-                                          const QByteArray &ticker2, const float basePrice2)
+bool Dialogs::askBuyRequestDoubleDeletion(const char *const ticker1, const float basePrice1,
+                                          const char *const ticker2, const float basePrice2)
 {
     return QMessageBox::question(0, QObject::tr("Delete double?"),
                                  QString("%1 %2\n%3 %4")

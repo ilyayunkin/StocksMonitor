@@ -48,7 +48,7 @@ class RulesFasade final : public AbstractStocksReceiver
     void registerStockSourceInPortfolio(const QString &name, const stocksListHandler handler);
     void signalizePortfolio(const QString &name, const float price);
     void signalizeLimit(const QString &name, const float price);
-    float getStockPrice(const stocksListHandler handler, const QByteArray &ticker);
+    float getStockPrice(const stocksListHandler handler, const char *const ticker);
     CurrencyCountersList getPortfolioSum() const;
 public:
     RulesFasade();
@@ -70,20 +70,20 @@ public:
     bool setPortfolioEntryReferencePrice(size_t row, float referencePrice);
     QString getPortfolioPrice(const char *const currency);
     QString getPortfolioPrice();
-    void addToPortfolio(const stocksListHandler handler, const QByteArray &ticker, const int quantity);
+    void addToPortfolio(const stocksListHandler handler, const char *const ticker, const int quantity);
     void deletePortfolioEntry(size_t row);
     QStringList getAvailibleCurrencies();
 
     Stock getStock(const stocksListHandler handler, const size_t i) const;
-    Stock getStock(const stocksListHandler handler, const QByteArray &ticker) const;
+    Stock getStock(const stocksListHandler handler, const char *const ticker) const;
     size_t getStocksCount(const stocksListHandler handler) const;
     QByteArray getStocksActualizationTime(const stocksListHandler handler) const;
 
     StockLimit getStockBuyRequest(const stocksListHandler handler, const size_t i) const;
-    StockLimit getStockBuyRequest(const stocksListHandler handler, const QByteArray &ticker) const;
+    StockLimit getStockBuyRequest(const stocksListHandler handler, const char *const ticker) const;
     size_t getStockBuyRequestsCount(const stocksListHandler handler) const;
 
-    void addLimit(const stocksListHandler handler, const QByteArray &ticker, float referencePrice);
+    void addLimit(const stocksListHandler handler, const char *const ticker, float referencePrice);
     bool setReferencePrice(const stocksListHandler handler, size_t row, float referencePrice);
 
 
@@ -91,7 +91,7 @@ public:
 public:
     void setStocks(const stocksListHandler handler,
                    StocksList &&stocks,
-                   const QByteArray &time) override;
+                   const char *const time) override;
 };
 
 #endif // RULESFASADE_H

@@ -50,7 +50,7 @@ bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
                     stocksInterface.addToPortfolio(ticker, quantity);
                 }else if(selected == urlAction)
                 {
-                    const auto stock = stocksInterface.getStock(ticker);
+                    const auto stock = stocksInterface.getStock(ticker.data());
                     if(!stock.url.isEmpty())
                     {
                         QDesktopServices::openUrl(QUrl(stock.url));

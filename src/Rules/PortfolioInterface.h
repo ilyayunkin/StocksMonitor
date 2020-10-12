@@ -6,7 +6,6 @@
 #include <cstdlib>
 
 #include <QString>
-#include <QByteArray>
 
 #include "StocksList.h"
 #include "Entities/PortfolioEntry.h"

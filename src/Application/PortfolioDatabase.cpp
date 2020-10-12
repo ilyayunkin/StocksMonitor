@@ -30,7 +30,7 @@ PortfolioDatabase::PortfolioDatabase()
     }
 }
 
-void PortfolioDatabase::add(const QString &plugin, const QByteArray &ticker, int quantity)
+void PortfolioDatabase::add(const QString &plugin, const char *const ticker, int quantity)
 {
     executeQuery(QString("INSERT INTO %1 "
                          "(plugin, ticker, quantity, sell_price) "
@@ -62,7 +62,7 @@ void PortfolioDatabase::update(const PortfolioEntry &entry)
     }
 }
 
-void PortfolioDatabase::deleteEntry(const QByteArray &ticker)
+void PortfolioDatabase::deleteEntry(const char *const ticker)
 {
     executeQuery(QString("DELETE FROM %1 "
                              "WHERE ticker = '%2';")

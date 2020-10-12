@@ -10,7 +10,7 @@ public:
     virtual ~AbstractStocksReceiver() = default;
     virtual void setStocks(const stocksListHandler handler,
                            StocksList &&stocks,
-                           const QByteArray &time) = 0;
+                           const char *const time) = 0;
 };
 
 #endif // ABSTRACTSTOCKSRECEIVER_H

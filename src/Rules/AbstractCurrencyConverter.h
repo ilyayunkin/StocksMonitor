@@ -1,13 +1,12 @@
 #ifndef ABSTRACTCURRENCYCONVERTER_H
 #define ABSTRACTCURRENCYCONVERTER_H
 
-#include <QByteArray>
 #include "CurrencyCounter.h"
 
 class AbstractCurrencyConverter
 {
 public:
-    virtual CurrencyCountersList convert(const QByteArray &targetCurrency,
+    virtual CurrencyCountersList convert(const char *const targetCurrency,
                                  const CurrencyCountersList &counters) = 0;
 };
 

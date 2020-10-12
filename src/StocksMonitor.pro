@@ -69,7 +69,6 @@ HEADERS += \
     Rules/AbstractBuyRequestDatabase.h \
     Rules/AbstractCurrencyConverter.h \
     Rules/AbstractPortfolioDatabase.h \
-    Rules/AbstractStocksModel.h \
     Rules/AbstractStocksReceiver.h \
     Rules/AbstractStocksView.h \
     Rules/BuyRequestInterface.h \

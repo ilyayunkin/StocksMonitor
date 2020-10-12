@@ -22,7 +22,7 @@ Stock StocksInterface::getStock(const size_t i) const
     return rules->getStock(handler, i);
 }
 
-Stock StocksInterface::getStock(const QByteArray &ticker) const
+Stock StocksInterface::getStock(const char *const ticker) const
 {
     return rules->getStock(handler, ticker);
 }
@@ -37,12 +37,12 @@ void StocksInterface::setView(AbstractStocksView * const view)
     this->view = view;
 }
 
-void StocksInterface::addToPortfolio(const QByteArray &ticker, const int quantity)
+void StocksInterface::addToPortfolio(const char *const ticker, const int quantity)
 {
     rules->addToPortfolio(handler, ticker, quantity);
 }
 
-void StocksInterface::addLimit(const QByteArray &ticker, float limit)
+void StocksInterface::addLimit(const char *const ticker, float limit)
 {
     qDebug() << __PRETTY_FUNCTION__ << __LINE__;
     rules->addLimit(handler, ticker, limit);

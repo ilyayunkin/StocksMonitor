@@ -58,7 +58,7 @@ bool StocksEventFilter::eventFilter(QObject *obj, QEvent *event)
                     addLimit(sortModelIndex);
                 }else if(selected == urlAction)
                 {
-                    const auto stock = stocksInterface.getStock(ticker);
+                    const auto stock = stocksInterface.getStock(ticker.data());
                     if(!stock.url.isEmpty())
                     {
                         QDesktopServices::openUrl(QUrl(stock.url));

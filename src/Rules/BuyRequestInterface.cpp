@@ -20,7 +20,7 @@ StockLimit BuyRequestInterface::getStockBuyRequest(const size_t i) const
     return rules->getStockBuyRequest(handler, i);
 }
 
-StockLimit BuyRequestInterface::getStockBuyRequest(const QByteArray &ticker) const
+StockLimit BuyRequestInterface::getStockBuyRequest(const char *const ticker) const
 {
     return rules->getStockBuyRequest(handler, ticker);
 }
@@ -35,7 +35,7 @@ void BuyRequestInterface::setView(AbstractStocksView * const view)
     this->view = view;
 }
 
-void BuyRequestInterface::addToPortfolio(const QByteArray &ticker, const int quantity)
+void BuyRequestInterface::addToPortfolio(const char *const ticker, const int quantity)
 {
     rules->addToPortfolio(handler, ticker, quantity);
 }

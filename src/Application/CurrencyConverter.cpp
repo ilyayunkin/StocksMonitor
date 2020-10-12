@@ -10,16 +10,14 @@
 
 #include <QDebug>
 
-#include "Rules/AbstractStocksModel.h"
-
-CurrencyConverter::CurrencyConverter(const QByteArray &currencyCode,
+CurrencyConverter::CurrencyConverter(const char *const currencyCode,
                                      StocksInterface * const currencyModel) :
     currencyModel(currencyModel),
     currencyCode(currencyCode)
 {
 }
 
-CurrencyCountersList CurrencyConverter::convert(const QByteArray &targetCurrency,
+CurrencyCountersList CurrencyConverter::convert(const char *const targetCurrency,
                                                 const CurrencyCountersList &counters)
 {
     qDebug() << __PRETTY_FUNCTION__ << targetCurrency;
@@ -46,7 +44,7 @@ CurrencyCountersList CurrencyConverter::convert(const QByteArray &targetCurrency
                 const QByteArray baseCurrency = currencyCode;
                 if(targetCurrency == baseCurrency)
                 {
-                    Stock stock = currencyModel->getStock(currency.currency);
+                    Stock stock = currencyModel->getStock(currency.currency.data());
                     if(stock.price != -1)
                         cource = stock.price;
                 }else if(currency.currency == baseCurrency)

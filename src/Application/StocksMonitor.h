@@ -10,8 +10,6 @@
 #include "Rules/AbstractStocksReceiver.h"
 #include "Entities/StocksListHandler.h"
 
-class AbstractStocksModel;
-
 class StocksMonitor : public QObject
 {
     Q_OBJECT
