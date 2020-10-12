@@ -270,10 +270,12 @@ void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                     stock.derivationYear = getPercentage(tableCols.at(DERIVATION_PC_YEAR));
 
                     stocks.push_back(stock);
-                }else if(i == 1)
+                }
+
+                if(i == 2)
                 {
                     QByteArray t = tableCols.at(TIME);
-//                    time = t;
+                    time = t;
                 }
             }
             ++i;
