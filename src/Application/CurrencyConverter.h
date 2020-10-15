@@ -14,6 +14,9 @@ public:
                       StocksInterface *const currencyModel = nullptr);
     CurrencyCountersList convert(const char *const targetCurrency,
                                  const CurrencyCountersList &counters) override;
+    float convert(const char *const targetCurrency,
+                              const char *const currency,
+                              const float value) override;
 };
 
 #endif // CURRENCYCONVERTER_H

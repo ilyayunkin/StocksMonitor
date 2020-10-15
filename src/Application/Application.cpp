@@ -8,6 +8,9 @@
 #include "StocksMonitor.h"
 #include "BuyRequestDatabase.h"
 #include "PortfolioDatabase.h"
+#include "StatisticsCsvSaver.h"
+#include "StatisticsConfigDatabase.h"
+#include "Controllers/StatisticsController.h"
 
 namespace  {
 typedef std::vector<std::shared_ptr<SourcePluginInterface>> PluginsList;
@@ -65,7 +68,10 @@ Application::Application(QObject *parent) :
         throw NoPluginsException();
     }
 
-    rules = std::make_shared<RulesFasade>();
+    csvSaver = std::make_shared<StatisticsCsvSaver>();
+    statisticsConfigDatabase = std::make_shared<StatisticsConfigDatabase>();
+    rules = std::make_shared<RulesFasade>(statisticsConfigDatabase.get());
+
     StocksInterface *currencyStocksInterface = nullptr;
     for(PluginsList::size_type i = 0; i < plugins.size(); ++i)
     {
@@ -94,6 +100,8 @@ Application::Application(QObject *parent) :
     rules->setConverter(converter.get());
     portfolioDatabase = std::make_shared<PortfolioDatabase>();
     rules->setPortfolioDatabase(portfolioDatabase.get());
+    statisticsController = std::make_shared<StatisticsController>(
+                rules->getStatisticsInteractor(), *csvSaver.get());
 }
 
 Application::~Application()
@@ -120,9 +128,24 @@ QStringList Application::getAvailibleCurrencies()
     return rules->getAvailibleCurrencies();
 }
 
+QStringList Application::getPluginsList() const
+{
+    return rules->getPluginsList();
+}
+
+StockIdList Application::getStockIdList(const QString &plugin) const
+{
+    return rules->getStockIdList(plugin);
+}
+
 PortfolioInterface &Application::getPortfolioInterface()
 {
     return rules->getPortfolioInterface();
+}
+
+StatisticsController &Application::getStatisticsController()
+{
+    return *statisticsController;
 }
 
 void Application::setNotifier(AbstractNotifier * const notifier)

@@ -17,6 +17,7 @@
 #include "StocksLimitsModel.h"
 #include "StocksModel.h"
 #include "Sounds/Signalizer.h"
+#include "StatisticsWidget.h"
 
 MainWindow::MainWindow(Application &application,
                        QWidget *parent)
@@ -50,9 +51,13 @@ MainWindow::MainWindow(Application &application,
                 {
                     auto portfolioModel = new PortfolioModel(application.getPortfolioInterface(), this);
                     application.getPortfolioInterface().setView(portfolioModel);
-                    PortfolioWidget *portfolioWidget =
+                    auto *portfolioWidget =
                             new PortfolioWidget(portfolioModel, application);
                     tabWidget->addTab(portfolioWidget, QIcon("://img/portfolio.png"), tr("Portfolio"));
+                }
+                {
+                    auto *statisticsWidget = new StatisticsWidget(application, this);
+                    tabWidget->addTab(statisticsWidget, tr("Statistics"));
                 }
             }
         }

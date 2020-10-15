@@ -4,6 +4,7 @@
 #include "StockLimit.h"
 #include "StocksList.h"
 #include "PortfolioEntry.h"
+#include "Statistics.h"
 
 #include <vector>
 #include <string>
@@ -26,6 +27,7 @@ struct Entities
 {
     std::vector<StockListsPair> pairs;
     PortfolioEntryList portfolio;
+    StatisticsConfigList statistics;
 };
 
 #endif // ENTITIES_H

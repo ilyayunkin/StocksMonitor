@@ -10,6 +10,7 @@ class SourcePluginInterface;
 
 #include "Rules/PortfolioInterface.h"
 #include "Rules/ViewInterfaces.h"
+#include "Entities/StockId.h"
 
 class RulesFasade;
 class CurrencyConverter;
@@ -18,6 +19,9 @@ class BuyRequestDatabase;
 class PortfolioDatabase;
 class AbstractNotifier;
 class AbstractDialogs;
+class StatisticsCsvSaver;
+class StatisticsConfigDatabase;
+class StatisticsController;
 
 class Application : public QObject
 {
@@ -28,15 +32,21 @@ class Application : public QObject
     std::shared_ptr<CurrencyConverter> converter;
     std::vector<std::shared_ptr<BuyRequestDatabase>> buyRequestDatabases;
     std::shared_ptr<PortfolioDatabase> portfolioDatabase;
+    std::shared_ptr<StatisticsCsvSaver> csvSaver;
+    std::shared_ptr<StatisticsConfigDatabase> statisticsConfigDatabase;
+    std::shared_ptr<StatisticsController> statisticsController;
 
 public:
     explicit Application(QObject *parent = nullptr);
     ~Application();
     ViewInterfaces &getViewInterfaces();
+    PortfolioInterface &getPortfolioInterface();
+    StatisticsController &getStatisticsController();
     QString getPortfolioPrice(const char *const currency);
     QString getPortfolioPrice();
     QStringList getAvailibleCurrencies();
-    PortfolioInterface &getPortfolioInterface();
+    QStringList getPluginsList() const;
+    StockIdList getStockIdList(const QString &plugin) const;
     void setNotifier(AbstractNotifier *const notifier);
     void setDialogs(AbstractDialogs *const dialogs);
 };

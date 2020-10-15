@@ -11,6 +11,7 @@
 #include "Presenters/CurrencyPresenter.h"
 #include "AbstractPortfolioDatabase.h"
 #include "AbstractNotifier.h"
+#include "AbstractStatisticsConfigDatabase.h"
 
 void RulesFasade::updateLimitsStorage(const stocksListHandler handler)
 {
@@ -196,8 +197,33 @@ size_t RulesFasade::getStockBuyRequestsCount(const stocksListHandler handler) co
     return limits.size();
 }
 
+QStringList RulesFasade::getPluginsList() const
+{
+    QStringList ret;
+    std::transform(entities.pairs.begin(), entities.pairs.end(),
+                   std::back_inserter(ret), [](const auto &pair){return pair.name;});
+    return ret;
+}
+
+StockIdList RulesFasade::getStockIdList(const QString &plugin) const
+{
+    const auto &it = std::find_if(entities.pairs.begin(), entities.pairs.end(),
+                                  [&plugin](const auto &pair){return plugin == pair.name;});
+    if(it != entities.pairs.end())
+    {
+        StockIdList ret;
+        std::transform(it->stocks.begin(), it->stocks.end(),
+                       std::back_inserter(ret),
+                       [](const auto &stock){return StockId(stock.ticker, stock.name);});
+        return ret;
+    }
+    return StockIdList();
+}
+
 void RulesFasade::addLimit(const stocksListHandler handler, const char * const ticker, float referencePrice)
 {
+    assert(ticker);
+    assert(strlen(ticker) != 0);
     auto &stockLimits = entities.pairs[handler].limits;
     const auto &limitsDb = buyRequestDatabases[handler];
 
@@ -296,8 +322,10 @@ CurrencyCountersList RulesFasade::getPortfolioSum() const
     return counters;
 }
 
-RulesFasade::RulesFasade() :
-    portfolioInterface(this)
+RulesFasade::RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb)
+    : portfolioInterface(this)
+    , statisticsDb(statisticsDb)
+    , statisticsInteractor(*statisticsDb, entities)
 {
     qDebug() << __PRETTY_FUNCTION__;
 }
@@ -318,6 +346,7 @@ stocksListHandler RulesFasade::addStocksSource(const StocksSource &source)
 void RulesFasade::setConverter(AbstractCurrencyConverter * const converter)
 {
     this->converter = converter;
+    statisticsInteractor.setConverter(converter);
 }
 
 void RulesFasade::setNotifier(AbstractNotifier *const notifier)
@@ -339,6 +368,7 @@ void RulesFasade::setPortfolioDatabase(AbstractPortfolioDatabase *const portfoli
 void RulesFasade::setDialogs(AbstractDialogs * const dialogs)
 {
     this->dialogs = dialogs;
+    statisticsInteractor.setDialogs(dialogs);
 }
 
 size_t RulesFasade::getPortfolioSize() const
@@ -400,6 +430,11 @@ ViewInterfaces &RulesFasade::getViewInterfaces()
 PortfolioInterface &RulesFasade::getPortfolioInterface()
 {
     return portfolioInterface;
+}
+
+StatisticsInteractor &RulesFasade::getStatisticsInteractor()
+{
+    return statisticsInteractor;
 }
 
 QString RulesFasade::getPortfolioPrice(const char * const currency)

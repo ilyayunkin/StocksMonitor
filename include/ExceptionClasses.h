@@ -53,4 +53,29 @@ public:
     NoSuchPluginException() : std::runtime_error("NoSuchPluginException") { }
 };
 
+class SqlQueryErrorException : public std::runtime_error {
+public:
+    SqlQueryErrorException() : std::runtime_error("SqlQueryErrorException") { }
+};
+
+class NoSuchItemInStatisticsConfig : public std::runtime_error {
+public:
+    NoSuchItemInStatisticsConfig() : std::runtime_error("NoSuchItemInStatisticsConfig") { }
+};
+
+class NoSuchGroupInStatisticsConfig : public std::runtime_error {
+public:
+    NoSuchGroupInStatisticsConfig() : std::runtime_error("NoSuchGroupInStatisticsConfig") { }
+};
+
+class NoSuchCategoryInStatisticsConfig : public std::runtime_error {
+public:
+    NoSuchCategoryInStatisticsConfig() : std::runtime_error("NoSuchCategoryInStatisticsConfig") { }
+};
+
+class ItemAlreadyIsInStatisticsConfig : public std::runtime_error {
+public:
+    ItemAlreadyIsInStatisticsConfig() : std::runtime_error("ItemAlreadyIsInStatisticsConfig") { }
+};
+
 #endif // EXCEPTIONCLASSES_H

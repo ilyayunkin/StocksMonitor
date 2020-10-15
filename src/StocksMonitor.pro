@@ -4,7 +4,7 @@ QT += multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -22,7 +22,11 @@ SOURCES += \
     Application/BuyRequestDatabase.cpp \
     Application/PortfolioDatabase.cpp \
     Application/CurrencyConverter.cpp \
+    Application/StatisticsConfigDatabase.cpp \
+    Application/StatisticsCsvSaver.cpp \
     Application/StocksMonitor.cpp \
+    Application/Controllers/StatisticsController.cpp \
+    Entities/StockId.cpp \
     Rules/BuyRequestInterface.cpp \
     Rules/PortfolioInterface.cpp \
     Rules/RulesFasade.cpp \
@@ -30,6 +34,7 @@ SOURCES += \
     Presenters/LimitBackgrounColor.cpp \
     Presenters/StockHint.cpp \
     Presenters/CurrencyPresenter.cpp \
+    Rules/StatisticsInteractor.cpp \
     Rules/StocksInterface.cpp \
     WidgetsUi/Dialogs.cpp \
     WidgetsUi/LimitsEventFilter.cpp \
@@ -38,6 +43,8 @@ SOURCES += \
     WidgetsUi/PortfolioWidget.cpp \
     WidgetsUi/Sounds/Signalizer.cpp \
     WidgetsUi/Sounds/SoundDialog.cpp \
+    WidgetsUi/StatisticsModel.cpp \
+    WidgetsUi/StatisticsWidget.cpp \
     WidgetsUi/StocksEventFilter.cpp \
     WidgetsUi/StoryWidget.cpp \
     WidgetsUi/StocksModelsWidget.cpp \
@@ -57,14 +64,23 @@ HEADERS += \
     Application/BuyRequestDatabase.h \
     Application/PortfolioDatabase.h \
     Application/CurrencyConverter.h \
+    Application/StatisticsConfigDatabase.h \
+    Application/StatisticsCsvSaver.h \
     Application/StocksMonitor.h \
+    Application/Controllers/StatisticsController.h \
     Color.h \
     Entities/Entities.h \
     Entities/PortfolioEntry.h \
+    Entities/Statistics.h \
     Entities/StocksListHandler.h \
     Entities/StockLimit.h \
     Rules/AbstractDialogs.h \
     Rules/AbstractNotifier.h \
+    Rules/AbstractStatisticsConfigDatabase.h \
+    Rules/AbstractStatisticsView.h \
+    Rules/StatisticsInteractor.h \
+    Rules/StatisticsResults.h \
+    Entities/StockId.h \
     Rules/ViewInterfaces.h \
     Rules/AbstractBuyRequestDatabase.h \
     Rules/AbstractCurrencyConverter.h \
@@ -86,6 +102,8 @@ HEADERS += \
     WidgetsUi/Sounds/AbstractSignalizer.h \
     WidgetsUi/Sounds/Signalizer.h \
     WidgetsUi/Sounds/SoundDialog.h \
+    WidgetsUi/StatisticsModel.h \
+    WidgetsUi/StatisticsWidget.h \
     WidgetsUi/StocksEventFilter.h \
     WidgetsUi/StocksModelsWidget.h \
     WidgetsUi/StoryWidget.h \
@@ -111,6 +129,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 FORMS += \
     WidgetsUi/PortfolioWidget.ui \
     WidgetsUi/Sounds/SoundDialog.ui \
+    WidgetsUi/StatisticsWidget.ui \
     WidgetsUi/StocksModelsWidget.ui
 
 RESOURCES += \

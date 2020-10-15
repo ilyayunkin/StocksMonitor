@@ -7,10 +7,13 @@
 #include "SourcePluginInterface.h"
 #include "CurrencyCounter.h"
 #include "AbstractDialogs.h"
-#include "Entities/Entities.h"
 #include "AbstractStocksReceiver.h"
 #include "ViewInterfaces.h"
 #include "PortfolioInterface.h"
+#include "Entities/Entities.h"
+#include "Entities/StockId.h"
+#include "Entities/Statistics.h"
+#include "StatisticsInteractor.h"
 
 class AbstractBuyRequestDatabase;
 struct StocksSource
@@ -26,6 +29,7 @@ typedef std::vector<AbstractBuyRequestDatabase *> BuyRequestDatabasesList;
 class AbstractCurrencyConverter;
 class AbstractPortfolioDatabase;
 class AbstractNotifier;
+class AbstractStatisticsConfigDatabase;
 
 class RulesFasade final : public AbstractStocksReceiver
 {
@@ -38,6 +42,9 @@ class RulesFasade final : public AbstractStocksReceiver
     AbstractPortfolioDatabase *portfolioDb = nullptr;
     AbstractNotifier *notifier = nullptr;
     AbstractDialogs *dialogs = nullptr;
+    AbstractStatisticsConfigDatabase *statisticsDb = nullptr;
+
+    StatisticsInteractor statisticsInteractor;
 
     void updateLimitsStorage(const stocksListHandler handler);
     void updatePortfolioStorage(const stocksListHandler handler);
@@ -45,17 +52,20 @@ class RulesFasade final : public AbstractStocksReceiver
     void updateLimitsView(const stocksListHandler handler);
     void updatePortfolioView();
     void updatePortfolioView(const size_t row);
-    void registerStockSourceInPortfolio(const QString &name, const stocksListHandler handler);
+    void registerStockSourceInPortfolio(const QString &name,
+                                        const stocksListHandler handler);
     void signalizePortfolio(const QString &name, const float price);
     void signalizeLimit(const QString &name, const float price);
-    float getStockPrice(const stocksListHandler handler, const char *const ticker);
+    float getStockPrice(const stocksListHandler handler,
+                        const char *const ticker);
     CurrencyCountersList getPortfolioSum() const;
 public:
-    RulesFasade();
+    RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb);
     ~RulesFasade();
 
     ViewInterfaces &getViewInterfaces();
     PortfolioInterface &getPortfolioInterface();
+    StatisticsInteractor &getStatisticsInteractor();
 
     stocksListHandler addStocksSource(const StocksSource &source);
     void setConverter(AbstractCurrencyConverter *const converter);
@@ -70,22 +80,31 @@ public:
     bool setPortfolioEntryReferencePrice(size_t row, float referencePrice);
     QString getPortfolioPrice(const char *const currency);
     QString getPortfolioPrice();
-    void addToPortfolio(const stocksListHandler handler, const char *const ticker, const int quantity);
+    void addToPortfolio(const stocksListHandler handler,
+                        const char *const ticker, const int quantity);
     void deletePortfolioEntry(size_t row);
     QStringList getAvailibleCurrencies();
 
     Stock getStock(const stocksListHandler handler, const size_t i) const;
-    Stock getStock(const stocksListHandler handler, const char *const ticker) const;
+    Stock getStock(const stocksListHandler handler,
+                   const char *const ticker) const;
     size_t getStocksCount(const stocksListHandler handler) const;
     std::string getStocksActualizationTime(const stocksListHandler handler) const;
 
-    StockLimit getStockBuyRequest(const stocksListHandler handler, const size_t i) const;
-    StockLimit getStockBuyRequest(const stocksListHandler handler, const char *const ticker) const;
+    StockLimit getStockBuyRequest(const stocksListHandler handler,
+                                  const size_t i) const;
+    StockLimit getStockBuyRequest(const stocksListHandler handler,
+                                  const char *const ticker) const;
     size_t getStockBuyRequestsCount(const stocksListHandler handler) const;
 
-    void addLimit(const stocksListHandler handler, const char *const ticker, float referencePrice);
-    bool setReferencePrice(const stocksListHandler handler, size_t row, float referencePrice);
+    QStringList getPluginsList() const;
+    StockIdList getStockIdList(const QString &plugin) const;
 
+    void addLimit(const stocksListHandler handler,
+                  const char *const ticker,
+                  float referencePrice);
+    bool setReferencePrice(const stocksListHandler handler, size_t row,
+                           float referencePrice);
 
     // AbstractStocksReceiver interface
 public:
