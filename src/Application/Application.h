@@ -22,6 +22,7 @@ class AbstractDialogs;
 class StatisticsCsvSaver;
 class StatisticsConfigDatabase;
 class StatisticsController;
+class AbstractStatisticsConfigView;
 
 class Application : public QObject
 {
@@ -49,6 +50,7 @@ public:
     StockIdList getStockIdList(const QString &plugin) const;
     void setNotifier(AbstractNotifier *const notifier);
     void setDialogs(AbstractDialogs *const dialogs);
+    void setStatisticsConfigView(AbstractStatisticsConfigView *configView);
 };
 
 #endif // APPLICATION_H

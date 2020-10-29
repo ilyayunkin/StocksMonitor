@@ -62,6 +62,8 @@ HEADERS += \
     ../include/StocksList.h \
     Application/Application.h \
     Application/BuyRequestDatabase.h \
+    Application/Controllers/AbstractStatisticsConfigView.h \
+    Application/Controllers/StatisticsConfigIndex.h \
     Application/PortfolioDatabase.h \
     Application/CurrencyConverter.h \
     Application/StatisticsConfigDatabase.h \

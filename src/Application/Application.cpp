@@ -157,3 +157,8 @@ void Application::setDialogs(AbstractDialogs * const dialogs)
 {
     rules->setDialogs(dialogs);
 }
+
+void Application::setStatisticsConfigView(AbstractStatisticsConfigView *configView)
+{
+    statisticsController->setConfigView(configView);
+}

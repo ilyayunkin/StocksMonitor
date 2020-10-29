@@ -2,14 +2,20 @@
 #include "Rules/StatisticsInteractor.h"
 #include "Application/AbstractStatisticsView.h"
 #include "ExceptionClasses.h"
+#include "AbstractStatisticsConfigView.h"
 
 #include <QMessageBox>
 
 StatisticsController::StatisticsController(StatisticsInteractor &rules,
                                            AbstractStatisticsView &view)
     : rules(rules)
-    , view(view)
+    , resultView(view)
 {
+}
+
+void StatisticsController::setConfigView(AbstractStatisticsConfigView *configView)
+{
+    this->configView = configView;
 }
 
 const StatisticsConfigList &StatisticsController::getStatisticsConfig() const
@@ -17,12 +23,12 @@ const StatisticsConfigList &StatisticsController::getStatisticsConfig() const
     return rules.getStatisticsConfig();
 }
 
-bool StatisticsController::addItem(const QString &entry,
-                                  const QString &group,
-                                  const StockId &stock)
+bool StatisticsController::addItem(const StatisticsConfigItemIndex &index)
 {
     try {
-        return rules.addStatisticsItem(entry, group, stock);
+        bool ok = rules.addStatisticsItem(index.category, index.group, index.stock);
+        configView->addItem(index);
+        return ok;
     } catch (ItemAlreadyIsInStatisticsConfig &e) {
         QMessageBox::critical(nullptr,
                               QObject::tr("Error"),
@@ -31,36 +37,60 @@ bool StatisticsController::addItem(const QString &entry,
     return false;
 }
 
-bool StatisticsController::addGroup(const QString &entry,
-                                   const QString &groupName)
+bool StatisticsController::addGroup(const StatisticsConfigGroupIndex &index)
 {
-    return rules.addStatisticsGroup(entry, groupName);
+    bool ok = rules.addStatisticsGroup(index.category
+                                       , index.group);
+    if(ok)
+    {
+        configView->addGroup(index);
+    }
+    return ok;
 }
 
-bool StatisticsController::addCategory(const QString &entryName)
+bool StatisticsController::addCategory(const StatisticsConfigCategoryIndex &index)
 {
-    return rules.addStatisticsCategory(entryName);
+    bool ok = rules.addStatisticsCategory(index.category);
+    if(ok)
+    {
+        configView->addCategory(index);
+    }
+    return ok;
 }
 
-bool StatisticsController::removeItem(const QString &entry,
-                                     const QString &group,
-                                     const char * const ticker)
+bool StatisticsController::removeItem(const StatisticsConfigItemIndex &index)
 {
-    return rules.removeStatisticsItem(entry, group, ticker);
+    bool ok = rules.removeStatisticsItem(index.category
+                                         , index.group
+                                         , index.stock.ticker.data());
+    if(ok)
+    {
+        configView->removeItem(index);
+    }
+    return ok;
 }
 
-bool StatisticsController::removeGroup(const QString &entry,
-                                      const QString &group)
+bool StatisticsController::removeGroup(const StatisticsConfigGroupIndex &index)
 {
-    return rules.removeStatisticsGroup(entry, group);
+    bool ok = rules.removeStatisticsGroup(index.category, index.group);
+    if(ok)
+    {
+        configView->removeGroup(index);
+    }
+    return ok;
 }
 
-bool StatisticsController::removeCategory(const QString &entry)
+bool StatisticsController::removeCategory(const StatisticsConfigCategoryIndex &index)
 {
-    return rules.removeStatisticsCategory(entry);
+    bool ok = rules.removeStatisticsCategory(index.category);
+    if(ok)
+    {
+        configView->removeCategory(index);
+    }
+    return ok;
 }
 
 void StatisticsController::processStatistics() const
 {
-    view.show(rules.processStatistics());
+    resultView.show(rules.processStatistics());
 }

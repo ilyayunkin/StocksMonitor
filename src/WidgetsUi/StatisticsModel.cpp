@@ -5,120 +5,108 @@
 #include <algorithm>
 #include <assert.h>
 
-namespace  {
-class TreeElement
+StatisticsTreeElement::StatisticsTreeElement(const StatisticsModelElementType type,
+                                             const QString &name)
+    : type(type)
+    , name(name)
 {
-    const StatisticsModelElementType type;
-    const QString name;
-    const QByteArray ticker;
-    const TreeElement *parent = nullptr;
-    std::vector<TreeElement *> children;
-public:
-    const QByteArray &getTicker() const {return ticker;}
-    const QString &getName() const {return name;}
-    StatisticsModelElementType getType() const {return type;}
-    const TreeElement *getParent(){return parent;}
-    const TreeElement * getParent()const {return parent;}
-    size_t getChildCount()const {return children.size();}
-    TreeElement *getChild(const size_t row){return children[row];}
-    const TreeElement *getChild(const size_t row) const{return children[row];}
-
-    TreeElement(const StatisticsModelElementType type,
-                const QString &name)
-        : type(type)
-        , name(name)
-    {
-        assert(type != StatisticsModelElementType::STOCK);
-        qDebug() << __PRETTY_FUNCTION__ << __LINE__ << name;
+    assert(type != StatisticsModelElementType::STOCK);
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << name;
+}
+StatisticsTreeElement::StatisticsTreeElement(const StatisticsConfigList &statisticsConfig)
+    : type(StatisticsModelElementType::ROOT)
+{
+    reserve(statisticsConfig.size());
+    for(const auto &stat : statisticsConfig){
+        add(new StatisticsTreeElement(stat));
     }
-    TreeElement(const StatisticsConfigList &statisticsConfig)
-        : type(StatisticsModelElementType::ROOT)
-    {
-        reserve(statisticsConfig.size());
-        for(const auto &stat : statisticsConfig){
-            add(new TreeElement(stat));
-        }
+}
+StatisticsTreeElement::StatisticsTreeElement(const StatisticsCathegoryConfig &statistics)
+    : type(StatisticsModelElementType::CATEGORY)
+    , name(statistics.name)
+{
+    reserve(statistics.list.size());
+    for(const auto &group : statistics.list){
+        add(new StatisticsTreeElement(group));
     }
-    TreeElement(const StatisticsCathegoryConfig &statistics)
-        : type(StatisticsModelElementType::CATEGORY)
-        , name(statistics.name)
-    {
-        reserve(statistics.list.size());
-        for(const auto &group : statistics.list){
-            add(new TreeElement(group));
-        }
+}
+StatisticsTreeElement::StatisticsTreeElement(const StatisticsGroupConfig &group)
+    : type(StatisticsModelElementType::GROUP)
+    , name(group.name)
+{
+    reserve(group.list.size());
+    for(const auto &stock : group.list){
+        add(new StatisticsTreeElement(stock.name, stock.ticker.data()));
     }
-    TreeElement(const StatisticsGroupConfig &group)
-        : type(StatisticsModelElementType::GROUP)
-        , name(group.name)
-    {
-        reserve(group.list.size());
-        for(const auto &stock : group.list){
-            add(new TreeElement(stock.name, stock.ticker.data()));
-        }
-    }
-    TreeElement(const QString &stock, const char *const ticker)
-        : type(StatisticsModelElementType::STOCK)
-        , name(stock)
-        , ticker(ticker)
-    {
-        assert(ticker);
-        assert(strlen(ticker) != 0);
-        qDebug() << __PRETTY_FUNCTION__ << __LINE__ << int(type) << name << ticker;
-    }
-    ~TreeElement()
-    {
-        qDebug() << __PRETTY_FUNCTION__ << __LINE__ << name;
-        std::destroy(children.begin(), children.end());
-    }
-    void add(TreeElement *element)
-    {
-        element->parent = this;
-        children.push_back(element);
-    }
-    void remove(TreeElement *element)
-    {
-        children.erase(std::remove(children.begin(), children.end(), element));
-        delete element;
-    }
-    int getRow() const
-    {
-        if(parent == nullptr)
-            return 0;
-
-        int row = 0;
-        for(auto item : parent->children)
-        {
-            if(item == this)
-                return row;
-
-            ++row;
-        }
-
+}
+StatisticsTreeElement::StatisticsTreeElement(const QString &stock, const char *const ticker)
+    : type(StatisticsModelElementType::STOCK)
+    , name(stock)
+    , ticker(ticker)
+{
+    assert(ticker);
+    assert(strlen(ticker) != 0);
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << int(type) << name << ticker;
+}
+StatisticsTreeElement::~StatisticsTreeElement()
+{
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << name;
+    std::destroy(children.begin(), children.end());
+}
+void StatisticsTreeElement::add(StatisticsTreeElement *element)
+{
+    element->parent = this;
+    children.push_back(element);
+}
+void StatisticsTreeElement::remove(StatisticsTreeElement *element)
+{
+    children.erase(std::remove(children.begin(), children.end(), element));
+    delete element;
+}
+int StatisticsTreeElement::getRow() const
+{
+    if(parent == nullptr)
         return 0;
-    }
-    void reserve(const int s)
+
+    int row = 0;
+    for(auto item : parent->children)
     {
-        children.reserve(s);
+        if(item == this)
+            return row;
+
+        ++row;
     }
-};
+
+    return 0;
+}
+void StatisticsTreeElement::reserve(const int s)
+{
+    children.reserve(s);
 }
 
 struct StatisticsModelPrivate
 {
-    StatisticsController &interface;
-    TreeElement root;
-    StatisticsModelPrivate(StatisticsController &interface)
-        : interface(interface)
-        , root(interface.getStatisticsConfig())
+    StatisticsTreeElement root;
+    StatisticsModelPrivate(const StatisticsConfigList &config)
+        : root(config)
     {
     }
 };
 
-StatisticsModel::StatisticsModel(StatisticsController &interface, QObject *parent)
+QModelIndex StatisticsModel::index(const StatisticsTreeElement *const item)
+{
+    if(item == nullptr)
+    {
+        return QModelIndex();
+    }else
+    {
+        return index(item->getRow(), 0, index(item->getParent()));
+    }
+}
+
+StatisticsModel::StatisticsModel(const StatisticsConfigList &config, QObject *parent)
     : QAbstractItemModel(parent)
-    , interface(interface)
-    , pimpl(new StatisticsModelPrivate(interface))
+    , pimpl(new StatisticsModelPrivate(config))
 {    
 }
 
@@ -133,91 +121,69 @@ StatisticsModelElementType StatisticsModel::getType(const QModelIndex &index)
 {
     if(index.isValid())
     {
-        auto item = static_cast<TreeElement *>(index.internalPointer());
+        auto item = static_cast<StatisticsTreeElement *>(index.internalPointer());
         return item->getType();
     }
     return StatisticsModelElementType::NONE;
 }
 
-void StatisticsModel::addCategory(const QModelIndex &parent, const QString &name)
+StatisticsTreeElement *StatisticsModel::getTreeElement(const QModelIndex &index)
 {
-    if(parent.isValid())
-    {
-        auto parentItem = static_cast<TreeElement *>(parent.internalPointer());
-        assert(parentItem);
-        assert(parentItem->getType() == StatisticsModelElementType::ROOT);
+    assert(index.isValid());
 
-        beginInsertRows(parent, parentItem->getChildCount(), parentItem->getChildCount());
-        parentItem->add(new TreeElement(StatisticsModelElementType::CATEGORY, name));
-        interface.addCategory(name);
-        endInsertRows();
-    }
+    auto item = static_cast<StatisticsTreeElement *>(index.internalPointer());
+    return item;
 }
 
-void StatisticsModel::addGroup(const QModelIndex &parent, const QString &name)
+void StatisticsModel::addCategory(const QString &name)
 {
-    if(parent.isValid())
-    {
-        auto parentItem = static_cast<TreeElement *>(parent.internalPointer());
-        assert(parentItem);
-        assert(parentItem->getType() == StatisticsModelElementType::CATEGORY);
-
-        beginInsertRows(parent, parentItem->getChildCount(), parentItem->getChildCount());
-        parentItem->add(new TreeElement(StatisticsModelElementType::GROUP, name));
-        interface.addGroup(parentItem->getName(), name);
-        endInsertRows();
-    }
+    beginInsertRows(parent(index(&pimpl->root)), pimpl->root.getChildCount(), pimpl->root.getChildCount());
+    pimpl->root.add(new StatisticsTreeElement(StatisticsModelElementType::CATEGORY, name));
+    endInsertRows();
 }
 
-void StatisticsModel::addItem(const QModelIndex &parent, const QString &name, const char * const &ticker)
+void StatisticsModel::addGroup(StatisticsTreeElement *parentItem, const QString &name)
+{
+    assert(parentItem);
+    assert(parentItem->getType() == StatisticsModelElementType::CATEGORY);
+
+    beginInsertRows(index(parentItem), parentItem->getChildCount(), parentItem->getChildCount());
+    parentItem->add(new StatisticsTreeElement(StatisticsModelElementType::GROUP, name));
+    endInsertRows();
+}
+
+void StatisticsModel::addItem(StatisticsTreeElement *parentItem, const QString &name, const char * const &ticker)
 {
     assert(ticker);
     assert(strlen(ticker) != 0);
-    if(parent.isValid())
-    {
-        auto parentItem = static_cast<TreeElement *>(parent.internalPointer());
-        assert(parentItem);
-        assert(parentItem->getType() == StatisticsModelElementType::GROUP);
 
-        bool ok = interface.addItem(parentItem->getParent()->getName()
-                                    , parentItem->getName()
-                                    , StockId(ticker, name));
-        if(ok)
-        {
-            beginInsertRows(parent, parentItem->getChildCount(), parentItem->getChildCount());
-            parentItem->add(new TreeElement(name, ticker));
-            endInsertRows();
-        }
-    }
+    assert(parentItem);
+    assert(parentItem->getType() == StatisticsModelElementType::GROUP);
+
+    beginInsertRows(index(parentItem), parentItem->getChildCount(), parentItem->getChildCount());
+    parentItem->add(new StatisticsTreeElement(name, ticker));
+    endInsertRows();
 }
 
-void StatisticsModel::remove(const QModelIndex &index)
+void StatisticsModel::remove(StatisticsTreeElement *item)
 {
-    auto item = static_cast<TreeElement *>(index.internalPointer());
     assert(item);
 
+    auto const parentItem = item->getParent();
     switch (item->getType())
     {
     case StatisticsModelElementType::CATEGORY:
     {
-        bool ok = interface.removeCategory(item->getName());
-        if(ok)
-        {
-            beginRemoveRows(index.parent(), item->getRow(), item->getRow());
-            const_cast<TreeElement *>(item->getParent())->remove(item);
-            endRemoveRows();
-        }
+        beginRemoveRows(index(parentItem), item->getRow(), item->getRow());
+        const_cast<StatisticsTreeElement *>(item->getParent())->remove(item);
+        endRemoveRows();
     }
         break;
     case StatisticsModelElementType::GROUP:
     {
-        bool ok = interface.removeGroup(item->getParent()->getName(), item->getName());
-        if(ok)
-        {
-            beginRemoveRows(index.parent(), item->getRow(), item->getRow());
-            const_cast<TreeElement *>(item->getParent())->remove(item);
-            endRemoveRows();
-        }
+        beginRemoveRows(index(parentItem), item->getRow(), item->getRow());
+        const_cast<StatisticsTreeElement *>(item->getParent())->remove(item);
+        endRemoveRows();
     }
         break;
     case StatisticsModelElementType::STOCK:
@@ -226,13 +192,10 @@ void StatisticsModel::remove(const QModelIndex &index)
         auto const group = item->getParent()->getName();
         auto const ticker = item->getTicker();
         assert(!ticker.isEmpty());
-        bool ok = interface.removeItem(category, group, ticker);
-        if(ok)
-        {
-            beginRemoveRows(index.parent(), item->getRow(), item->getRow());
-            const_cast<TreeElement *>(item->getParent())->remove(item);
-            endRemoveRows();
-        }
+
+        beginRemoveRows(index(parentItem), item->getRow(), item->getRow());
+        const_cast<StatisticsTreeElement *>(item->getParent())->remove(item);
+        endRemoveRows();
     }
         break;
     case StatisticsModelElementType::ROOT:
@@ -252,7 +215,7 @@ int StatisticsModel::rowCount(const QModelIndex &parent) const
         return 1; // we suppose to have only 1 root
     }else
     {
-        auto parentItem = static_cast<TreeElement *>(parent.internalPointer());
+        auto parentItem = static_cast<StatisticsTreeElement *>(parent.internalPointer());
         assert(parentItem);
 
         return parentItem->getChildCount();
@@ -261,7 +224,7 @@ int StatisticsModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex StatisticsModel::parent(const QModelIndex &index) const
 {
-    auto item = static_cast<TreeElement *>(index.internalPointer());
+    auto item = static_cast<StatisticsTreeElement *>(index.internalPointer());
     if(item == nullptr)
     {
         return QModelIndex();
@@ -273,7 +236,7 @@ QModelIndex StatisticsModel::parent(const QModelIndex &index) const
 
     auto parentItem = item->getParent();
 
-    return createIndex(parentItem->getRow(), 0, const_cast<TreeElement *>(parentItem));
+    return createIndex(parentItem->getRow(), 0, const_cast<StatisticsTreeElement *>(parentItem));
 }
 
 QModelIndex StatisticsModel::index(int row, int column, const QModelIndex &parent) const
@@ -289,7 +252,7 @@ QModelIndex StatisticsModel::index(int row, int column, const QModelIndex &paren
     }
     else
     {
-        auto parentItem = static_cast<TreeElement *>(parent.internalPointer());
+        auto parentItem = static_cast<StatisticsTreeElement *>(parent.internalPointer());
         assert(parentItem);
         auto childrenItem = parentItem->getChild(row);
         return createIndex(row, column, childrenItem);
@@ -334,7 +297,7 @@ QVariant StatisticsModel::data(const QModelIndex &index, int role) const
         {
             return tr("Stats");
         }
-        auto item = static_cast<TreeElement *>(index.internalPointer());
+        auto item = static_cast<StatisticsTreeElement *>(index.internalPointer());
 
         return item->getName();
     }

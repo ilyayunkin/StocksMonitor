@@ -39,14 +39,16 @@ void StatisticsWidget::updateStocksList(const QString &pluginSelected)
 StatisticsWidget::StatisticsWidget(Application &application, QWidget *parent)
     : QWidget(parent)
     , application(application)
+    , configController(application.getStatisticsController())
+    , model(new StatisticsModel(configController.getStatisticsConfig(), this))
     , ui(new Ui::StatisticsWidget)
 {
     ui->setupUi(this);
     ui->pluginsComboBox->addItems(application.getPluginsList());
-    auto model = new StatisticsModel(application.getStatisticsController(), this);
     ui->treeView->setModel(model);
     ui->treeView->expandAll();
-    auto updateEnables = [model, this](const QModelIndex &index)
+    application.setStatisticsConfigView(this);
+    auto updateEnables = [this](const QModelIndex &index)
     {
         auto type = model->getType(index);
         switch (type) {
@@ -93,17 +95,19 @@ StatisticsWidget::StatisticsWidget(Application &application, QWidget *parent)
     connect(ui->processButton, &QPushButton::clicked,
             [&application](){application.getStatisticsController().processStatistics();});
 
-    auto add = [model, this]
+    auto add = [this]
     {
         auto index = ui->treeView->selectionModel()->currentIndex();
         auto type = model->getType(index);
+        auto configElement = model->getTreeElement(index);
         switch (type) {
         case StatisticsModelElementType::ROOT:
         {
             const auto categoryName = QInputDialog::getText(this, tr("Input category name"), tr("Input category name"));
             if(!categoryName.isEmpty())
             {
-                model->addCategory(index, categoryName);
+                StatisticsConfigCategoryIndex catIndex(categoryName, static_cast<void *>(configElement));
+                configController.addCategory(catIndex);
             }
         }
             break;
@@ -112,7 +116,10 @@ StatisticsWidget::StatisticsWidget(Application &application, QWidget *parent)
             const auto groupName = QInputDialog::getText(this, tr("Input group name"), tr("Input group name"));
             if(!groupName.isEmpty())
             {
-                model->addGroup(index, groupName);
+                StatisticsConfigGroupIndex groupIndex(configElement->getName()
+                                                      , groupName
+                                                      , static_cast<void *>(configElement));
+                configController.addGroup(groupIndex);
             }
         }
             break;
@@ -122,7 +129,11 @@ StatisticsWidget::StatisticsWidget(Application &application, QWidget *parent)
             if(!ticker.isEmpty())
             {
                 const auto name = ui->stocksComboBox->currentText();
-                model->addItem(index, name, ticker);
+                StatisticsConfigItemIndex itemIndex(configElement->getParent()->getName()
+                                                    , configElement->getName()
+                                                    , StockId{ticker.data(), name}
+                                                    , static_cast<void *>(configElement));
+                configController.addItem(itemIndex);
             }
             break;
         }
@@ -134,11 +145,46 @@ StatisticsWidget::StatisticsWidget(Application &application, QWidget *parent)
 
     };
     connect(ui->addButton, &QPushButton::clicked, add);
-    auto remove = [model, this]
+    auto remove = [this]
     {
         auto index = ui->treeView->selectionModel()->currentIndex();
-        model->remove(index);
+        auto type = model->getType(index);
+        auto configElement = model->getTreeElement(index);
+        auto parentElement = configElement->getParent();
+        switch (type) {
+        case StatisticsModelElementType::CATEGORY:
+        {
+            StatisticsConfigCategoryIndex catIndex(configElement->getName()
+                                                   , static_cast<void *>(configElement));
+            configController.removeCategory(catIndex);
+        }
+            break;
+        case StatisticsModelElementType::GROUP:
+        {
+            StatisticsConfigGroupIndex groupIndex(parentElement->getName()
+                                                  , configElement->getName()
+                                                  , static_cast<void *>(configElement));
+            configController.removeGroup(groupIndex);
+        }
+            break;
+        case StatisticsModelElementType::STOCK:
+        {
+            const auto ticker = configElement->getTicker();
+            assert(!ticker.isEmpty());
 
+            const auto name = configElement->getName();
+            StatisticsConfigItemIndex itemIndex(configElement->getParent()->getParent()->getName()
+                                                , configElement->getParent()->getName()
+                                                , StockId{ticker.data(), name}
+                                                , static_cast<void *>(configElement));
+            configController.removeItem(itemIndex);
+            break;
+        }
+        default:
+        case StatisticsModelElementType::ROOT:
+        case StatisticsModelElementType::NONE:
+            break;
+        }
     };
     connect(ui->removeButton, &QPushButton::clicked, remove);
     updateStocksList(ui->stocksComboBox->currentText());
@@ -147,4 +193,39 @@ StatisticsWidget::StatisticsWidget(Application &application, QWidget *parent)
 StatisticsWidget::~StatisticsWidget()
 {
     delete ui;
+}
+
+void StatisticsWidget::addItem(const StatisticsConfigItemIndex &index)
+{
+    auto parentElement = static_cast<StatisticsTreeElement *>(index.internalPointer);
+    model->addItem(parentElement, index.stock.name, index.stock.ticker.data());
+}
+
+void StatisticsWidget::addGroup(const StatisticsConfigGroupIndex &index)
+{
+    auto parentElement = static_cast<StatisticsTreeElement *>(index.internalPointer);
+    model->addGroup(parentElement, index.group);
+}
+
+void StatisticsWidget::addCategory(const StatisticsConfigCategoryIndex &index)
+{
+    model->addCategory(index.category);
+}
+
+void StatisticsWidget::removeItem(const StatisticsConfigItemIndex &index)
+{
+    auto element = static_cast<StatisticsTreeElement *>(index.internalPointer);
+    model->remove(element);
+}
+
+void StatisticsWidget::removeGroup(const StatisticsConfigGroupIndex &index)
+{
+    auto element = static_cast<StatisticsTreeElement *>(index.internalPointer);
+    model->remove(element);
+}
+
+void StatisticsWidget::removeCategory(const StatisticsConfigCategoryIndex &index)
+{
+    auto element = static_cast<StatisticsTreeElement *>(index.internalPointer);
+    model->remove(element);
 }
