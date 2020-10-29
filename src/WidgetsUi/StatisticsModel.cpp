@@ -179,14 +179,15 @@ void StatisticsModel::addItem(const QModelIndex &parent, const QString &name, co
         assert(parentItem);
         assert(parentItem->getType() == StatisticsModelElementType::GROUP);
 
-        beginInsertRows(parent, parentItem->getChildCount(), parentItem->getChildCount());
-        if(interface.addItem(parentItem->getParent()->getName()
-                          , parentItem->getName()
-                          , StockId(ticker, name)))
+        bool ok = interface.addItem(parentItem->getParent()->getName()
+                                    , parentItem->getName()
+                                    , StockId(ticker, name));
+        if(ok)
         {
+            beginInsertRows(parent, parentItem->getChildCount(), parentItem->getChildCount());
             parentItem->add(new TreeElement(name, ticker));
+            endInsertRows();
         }
-        endInsertRows();
     }
 }
 
