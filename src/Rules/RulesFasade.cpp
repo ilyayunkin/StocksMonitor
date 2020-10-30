@@ -25,11 +25,13 @@ void RulesFasade::updateLimitsStorage(const stocksListHandler handler)
         if(price != limit.price)
         {
             anyUpdates = true;
-            limit.price = price;
-            if(price < limit.basePrice)
+            if((price < limit.basePrice)
+                    && ((limit.price >= limit.basePrice)
+                    || (limit.price <= 0)))
             {
                 signalizeLimit(limit.name, price);
             }
+            limit.price = price;
         }
         ++i;
     }
