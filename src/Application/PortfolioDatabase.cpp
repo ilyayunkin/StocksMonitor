@@ -4,16 +4,6 @@ namespace  {
 QString tableName = "Pocket";
 }
 
-QSqlQuery PortfolioDatabase::executeQuery(const QString &query)
-{
-    QSqlQuery q = db.exec(query);
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastError();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.record();
-
-    return q;
-}
-
 PortfolioDatabase::PortfolioDatabase()
 {
     db = QSqlDatabase::addDatabase("QSQLITE", "pocket");
@@ -101,4 +91,14 @@ PortfolioEntryList PortfolioDatabase::getAll()
         //        }
     }
     return entries;
+}
+
+QSqlQuery PortfolioDatabase::executeQuery(const QString &query)
+{
+    QSqlQuery q = db.exec(query);
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastError();
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.record();
+
+    return q;
 }

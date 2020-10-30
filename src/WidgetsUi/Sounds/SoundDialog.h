@@ -12,11 +12,6 @@ class SoundDialog;
 class SoundDialog : public QDialog
 {
     Q_OBJECT
-
-    const QString dir;
-    std::shared_ptr<QSound> sound;
-
-    void setupFile(const QString &filename);
 public:
     explicit SoundDialog(const QString dir, QWidget *parent = nullptr);
     ~SoundDialog();
@@ -32,6 +27,11 @@ private slots:
 
 private:
     Ui::SoundDialog *ui;
+
+    const QString dir;
+    std::shared_ptr<QSound> sound;
+
+    void setupFile(const QString &filename);
 };
 
 #endif // SOUNDDIALOG_H

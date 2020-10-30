@@ -93,17 +93,6 @@ struct StatisticsModelPrivate
     }
 };
 
-QModelIndex StatisticsModel::index(const StatisticsTreeElement *const item)
-{
-    if(item == nullptr)
-    {
-        return QModelIndex();
-    }else
-    {
-        return index(item->getRow(), 0, index(item->getParent()));
-    }
-}
-
 StatisticsModel::StatisticsModel(const StatisticsConfigList &config, QObject *parent)
     : QAbstractItemModel(parent)
     , pimpl(new StatisticsModelPrivate(config))
@@ -302,4 +291,15 @@ QVariant StatisticsModel::data(const QModelIndex &index, int role) const
         return item->getName();
     }
     return QVariant();
+}
+
+QModelIndex StatisticsModel::index(const StatisticsTreeElement *const item)
+{
+    if(item == nullptr)
+    {
+        return QModelIndex();
+    }else
+    {
+        return index(item->getRow(), 0, index(item->getParent()));
+    }
 }

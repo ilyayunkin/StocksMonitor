@@ -8,28 +8,6 @@ const auto itemsTableName = "items";
 const auto dbName = "StatisticsConfig";
 }
 
-QSqlQuery StatisticsConfigDatabase::executeQuery(const QString &query)
-{
-    QSqlQuery q = db.exec(query);
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastError();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.record();
-
-    return q;
-}
-
-QSqlQuery StatisticsConfigDatabase::executeQueryException(const QString &query)
-{
-    QSqlQuery q = db.exec(query);
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastError();
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.record();
-    if(q.lastError().isValid())
-        throw SqlQueryErrorException();
-
-    return q;
-}
-
 QStringList StatisticsConfigDatabase::getAllCategories()
 {
     QStringList ret;
@@ -286,4 +264,26 @@ StatisticsConfigList StatisticsConfigDatabase::getAll()
         ret.push_back(c);
     }
     return ret;
+}
+
+QSqlQuery StatisticsConfigDatabase::executeQuery(const QString &query)
+{
+    QSqlQuery q = db.exec(query);
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastError();
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.record();
+
+    return q;
+}
+
+QSqlQuery StatisticsConfigDatabase::executeQueryException(const QString &query)
+{
+    QSqlQuery q = db.exec(query);
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastError();
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.record();
+    if(q.lastError().isValid())
+        throw SqlQueryErrorException();
+
+    return q;
 }

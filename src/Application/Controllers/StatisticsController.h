@@ -12,9 +12,6 @@ class AbstractStatisticsConfigView;
 
 class StatisticsController
 {
-    StatisticsInteractor &rules;
-    AbstractStatisticsView &resultView;
-    AbstractStatisticsConfigView *configView = nullptr;
 public:
     StatisticsController(StatisticsInteractor &rules,
                          AbstractStatisticsView &resultView);
@@ -30,6 +27,10 @@ public:
     bool removeCategory(const StatisticsConfigCategoryIndex &index);
 
     void processStatistics() const;
+private:
+    StatisticsInteractor &rules;
+    AbstractStatisticsView &resultView;
+    AbstractStatisticsConfigView *configView = nullptr;
 };
 
 #endif // STATISTICSCONTROLLER_H

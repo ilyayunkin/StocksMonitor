@@ -15,8 +15,6 @@ class RulesFasade;
 
 class PortfolioInterface
 {
-    RulesFasade *const rules;
-    AbstractStocksView *view = nullptr;
 public:
     explicit PortfolioInterface(RulesFasade * const rules);
     size_t size() const;
@@ -28,6 +26,9 @@ public:
     void setView(AbstractStocksView *const view);
     void update();
     void update(const size_t row);
+private:
+    RulesFasade *const rules;
+    AbstractStocksView *view = nullptr;
 };
 
 #endif // PORTFOLIOINTERFACE_H

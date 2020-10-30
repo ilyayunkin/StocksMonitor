@@ -18,11 +18,6 @@ enum class StatisticsModelElementType
 
 class StatisticsTreeElement
 {
-    const StatisticsModelElementType type;
-    const QString name;
-    const QByteArray ticker;
-    const StatisticsTreeElement *parent = nullptr;
-    std::vector<StatisticsTreeElement *> children;
 public:
     StatisticsTreeElement(const StatisticsModelElementType type,
                           const QString &name);
@@ -43,14 +38,18 @@ public:
     void add(StatisticsTreeElement *element);
     void remove(StatisticsTreeElement *element);
     int getRow() const;
+private:
+    const StatisticsModelElementType type;
+    const QString name;
+    const QByteArray ticker;
+    const StatisticsTreeElement *parent = nullptr;
+    std::vector<StatisticsTreeElement *> children;
 };
 
 class StatisticsModelPrivate;
 class StatisticsModel : public QAbstractItemModel
 {
     Q_OBJECT
-    std::shared_ptr<StatisticsModelPrivate> pimpl;
-    QModelIndex index(const StatisticsTreeElement * const item);
 public:
     StatisticsModel(const StatisticsConfigList &config,
                     QObject *parent = nullptr);
@@ -73,6 +72,9 @@ public:
     void addItem(StatisticsTreeElement *parentItem, const QString &name,
                  const char *const &ticker);
     void remove(StatisticsTreeElement *item);
+private:
+    std::shared_ptr<StatisticsModelPrivate> pimpl;
+    QModelIndex index(const StatisticsTreeElement * const item);
 };
 
 #endif // STATISTICSMODEL_H

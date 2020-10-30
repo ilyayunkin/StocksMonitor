@@ -6,10 +6,11 @@
 class StoryWidget : public QDialog
 {
     Q_OBJECT
-    explicit StoryWidget(QWidget *parent = nullptr);
-    ~StoryWidget();
 public:
     static void showStory();
+private:
+    explicit StoryWidget(QWidget *parent = nullptr);
+    ~StoryWidget();
 };
 
 #endif // STORYWIDGET_H

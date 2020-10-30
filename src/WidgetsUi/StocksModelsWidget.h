@@ -13,9 +13,6 @@ class StocksModelsWidget;
 class StocksModelsWidget : public QWidget
 {
     Q_OBJECT
-    StocksInterface &stocksInterface;
-    BuyRequestInterface &buyRequestInterface;
-
 public:
     explicit StocksModelsWidget(StocksInterface &stocksInterface,
                                 BuyRequestInterface &buyRequestInterface,
@@ -24,6 +21,8 @@ public:
 
 private:
     Ui::StocksModelsWidget *ui;
+    StocksInterface &stocksInterface;
+    BuyRequestInterface &buyRequestInterface;
 };
 
 #endif // STOCKSMODELSWIDGET_H

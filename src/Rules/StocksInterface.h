@@ -14,9 +14,6 @@ class RulesFasade;
 
 class StocksInterface
 {
-    const stocksListHandler handler;
-    RulesFasade *const rules;
-    AbstractStocksView *view = nullptr;
 public:
     StocksInterface(RulesFasade * const rules,
                     const stocksListHandler handler);
@@ -28,6 +25,10 @@ public:
     void addToPortfolio(const char *const ticker, const int quantity);
     void addLimit(const char *const ticker, float limit);
     void update();
+private:
+    const stocksListHandler handler;
+    RulesFasade *const rules;
+    AbstractStocksView *view = nullptr;
 };
 
 #endif // STOCKSINTERFACE_H

@@ -5,8 +5,8 @@
 
 SoundDialog::SoundDialog(const QString dir, QWidget *parent) :
     QDialog(parent),
-    dir(dir),
-    ui(new Ui::SoundDialog)
+    ui(new Ui::SoundDialog),
+    dir(dir)
 {
     ui->setupUi(this);
     connect(ui->okButton, SIGNAL(clicked(bool)), SLOT(accept()));
@@ -33,16 +33,6 @@ void SoundDialog::on_selectButton_clicked()
     setupFile(filename);
 }
 
-void SoundDialog::setupFile(const QString &filename)
-{
-    if(!filename.isEmpty()){
-        sound = std::make_shared<QSound>(filename);
-        ui->playButton->setEnabled(true);
-        ui->stopButton->setEnabled(true);
-        ui->okButton->setEnabled(true);
-    }
-}
-
 void SoundDialog::on_playButton_clicked()
 {
     sound->play();
@@ -51,4 +41,14 @@ void SoundDialog::on_playButton_clicked()
 void SoundDialog::on_stopButton_clicked()
 {
     sound->stop();
+}
+
+void SoundDialog::setupFile(const QString &filename)
+{
+    if(!filename.isEmpty()){
+        sound = std::make_shared<QSound>(filename);
+        ui->playButton->setEnabled(true);
+        ui->stopButton->setEnabled(true);
+        ui->okButton->setEnabled(true);
+    }
 }

@@ -6,17 +6,16 @@
 
 class BuyRequestDatabase : public AbstractBuyRequestDatabase
 {
-    QSqlDatabase db;
-    QSqlQuery executeQuery(const QString &query);
 public:
     explicit BuyRequestDatabase(const QString &name);
 
-
     // AbstractBuyRequestDatabase interface
-public:
     void add(const StockLimit &stockLimit);
     void update(const StockLimit &stockLimit);
     StockLimitsList getAll();
+private:
+    QSqlDatabase db;
+    QSqlQuery executeQuery(const QString &query);
 };
 
 #endif // BUYREQUESTDATABASE_H

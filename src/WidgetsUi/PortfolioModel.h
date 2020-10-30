@@ -12,11 +12,6 @@
 class PortfolioModel : public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
-
-    mutable size_t size = 0;
-    PortfolioInterface &portfolioInterface;
-    void stocksUpdated() override;
-    void stocksUpdated(size_t row) override;
 public:
     enum
     {
@@ -42,6 +37,11 @@ public:
 
 signals:
     void updated();
+private:
+    mutable size_t size = 0;
+    PortfolioInterface &portfolioInterface;
+    void stocksUpdated() override;
+    void stocksUpdated(size_t row) override;
 };
 
 #endif // PORTFOLIO_MODEL_H

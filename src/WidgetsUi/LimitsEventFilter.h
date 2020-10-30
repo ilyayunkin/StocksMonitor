@@ -12,15 +12,16 @@ class LimitsEventFilter : public QObject
 {
     Q_OBJECT
 
+public:
+    explicit LimitsEventFilter(StocksInterface &stocksInterface,
+                               QTableView *table);
+    bool eventFilter(QObject *obj, QEvent *event) override;
+private:
     QTableView *table;
     QMenu *menu;
     QAction *portfolioAction;
     QAction *urlAction;
     StocksInterface &stocksInterface;
-public:
-    explicit LimitsEventFilter(StocksInterface &stocksInterface,
-                               QTableView *table);
-    bool eventFilter(QObject *obj, QEvent *event) override;
 };
 
 #endif // LIMITSEVENTFILTER_H

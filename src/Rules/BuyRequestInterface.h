@@ -14,9 +14,6 @@ class RulesFasade;
 
 class BuyRequestInterface
 {
-    const stocksListHandler handler;
-    RulesFasade *const rules;
-    AbstractStocksView *view = nullptr;
 public:
     BuyRequestInterface(RulesFasade * const rules,
                     const stocksListHandler handler);
@@ -27,5 +24,9 @@ public:
     void setView(AbstractStocksView *const view);
     void addToPortfolio(const char *const ticker, const int quantity);
     void update();
+private:
+    const stocksListHandler handler;
+    RulesFasade *const rules;
+    AbstractStocksView *view = nullptr;
 };
 #endif // BUYREQUESTINTERFACE_H

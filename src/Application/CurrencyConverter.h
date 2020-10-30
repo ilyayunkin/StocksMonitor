@@ -7,8 +7,6 @@
 
 class CurrencyConverter final : public AbstractCurrencyConverter
 {
-    StocksInterface * const currencyModel;
-    const QByteArray currencyCode;
 public:
     explicit CurrencyConverter(const char *const currencyCode,
                       StocksInterface *const currencyModel = nullptr);
@@ -17,6 +15,9 @@ public:
     float convert(const char *const targetCurrency,
                               const char *const currency,
                               const float value) override;
+private:
+    StocksInterface * const currencyModel;
+    const QByteArray currencyCode;
 };
 
 #endif // CURRENCYCONVERTER_H

@@ -14,8 +14,6 @@ class Application;
 class PortfolioWidget : public QWidget
 {
     Q_OBJECT
-    PortfolioModel &model;
-    Application &rules;
 public:
     explicit PortfolioWidget(PortfolioModel *model,
                           Application &rules,
@@ -28,6 +26,8 @@ private slots:
 
 private:
     Ui::PortfolioWidget *ui;
+    PortfolioModel &model;
+    Application &rules;
 };
 
 #endif // PORTFOLIO_WIDGET_H

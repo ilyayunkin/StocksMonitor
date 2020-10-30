@@ -12,7 +12,11 @@ class BuyRequestInterface;
 class StocksEventFilter : public QObject
 {
     Q_OBJECT
-
+public:
+    explicit StocksEventFilter(StocksInterface &stocksInterface,
+                               QTableView *table);
+    bool eventFilter(QObject *obj, QEvent *event) override;
+private:
     QTableView *table;
     QMenu *menu;
     QAction *portfolioAction;
@@ -21,10 +25,6 @@ class StocksEventFilter : public QObject
     StocksInterface &stocksInterface;
 
     void addLimit(const QModelIndex &index);
-public:
-    explicit StocksEventFilter(StocksInterface &stocksInterface,
-                               QTableView *table);
-    bool eventFilter(QObject *obj, QEvent *event) override;
 };
 
 #endif // STOCKSEVENTFILTER_H

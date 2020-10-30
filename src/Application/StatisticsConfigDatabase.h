@@ -7,10 +7,6 @@
 
 class StatisticsConfigDatabase final : public AbstractStatisticsConfigDatabase
 {
-    QSqlDatabase db;
-    QSqlQuery executeQuery(const QString &query);
-    QSqlQuery executeQueryException(const QString &query);
-
 public:
     StatisticsConfigDatabase();
     ~StatisticsConfigDatabase();
@@ -27,6 +23,10 @@ public:
     void removeCategory(const QString &category);
     void removeGroup(const QString &category, const QString &group);
     void removeItem(const QString &group, const char *const ticker);
+private:
+    QSqlDatabase db;
+    QSqlQuery executeQuery(const QString &query);
+    QSqlQuery executeQueryException(const QString &query);
 };
 
 #endif // STATISTICSCONFIGDATABASE_H

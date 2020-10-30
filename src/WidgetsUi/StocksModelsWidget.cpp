@@ -14,9 +14,9 @@ StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
                                        BuyRequestInterface &buyRequestInterface,
                                        QWidget *parent) :
     QWidget(parent),
+    ui(new Ui::StocksModelsWidget),
     stocksInterface(stocksInterface),
-    buyRequestInterface(buyRequestInterface),
-    ui(new Ui::StocksModelsWidget)
+    buyRequestInterface(buyRequestInterface)
 {
     ui->setupUi(this);
     {

@@ -11,55 +11,6 @@
 #include <assert.h>
 #include <set>
 
-CurrencyCountersList StatisticsInteractor::getPortfolioSum() const
-{
-    CurrencyCountersList counters;
-    for(auto &e : entities.portfolio)
-    {
-        counters.add(e.currency.data(), e.price * e.quantity);
-    }
-
-    return counters;
-}
-
-Stock StatisticsInteractor::getStockForPortfolioEntry(const size_t i) const
-{
-    auto const &entry = entities.portfolio.at(i);
-    return getStock(entry.handler, entry.ticker.data());
-}
-
-Stock StatisticsInteractor::getStock(const stocksListHandler handler, const char * const ticker) const
-{
-    assert(ticker);
-    assert(strlen(ticker) != 0);
-    const auto &stocks = entities.pairs[handler].stocks;
-
-    Stock ret{};
-    const auto cit = std::find_if(stocks.begin(), stocks.end(),
-                                  [&](const Stock &stock){return stock.ticker == ticker;});
-    if(cit != stocks.cend())
-    {
-        ret = *cit;
-    }
-    return ret;
-}
-
-bool StatisticsInteractor::isItemInCategory(const StatisticsConfigList::iterator category,
-                                            const char *ticker)
-{
-    for(const auto &group : category->list)
-    {
-        for(const auto &item : group.list)
-        {
-            if(item.ticker == ticker)
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 StatisticsInteractor::StatisticsInteractor(AbstractStatisticsConfigDatabase &db,
                                            Entities &entities)
     : db(db)
@@ -362,4 +313,53 @@ Statistics StatisticsInteractor::processStatistics() const
         }
     }
     return statistics;
+}
+
+CurrencyCountersList StatisticsInteractor::getPortfolioSum() const
+{
+    CurrencyCountersList counters;
+    for(auto &e : entities.portfolio)
+    {
+        counters.add(e.currency.data(), e.price * e.quantity);
+    }
+
+    return counters;
+}
+
+Stock StatisticsInteractor::getStockForPortfolioEntry(const size_t i) const
+{
+    auto const &entry = entities.portfolio.at(i);
+    return getStock(entry.handler, entry.ticker.data());
+}
+
+Stock StatisticsInteractor::getStock(const stocksListHandler handler, const char * const ticker) const
+{
+    assert(ticker);
+    assert(strlen(ticker) != 0);
+    const auto &stocks = entities.pairs[handler].stocks;
+
+    Stock ret{};
+    const auto cit = std::find_if(stocks.begin(), stocks.end(),
+                                  [&](const Stock &stock){return stock.ticker == ticker;});
+    if(cit != stocks.cend())
+    {
+        ret = *cit;
+    }
+    return ret;
+}
+
+bool StatisticsInteractor::isItemInCategory(const StatisticsConfigList::iterator category,
+                                            const char *ticker)
+{
+    for(const auto &group : category->list)
+    {
+        for(const auto &item : group.list)
+        {
+            if(item.ticker == ticker)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }

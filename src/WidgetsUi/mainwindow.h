@@ -16,6 +16,12 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+public:
+    explicit MainWindow(Application &application,
+               QWidget *parent = nullptr);
+    ~MainWindow();
+    void save();
+private:
     Application &application;
     Signalizer *signalizer;
     Notifier *notifier;
@@ -23,10 +29,5 @@ class MainWindow : public QMainWindow
     void selectSoundFile();
     void setupFile(const QString &filename);
     void closeEvent(QCloseEvent *event);
-public:
-    explicit MainWindow(Application &application,
-               QWidget *parent = nullptr);
-    ~MainWindow();
-    void save();
 };
 #endif // MAINWINDOW_H

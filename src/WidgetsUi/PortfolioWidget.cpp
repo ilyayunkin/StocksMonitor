@@ -16,9 +16,9 @@ PortfolioWidget::PortfolioWidget(PortfolioModel *model,
                                  Application &application,
                                  QWidget *parent) :
     QWidget(parent),
+    ui(new Ui::PortfolioWidget),
     model(*model),
-    rules(application),
-    ui(new Ui::PortfolioWidget)
+    rules(application)
 {
     ui->setupUi(this);
     QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);

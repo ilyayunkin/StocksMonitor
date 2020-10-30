@@ -14,11 +14,6 @@ class StocksInterface;
 class StocksLimitsModel final: public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
-
-    BuyRequestInterface &stockLimits;
-    StocksInterface &stocksInterface;
-    mutable size_t size;
-
 public:
     enum
     {
@@ -44,6 +39,10 @@ public:
 
     void stocksUpdated() override;
     void stocksUpdated(size_t row) override;
+private:
+    BuyRequestInterface &stockLimits;
+    StocksInterface &stocksInterface;
+    mutable size_t size;
 };
 
 #endif // StocksLimitsModel_H

@@ -14,9 +14,6 @@
 class StocksModel final: public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
-
-    StocksInterface &stocks;
-    mutable size_t size = 0;
 public:
     enum
     {
@@ -45,6 +42,9 @@ public:
     void stocksUpdated(size_t row) override;
 signals:
     void time(std::string);
+private:
+    StocksInterface &stocks;
+    mutable size_t size = 0;
 };
 
 #endif // StocksModel_H

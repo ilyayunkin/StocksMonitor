@@ -10,16 +10,15 @@
 class Signalizer : public QObject, public AbstractSignalizer
 {
     Q_OBJECT
-
-    std::shared_ptr<QSound> sound;
-    void setupFile(const QString &filename);
 public:
     explicit Signalizer(QObject *parent = nullptr);
 
     // AbstractSignalizer interface
-public:
     void signalize() override;
     void changeSound() override;
+private:
+    std::shared_ptr<QSound> sound;
+    void setupFile(const QString &filename);
 };
 
 #endif // SIGNALIZER_H

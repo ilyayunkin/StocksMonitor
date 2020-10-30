@@ -6,7 +6,6 @@
 class QWidget;
 class Dialogs : public AbstractDialogs
 {
-    QWidget *const w = nullptr;
 public:
     Dialogs(QWidget *const w = nullptr);
     bool askReplaceBuyRequest(const char *const ticker
@@ -20,6 +19,8 @@ public:
                                      , const float basePrice1
                                      , const char *const ticker2
                                      , const float basePrice2)const;
+private:
+    QWidget *const w = nullptr;
 };
 
 #endif // DIALOGS_H

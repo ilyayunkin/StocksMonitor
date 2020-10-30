@@ -28,15 +28,6 @@ class Application : public QObject
 {
     Q_OBJECT
 
-    std::vector<std::shared_ptr<StocksMonitor>> monitors;
-    std::shared_ptr<RulesFasade> rules;
-    std::shared_ptr<CurrencyConverter> converter;
-    std::vector<std::shared_ptr<BuyRequestDatabase>> buyRequestDatabases;
-    std::shared_ptr<PortfolioDatabase> portfolioDatabase;
-    std::shared_ptr<StatisticsCsvSaver> csvSaver;
-    std::shared_ptr<StatisticsConfigDatabase> statisticsConfigDatabase;
-    std::shared_ptr<StatisticsController> statisticsController;
-
 public:
     explicit Application(QObject *parent = nullptr);
     ~Application();
@@ -51,6 +42,16 @@ public:
     void setNotifier(AbstractNotifier *const notifier);
     void setDialogs(AbstractDialogs *const dialogs);
     void setStatisticsConfigView(AbstractStatisticsConfigView *configView);
+private:
+
+    std::vector<std::shared_ptr<StocksMonitor>> monitors;
+    std::shared_ptr<RulesFasade> rules;
+    std::shared_ptr<CurrencyConverter> converter;
+    std::vector<std::shared_ptr<BuyRequestDatabase>> buyRequestDatabases;
+    std::shared_ptr<PortfolioDatabase> portfolioDatabase;
+    std::shared_ptr<StatisticsCsvSaver> csvSaver;
+    std::shared_ptr<StatisticsConfigDatabase> statisticsConfigDatabase;
+    std::shared_ptr<StatisticsController> statisticsController;
 };
 
 #endif // APPLICATION_H
