@@ -242,26 +242,20 @@ void StatisticsDbTest::test_RemoveItem()
     StatisticsConfigDatabase db;
 
     const char * categories[] = {"Category1", "Category2"};
-    for(auto const c : categories)
-    {
-        db.addCategory(c);
-    }
+    std::for_each(std::begin(categories), std::end(categories)
+                  , [&db](const auto c){db.addCategory(c);});
     {
         const auto cat = categories[0];
         const char * groups[] = {"g1", "g2"};
-        for(auto const g : groups)
-        {
-            db.addGroup(cat, g);
-        }
+        std::for_each(std::begin(groups), std::end(groups)
+                      , [&db, &cat](const auto g){db.addGroup(cat, g);});
         {
             const auto g = groups[0];
             const StockId items[] = {StockId("i1", "item1")
                                      , StockId("i2", "item2")
                                      , StockId("i3", "item3")};
-            for(auto const item : items)
-            {
-                db.addItem(g, item);
-            }
+            std::for_each(std::begin(items), std::end(items)
+                          , [&db, &g](const auto item){db.addItem(g, item);});
             {
                 auto all = db.getAllItems(g);
                 QCOMPARE(all.size() , sizeof(items) / sizeof (*items));
@@ -288,20 +282,14 @@ void StatisticsDbTest::test_RemoveGroup()
     StatisticsConfigDatabase db;
 
     const char * categories[] = {"Category1", "Category2"};
-    {
-        for(auto const c : categories)
-        {
-            db.addCategory(c);
-        }
-    }
+    std::for_each(std::begin(categories), std::end(categories)
+                  , [&db](const auto c){db.addCategory(c);});
     {
         const auto cat = categories[0];
         const char * groups[] = {"g1", "g2", "g3"};
         {
-            for(auto const g : groups)
-            {
-                db.addGroup(cat, g);
-            }
+            std::for_each(std::begin(groups), std::end(groups)
+                          , [&db, &cat](const auto g){db.addGroup(cat, g);});
             {
                 auto all = db.getAllGroups(cat);
                 const auto uSize = static_cast<size_t>(all.size());
@@ -315,10 +303,8 @@ void StatisticsDbTest::test_RemoveGroup()
                 const StockId items[] = {StockId("i1", "item1")
                                          , StockId("i2", "item2")
                                          , StockId("i3", "item3")};
-                for(auto const item : items)
-                {
-                    db.addItem(g, item);
-                }
+                std::for_each(std::begin(items), std::end(items)
+                              , [&db, &g](const auto item){db.addItem(g, item);});
                 {
                     db.addItem(groups[0], StockId("i4", "item4"));
                     auto all = db.getAllItems(groups[0]);
@@ -376,12 +362,8 @@ void StatisticsDbTest::test_RemoveCategory()
     }
 
     const char * categories[] = {"Category1", "Category2", "Category3"};
-    {
-        for(auto const c : categories)
-        {
-            db.addCategory(c);
-        }
-    }
+    std::for_each(std::begin(categories), std::end(categories)
+                  , [&db](const auto c){db.addCategory(c);});
     {
         auto all = db.getAllCategories();
         const auto uSize = static_cast<size_t>(all.size());
@@ -393,10 +375,8 @@ void StatisticsDbTest::test_RemoveCategory()
     const auto cat = categories[1];
     const char * groups[] = {"g1", "g2", "g3"};
     {
-        for(auto const g : groups)
-        {
-            db.addGroup(cat, g);
-        }
+        std::for_each(std::begin(groups), std::end(groups)
+                      , [&db, &cat](const auto g){db.addGroup(cat, g);});
         auto all = db.getAllGroups(cat);
         const auto uSize = static_cast<size_t>(all.size());
         QCOMPARE(uSize , sizeof(groups) / sizeof (*groups));
@@ -406,10 +386,8 @@ void StatisticsDbTest::test_RemoveCategory()
         const StockId items[] = {StockId("i1", "item1")
                                  , StockId("i2", "item2")
                                  , StockId("i3", "item3")};
-        for(auto const item : items)
-        {
-            db.addItem(g, item);
-        }
+        std::for_each(std::begin(items), std::end(items)
+                      , [&db, &g](const auto item){db.addItem(g, item);});
         {
             auto all = db.getAllItems(g);
             const auto uSize = static_cast<size_t>(all.size());
