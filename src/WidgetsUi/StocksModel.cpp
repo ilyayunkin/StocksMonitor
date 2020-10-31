@@ -80,11 +80,16 @@ QVariant StocksModel::headerData(int section,
 QVariant StocksModel::data(const QModelIndex &index, int role) const
 {
     QVariant ret;
+    int row = index.row();
+    int col = index.column();
+    assert(row >= 0);
+    assert(col >= 0);
+
+    const auto uRow = static_cast<size_t>(row);
+
     if ((role == Qt::DisplayRole) || (role == Qt::EditRole))
     {
-        int row = index.row();
-        int col = index.column();
-        if(row < (size = stocks.size()))
+        if(uRow < (size = stocks.size()))
         {
             const Stock &stock = stocks.getStock(row);
             switch (col) {
@@ -119,9 +124,7 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::ForegroundRole)
     {
-        int row = index.row();
-        int col = index.column();
-        if(row < (size = stocks.size()))
+        if(uRow < (size = stocks.size()))
         {
             const Stock &stock = stocks.getStock(row);
             float number = 0.0;

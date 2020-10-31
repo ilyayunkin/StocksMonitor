@@ -127,7 +127,8 @@ void StatisticsDbTest::test_AddGroup()
             }
             {
                 auto all = db.getAllGroups(cat);
-                QCOMPARE(all.size() , sizeof(groups) / sizeof (*groups));
+                const auto uSize = static_cast<size_t>(all.size());
+                QCOMPARE(uSize, sizeof(groups) / sizeof (*groups));
             }
 
         }
@@ -193,7 +194,8 @@ void StatisticsDbTest::test_AddItem()
             }
             {
                 auto all = db.getAllGroups(cat);
-                QCOMPARE(all.size() , sizeof(groups) / sizeof (*groups));
+                const auto uSize = static_cast<size_t>(all.size());
+                QCOMPARE(uSize , sizeof(groups) / sizeof (*groups));
             }
         }
 
@@ -212,14 +214,15 @@ void StatisticsDbTest::test_AddItem()
                     {
                         auto all = db.getAllItems(g);
                         QVERIFY(!all.empty());
-                        QCOMPARE(all.size() , i + 1);
+                        QCOMPARE(all.size() , static_cast<size_t>(i + 1));
                         QVERIFY(all[i] == item);
                     }
                     ++i;
                 }
                 {
                     auto all = db.getAllItems(g);
-                    QCOMPARE(all.size() , sizeof(items) / sizeof (*items));
+                    const auto uSize = static_cast<size_t>(all.size());
+                    QCOMPARE(uSize , sizeof(items) / sizeof (*items));
                 }
             }
             {
@@ -301,7 +304,8 @@ void StatisticsDbTest::test_RemoveGroup()
             }
             {
                 auto all = db.getAllGroups(cat);
-                QCOMPARE(all.size() , sizeof(groups) / sizeof (*groups));
+                const auto uSize = static_cast<size_t>(all.size());
+                QCOMPARE(uSize , sizeof(groups) / sizeof (*groups));
                 QVERIFY(std::find(all.begin(), all.end(), groups[1]) != all.end());
                 QVERIFY(std::find(all.begin(), all.end(), groups[0]) != all.end());
                 QVERIFY(std::find(all.begin(), all.end(), groups[2]) != all.end());
@@ -318,16 +322,17 @@ void StatisticsDbTest::test_RemoveGroup()
                 {
                     db.addItem(groups[0], StockId("i4", "item4"));
                     auto all = db.getAllItems(groups[0]);
-                    QCOMPARE(all.size() , 1);
+                    QCOMPARE(all.size() , 1u);
                 }
                 {
                     db.addItem(groups[2], StockId("i5", "item5"));
                     auto all = db.getAllItems(groups[2]);
-                    QCOMPARE(all.size() , 1);
+                    QCOMPARE(all.size() , 1u);
                 }
                 {
                     auto all = db.getAllItems(g);
-                    QCOMPARE(all.size() , sizeof(items) / sizeof (*items));
+                    const auto uSize = static_cast<size_t>(all.size());
+                    QCOMPARE(uSize , sizeof(items) / sizeof (*items));
                     QVERIFY(std::find(all.begin(), all.end(), items[1]) != all.end());
                     QVERIFY(std::find(all.begin(), all.end(), items[0]) != all.end());
                     QVERIFY(std::find(all.begin(), all.end(), items[2]) != all.end());
@@ -335,23 +340,24 @@ void StatisticsDbTest::test_RemoveGroup()
                 db.removeGroup(cat, groups[1]);
                 {// Check if group is removed
                     auto all = db.getAllGroups(cat);
-                    QCOMPARE(all.size() , sizeof(groups) / sizeof (*groups) - 1);
+                    const auto uSize = static_cast<size_t>(all.size());
+                    QCOMPARE(uSize , sizeof(groups) / sizeof (*groups) - 1);
                     QVERIFY(std::find(all.begin(), all.end(), groups[1]) == all.end());
                     QVERIFY(std::find(all.begin(), all.end(), groups[0]) != all.end());
                     QVERIFY(std::find(all.begin(), all.end(), groups[2]) != all.end());
                 }
                 {// Check if associated items are removed
                     auto all = db.getAllItems(g);
-                    QCOMPARE(all.size() , 0);
+                    QCOMPARE(all.size() , 0u);
                 }
                 {// Check if other items aren't removed
                     {
                         auto all = db.getAllItems(groups[0]);
-                        QCOMPARE(all.size() , 1);
+                        QCOMPARE(all.size() , 1u);
                     }
                     {
                         auto all = db.getAllItems(groups[2]);
-                        QCOMPARE(all.size() , 1);
+                        QCOMPARE(all.size() , 1u);
                     }
                 }
             }
@@ -378,7 +384,8 @@ void StatisticsDbTest::test_RemoveCategory()
     }
     {
         auto all = db.getAllCategories();
-        QCOMPARE(all.size() , sizeof(categories) / sizeof (*categories));
+        const auto uSize = static_cast<size_t>(all.size());
+        QCOMPARE(uSize , sizeof(categories) / sizeof (*categories));
         QVERIFY(std::find(all.begin(), all.end(), categories[1]) != all.end());
         QVERIFY(std::find(all.begin(), all.end(), categories[0]) != all.end());
         QVERIFY(std::find(all.begin(), all.end(), categories[2]) != all.end());
@@ -391,7 +398,8 @@ void StatisticsDbTest::test_RemoveCategory()
             db.addGroup(cat, g);
         }
         auto all = db.getAllGroups(cat);
-        QCOMPARE(all.size() , sizeof(groups) / sizeof (*groups));
+        const auto uSize = static_cast<size_t>(all.size());
+        QCOMPARE(uSize , sizeof(groups) / sizeof (*groups));
     }
     {
         const auto g = groups[1];
@@ -404,7 +412,8 @@ void StatisticsDbTest::test_RemoveCategory()
         }
         {
             auto all = db.getAllItems(g);
-            QCOMPARE(all.size() , sizeof(items) / sizeof (*items));
+            const auto uSize = static_cast<size_t>(all.size());
+            QCOMPARE(uSize , sizeof(items) / sizeof (*items));
             QVERIFY(std::find(all.begin(), all.end(), items[1]) != all.end());
             QVERIFY(std::find(all.begin(), all.end(), items[0]) != all.end());
             QVERIFY(std::find(all.begin(), all.end(), items[2]) != all.end());
@@ -417,13 +426,14 @@ void StatisticsDbTest::test_RemoveCategory()
         {
             db.addItem("g4", StockId("i4", "item4"));
             auto all = db.getAllItems("g4");
-            QCOMPARE(all.size() , 1);
+            QCOMPARE(all.size() , 1u);
         }
     }
     db.removeCategory(categories[1]);
     {// Check if category is removed
         auto all = db.getAllCategories();
-        QCOMPARE(all.size() , sizeof(categories) / sizeof (*categories) - 1);
+        const auto uSize = static_cast<size_t>(all.size());
+        QCOMPARE(uSize , sizeof(categories) / sizeof (*categories) - 1);
         QVERIFY(std::find(all.begin(), all.end(), categories[1]) == all.end());
         QVERIFY(std::find(all.begin(), all.end(), categories[0]) != all.end());
         QVERIFY(std::find(all.begin(), all.end(), categories[2]) != all.end());
@@ -439,11 +449,11 @@ void StatisticsDbTest::test_RemoveCategory()
     for(auto const g : groups)
     {// Check if associated items are removed
         auto all = db.getAllItems(g);
-        QCOMPARE(all.size() , 0);
+        QCOMPARE(all.size() , 0u);
     }
     {// Check if other items aren't removed
         auto all = db.getAllItems("g4");
-        QCOMPARE(all.size() , 1);
+        QCOMPARE(all.size() , 1u);
     }
 }
 

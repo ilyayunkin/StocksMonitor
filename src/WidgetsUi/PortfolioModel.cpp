@@ -107,13 +107,17 @@ QVariant PortfolioModel::headerData(int section, Qt::Orientation orientation, in
 
 QVariant PortfolioModel::data(const QModelIndex &index, int role) const
 {
-
     QVariant ret;
-    int row = index.row();
-    int col = index.column();
+    const int row = index.row();
+    const int col = index.column();
+    assert(row >= 0);
+    assert(col >= 0);
+
+    const auto uRow = static_cast<size_t>(row);
+
     if ((role == Qt::DisplayRole) || (role == Qt::EditRole))
     {
-        if(row < (size = portfolioInterface.size()))
+        if(uRow < (size = portfolioInterface.size()))
         {
             const PortfolioEntry &entry = portfolioInterface.getPortfolioEntry(row);
             switch (col) {
@@ -145,7 +149,7 @@ QVariant PortfolioModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::ToolTipRole)
     {
-        if(row < (size = portfolioInterface.size()))
+        if(uRow < (size = portfolioInterface.size()))
         {
             auto stock = portfolioInterface.getStock(row);
             ret = StockHint::getHint(stock);
@@ -153,7 +157,7 @@ QVariant PortfolioModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::BackgroundRole)
     {
-        if(row < (size = portfolioInterface.size()))
+        if(uRow < (size = portfolioInterface.size()))
         {
             const PortfolioEntry &entry = portfolioInterface.getPortfolioEntry(row);
             if(entry.sellPrice > 0
@@ -170,8 +174,12 @@ bool PortfolioModel::setData(const QModelIndex &index, const QVariant &value, in
 {
     int row = index.row();
     int col = index.column();
+    assert(row >= 0);
+    assert(col >= 0);
 
-    if ((role == Qt::EditRole) && (row < (size =portfolioInterface.size())))
+    const auto uRow = static_cast<size_t>(row);
+
+    if ((role == Qt::EditRole) && (uRow < (size =portfolioInterface.size())))
     {
         if(col == QUANTITY)
         {

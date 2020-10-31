@@ -83,9 +83,13 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     QVariant ret;
     int row = index.row();
     int col = index.column();
+    assert(row >= 0);
+    assert(col >= 0);
+
+    const auto uRow = static_cast<size_t>(row);
     if ((role == Qt::DisplayRole) || (role == Qt::EditRole))
     {
-        if(row < (size = stockLimits.size()))
+        if(uRow < (size = stockLimits.size()))
         {
             const StockLimit &limit = stockLimits.getStockBuyRequest(row);
             switch (col) {
@@ -111,7 +115,7 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::BackgroundRole)
     {
-        if(row < (size = stockLimits.size()))
+        if(uRow < (size = stockLimits.size()))
         {
             const StockLimit &limit = stockLimits.getStockBuyRequest(row);
             ret = LimitBackgrounColor::brushForColor(
@@ -121,7 +125,7 @@ QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::ToolTipRole)
     {
-        if(row < (size = stockLimits.size()))
+        if(uRow < (size = stockLimits.size()))
         {
             const StockLimit &limit = stockLimits.getStockBuyRequest(row);
             auto stock = stocksInterface.getStock(limit.ticker.data());
@@ -137,8 +141,13 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
 {
     int row = index.row();
     int col = index.column();
+    assert(row >= 0);
+    assert(col >= 0);
 
-    if ((role == Qt::EditRole) && (col == BASE_PRICE) && (row < (size = stockLimits.size())))
+    const auto uRow = static_cast<size_t>(row);
+
+    if ((role == Qt::EditRole)
+            && (col == BASE_PRICE) && (uRow < (size = stockLimits.size())))
     {
         float referencePrice = value.toFloat();
         if(referencePrice > 0)
