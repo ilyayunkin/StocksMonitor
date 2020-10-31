@@ -5,11 +5,12 @@
 
 #include <algorithm>
 
-StocksModel::StocksModel(StocksInterface &stocks, QObject *parent) :
+StocksModel::StocksModel(StocksInterface &stocksInterface, QObject *parent) :
     QAbstractTableModel(parent),
-    stocks(stocks)
+    stocks(stocksInterface)
 {
     qDebug() << __PRETTY_FUNCTION__ << __LINE__;
+    stocksInterface.subscribeForChanges(this);
 }
 
 StocksModel::~StocksModel()

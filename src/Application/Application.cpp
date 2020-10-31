@@ -83,7 +83,7 @@ Application::Application(QObject *parent) :
                                  plugin->getCurrencyCode(),
                                  db.get()});
 
-        auto monitor = std::make_shared<StocksMonitor>(*rules,
+        auto monitor = std::make_shared<StocksMonitor>(rules->getLoadStocksInteractor(),
                                                        handler,
                                                        plugin->createParser(),
                                                        plugin->getUrl());
@@ -93,13 +93,13 @@ Application::Application(QObject *parent) :
     {
         if(interface.name == "CBRF-Currency")
         {
-            currencyStocksInterface = &interface.stocks;
+            currencyStocksInterface = &interface.stocksInterfaces;
         }
     }
     converter = std::make_shared<CurrencyConverter>("RUB", currencyStocksInterface);
     rules->setConverter(converter.get());
     portfolioDatabase = std::make_shared<PortfolioDatabase>();
-    rules->setPortfolioDatabase(portfolioDatabase.get());
+    rules->getEditPortfolioInteractor().setPortfolioDatabase(portfolioDatabase.get());
     statisticsController = std::make_shared<StatisticsController>(
                 rules->getStatisticsInteractor(), *csvSaver.get());
 }
@@ -108,19 +108,19 @@ Application::~Application()
 {
 }
 
-ViewInterfaces &Application::getViewInterfaces()
+ViewInterfacesList &Application::getViewInterfaces()
 {
     return rules->getViewInterfaces();
 }
 
 QString Application::getPortfolioPrice(const char * const currency)
 {
-    return rules->getPortfolioPrice(currency);
+    return rules->getEditPortfolioInteractor().getPortfolioPrice(currency);
 }
 
 QString Application::getPortfolioPrice()
 {
-    return rules->getPortfolioPrice();
+    return rules->getEditPortfolioInteractor().getPortfolioPrice();
 }
 
 QStringList Application::getAvailibleCurrencies()
@@ -150,7 +150,7 @@ StatisticsController &Application::getStatisticsController()
 
 void Application::setNotifier(AbstractNotifier * const notifier)
 {
-    rules->setNotifier(notifier);
+    rules->getLoadStocksInteractor().setNotifier(notifier);
 }
 
 void Application::setDialogs(AbstractDialogs * const dialogs)

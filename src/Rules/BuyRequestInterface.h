@@ -10,23 +10,33 @@
 #include "Entities/StockLimit.h"
 #include "Entities/StocksListHandler.h"
 
-class RulesFasade;
+class Entities;
+class LoadStocksInteractor;
+class EditPortfolioInteractor;
+class EditBuyRequestInteractor;
+class Subscriptions;
 
 class BuyRequestInterface
 {
 public:
-    BuyRequestInterface(RulesFasade * const rules,
-                    const stocksListHandler handler);
+    BuyRequestInterface(const Entities &entities,
+                        Subscriptions &subscriptions,
+                        LoadStocksInteractor &loadStocksInteractor,
+                        EditPortfolioInteractor &editPortfolioInteractor,
+                        EditBuyRequestInteractor &editBuyRequestInteractor,
+                        const stocksListHandler handler);
     size_t size() const;
     StockLimit getStockBuyRequest(const size_t i) const;
     StockLimit getStockBuyRequest(const char *const ticker) const;
     bool setReferencePrice(size_t row, float referencePrice);
-    void setView(AbstractStocksView *const view);
     void addToPortfolio(const char *const ticker, const int quantity);
-    void update();
+    void subscribeForChanges(AbstractStocksView *view);
 private:
     const stocksListHandler handler;
-    RulesFasade *const rules;
-    AbstractStocksView *view = nullptr;
+    const Entities &entities;
+    Subscriptions &subscriptions;
+    LoadStocksInteractor &loadStocksInteractor;
+    EditPortfolioInteractor &editPortfolioInteractor;
+    EditBuyRequestInteractor &editBuyRequestInteractor;
 };
 #endif // BUYREQUESTINTERFACE_H

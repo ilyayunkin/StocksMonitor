@@ -40,6 +40,7 @@ PortfolioModel::PortfolioModel(PortfolioInterface &portfolioInterface, QObject *
     QAbstractTableModel(parent),
     portfolioInterface(portfolioInterface)
 {
+    portfolioInterface.subscribeForChanges(this);
 }
 
 int PortfolioModel::rowCount(const QModelIndex &parent) const

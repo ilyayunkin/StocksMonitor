@@ -3,6 +3,7 @@
 #include "StatisticsModel.h"
 
 #include <algorithm>
+#include <assert.h>
 
 #include <QDebug>
 #include <QInputDialog>

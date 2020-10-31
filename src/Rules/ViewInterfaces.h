@@ -9,17 +9,32 @@
 struct ViewInterfacesPair
 {
     QString name;
-    StocksInterface stocks;
-    BuyRequestInterface buyRequests;
+    StocksInterface stocksInterfaces;
+    BuyRequestInterface buyRequestInterfaces;
 
-    ViewInterfacesPair(const QString &name, RulesFasade * const rules,
+    ViewInterfacesPair(const QString &name,
+                       const Entities &entities,
+                       Subscriptions &subscriptions,
+                       LoadStocksInteractor &loadStocksInteractor,
+                       EditPortfolioInteractor &editPortfolioInteractor,
+                       EditBuyRequestInteractor &editBuyRequestInteractor,
                        const stocksListHandler handler) :
         name(name),
-        stocks(rules, handler),
-        buyRequests(rules, handler)
+        stocksInterfaces(entities,
+                         subscriptions,
+                         loadStocksInteractor,
+                         editBuyRequestInteractor,
+                         editPortfolioInteractor,
+                         handler),
+        buyRequestInterfaces(entities,
+                             subscriptions,
+                             loadStocksInteractor,
+                             editPortfolioInteractor,
+                             editBuyRequestInteractor,
+                             handler)
     {}
 };
 
-typedef std::vector<ViewInterfacesPair> ViewInterfaces;
+typedef std::vector<ViewInterfacesPair> ViewInterfacesList;
 
 #endif // VIEWINTERFACES_H

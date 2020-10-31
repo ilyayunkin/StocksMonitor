@@ -1,49 +1,53 @@
 #include "BuyRequestInterface.h"
 
-#include "RulesFasade.h"
+#include "Entities/Entities.h"
+#include "LoadStocksInteractor.h"
+#include "EditPortfolioInteractor.h"
+#include "EditBuyRequestInteractor.h"
+#include "Subscriptions.h"
 
-BuyRequestInterface::BuyRequestInterface(RulesFasade *const rules,
-                                 const stocksListHandler handler) :
-    handler(handler),
-    rules(rules)
+BuyRequestInterface::BuyRequestInterface(
+        const Entities &entities,
+        Subscriptions &subscriptions,
+        LoadStocksInteractor &loadStocksInteractor,
+        EditPortfolioInteractor &editPortfolioInteractor,
+        EditBuyRequestInteractor &editBuyRequestInteractor,
+        const stocksListHandler handler)
+    : handler(handler)
+    , entities(entities)
+    , subscriptions(subscriptions)
+    , loadStocksInteractor(loadStocksInteractor)
+    , editPortfolioInteractor(editPortfolioInteractor)
+    , editBuyRequestInteractor(editBuyRequestInteractor)
 {
-
 }
 
 size_t BuyRequestInterface::size() const
 {
-    return rules->getStockBuyRequestsCount(handler);
+    return entities.getStockBuyRequestsCount(handler);
 }
 
 StockLimit BuyRequestInterface::getStockBuyRequest(const size_t i) const
 {
-    return rules->getStockBuyRequest(handler, i);
+    return entities.getStockBuyRequest(handler, i);
 }
 
 StockLimit BuyRequestInterface::getStockBuyRequest(const char *const ticker) const
 {
-    return rules->getStockBuyRequest(handler, ticker);
+    return entities.getStockBuyRequest(handler, ticker);
 }
 
 bool BuyRequestInterface::setReferencePrice(size_t row, float referencePrice)
 {
-    return rules->setReferencePrice(handler, row, referencePrice);
-}
-
-void BuyRequestInterface::setView(AbstractStocksView * const view)
-{
-    this->view = view;
+    return editBuyRequestInteractor.setReferencePrice(handler, row, referencePrice);
 }
 
 void BuyRequestInterface::addToPortfolio(const char *const ticker, const int quantity)
 {
-    rules->addToPortfolio(handler, ticker, quantity);
+    editPortfolioInteractor.addToPortfolio(handler, ticker, quantity);
 }
 
-void BuyRequestInterface::update()
+void BuyRequestInterface::subscribeForChanges(AbstractStocksView *view)
 {
-    if(view)
-    {
-        view->stocksUpdated();
-    }
+    subscriptions.subscribeForBuyRequestChanges(handler, view);
 }

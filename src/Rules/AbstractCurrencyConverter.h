@@ -1,7 +1,7 @@
 #ifndef ABSTRACTCURRENCYCONVERTER_H
 #define ABSTRACTCURRENCYCONVERTER_H
 
-#include "CurrencyCounter.h"
+#include "Entities/CurrencyCounter.h"
 
 class AbstractCurrencyConverter
 {

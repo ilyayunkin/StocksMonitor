@@ -19,6 +19,7 @@ StocksLimitsModel::StocksLimitsModel(BuyRequestInterface &stockLimits,
     stockLimits(stockLimits),
     stocksInterface(stocksInterface)
 {
+    stockLimits.subscribeForChanges(this);
 }
 
 int StocksLimitsModel::rowCount(const QModelIndex &parent) const

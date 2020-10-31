@@ -1,7 +1,7 @@
 #ifndef CURRENCYPRESENTER_H
 #define CURRENCYPRESENTER_H
 
-#include "Rules/CurrencyCounter.h"
+#include "Entities/CurrencyCounter.h"
 
 #include <QString>
 

@@ -26,16 +26,21 @@ SOURCES += \
     Application/StatisticsCsvSaver.cpp \
     Application/StocksMonitor.cpp \
     Application/Controllers/StatisticsController.cpp \
+    Entities/Entities.cpp \
     Entities/StockId.cpp \
+    Entities/CurrencyCounter.cpp \
     Rules/BuyRequestInterface.cpp \
+    Rules/EditBuyRequestInteractor.cpp \
+    Rules/EditPortfolioInteractor.cpp \
+    Rules/LoadStocksInteractor.cpp \
     Rules/PortfolioInterface.cpp \
     Rules/RulesFasade.cpp \
-    Rules/CurrencyCounter.cpp \
     Presenters/LimitBackgrounColor.cpp \
     Presenters/StockHint.cpp \
     Presenters/CurrencyPresenter.cpp \
     Rules/StatisticsInteractor.cpp \
     Rules/StocksInterface.cpp \
+    Rules/Subscriptions.cpp \
     WidgetsUi/Dialogs.cpp \
     WidgetsUi/LimitsEventFilter.cpp \
     WidgetsUi/Notifier.cpp \
@@ -76,13 +81,18 @@ HEADERS += \
     Entities/Statistics.h \
     Entities/StocksListHandler.h \
     Entities/StockLimit.h \
+    Entities/StockId.h \
+    Entities/CurrencyCounter.h \
+    Entities/AbstractStatisticsView.h \
     Rules/AbstractDialogs.h \
     Rules/AbstractNotifier.h \
     Rules/AbstractStatisticsConfigDatabase.h \
-    Rules/AbstractStatisticsView.h \
+    Rules/EditBuyRequestInteractor.h \
+    Rules/EditPortfolioInteractor.h \
+    Rules/LoadStocksInteractor.h \
     Rules/StatisticsInteractor.h \
     Rules/StatisticsResults.h \
-    Entities/StockId.h \
+    Rules/Subscriptions.h \
     Rules/ViewInterfaces.h \
     Rules/AbstractBuyRequestDatabase.h \
     Rules/AbstractCurrencyConverter.h \
@@ -93,7 +103,6 @@ HEADERS += \
     Rules/PortfolioInterface.h \
     Rules/RulesFasade.h \
     Rules/StocksInterface.h \
-    Rules/CurrencyCounter.h \
     Presenters/LimitBackgrounColor.h \
     Presenters/StockHint.h \
     Presenters/CurrencyPresenter.h \

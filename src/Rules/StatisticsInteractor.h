@@ -6,7 +6,7 @@
 #include "Entities/Statistics.h"
 #include "Entities/StocksListHandler.h"
 #include "StocksList.h"
-#include "CurrencyCounter.h"
+#include "Entities/CurrencyCounter.h"
 #include "StatisticsResults.h"
 
 class AbstractStatisticsConfigDatabase;

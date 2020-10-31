@@ -2,7 +2,7 @@
 #define CURRENCYCONVERTER_H
 
 #include "Rules/AbstractCurrencyConverter.h"
-#include "Rules/CurrencyCounter.h"
+#include "Entities/CurrencyCounter.h"
 #include "Rules/StocksInterface.h"
 
 class CurrencyConverter final : public AbstractCurrencyConverter

@@ -28,7 +28,7 @@ public:
 
         COL_COUNT
     };
-    explicit StocksModel(StocksInterface &stocks, QObject *parent = 0);
+    explicit StocksModel(StocksInterface &stocksInterface, QObject *parent = 0);
     ~StocksModel();
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;

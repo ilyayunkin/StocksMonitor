@@ -31,7 +31,7 @@ class Application : public QObject
 public:
     explicit Application(QObject *parent = nullptr);
     ~Application();
-    ViewInterfaces &getViewInterfaces();
+    ViewInterfacesList &getViewInterfaces();
     PortfolioInterface &getPortfolioInterface();
     StatisticsController &getStatisticsController();
     QString getPortfolioPrice(const char *const currency);

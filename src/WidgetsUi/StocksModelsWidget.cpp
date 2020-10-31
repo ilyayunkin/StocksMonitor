@@ -22,7 +22,6 @@ StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
     {
         QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
         StocksModel *model = new StocksModel(stocksInterface, this);
-        stocksInterface.setView(model);
         proxyModel->setSourceModel(model);
         ui->stocksTableView->setModel(proxyModel);
         ui->stocksTableView->setSortingEnabled(true);
@@ -35,7 +34,6 @@ StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
     {
         QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
         StocksLimitsModel *model = new StocksLimitsModel(buyRequestInterface, stocksInterface, this);
-        buyRequestInterface.setView(model);
         proxyModel->setSourceModel(model);
         ui->stocksLimitsTableView->setModel(proxyModel);
         ui->stocksLimitsTableView->setSortingEnabled(true);

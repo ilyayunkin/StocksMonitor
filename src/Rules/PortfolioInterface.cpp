@@ -1,59 +1,49 @@
 #include "PortfolioInterface.h"
-#include "RulesFasade.h"
+#include "Entities/Entities.h"
+#include "Subscriptions.h"
+#include "EditPortfolioInteractor.h"
 
-PortfolioInterface::PortfolioInterface(RulesFasade * const rules) :
-    rules(rules)
+PortfolioInterface::PortfolioInterface(
+        const Entities &entities,
+        Subscriptions &subscriptions,
+        EditPortfolioInteractor &editPortfolioInteractor)
+    : entities(entities)
+    , subscriptions(subscriptions)
+    , editPortfolioInteractor(editPortfolioInteractor)
 {
-
 }
 
 size_t PortfolioInterface::size() const
 {
-    return rules->getPortfolioSize();
+    return entities.getPortfolioSize();
 }
 
 PortfolioEntry PortfolioInterface::getPortfolioEntry(const size_t i) const
 {
-    return rules->getPortfolioEntry(i);
+    return entities.getPortfolioEntry(i);
 }
 
 Stock PortfolioInterface::getStock(const size_t i) const
 {
-    return rules->getStockForPortfolioEntry(i);
+    return entities.getStockForPortfolioEntry(i);
 }
 
 void PortfolioInterface::deletePortfolioEntry(size_t row)
 {
-    rules->deletePortfolioEntry(row);
+    editPortfolioInteractor.deletePortfolioEntry(row);
 }
 
 bool PortfolioInterface::setPortfolioEntryQuantity(size_t row, int quantity)
 {
-    return rules->setPortfolioEntryQuantity(row, quantity);
+    return editPortfolioInteractor.setPortfolioEntryQuantity(row, quantity);
 }
 
 bool PortfolioInterface::setPortfolioEntryReferencePrice(size_t row, float referencePrice)
 {
-    return rules->setPortfolioEntryReferencePrice(row, referencePrice);
+    return editPortfolioInteractor.setPortfolioEntryReferencePrice(row, referencePrice);
 }
 
-void PortfolioInterface::setView(AbstractStocksView * const view)
+void PortfolioInterface::subscribeForChanges(AbstractStocksView *view)
 {
-    this->view = view;
-}
-
-void PortfolioInterface::update()
-{
-    if(view)
-    {
-        view->stocksUpdated();
-    }
-}
-
-void PortfolioInterface::update(const size_t row)
-{
-    if(view)
-    {
-        view->stocksUpdated(row);
-    }
+    subscriptions.subscribeForPortfolioChanges(view);
 }

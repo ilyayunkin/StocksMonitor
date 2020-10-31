@@ -41,8 +41,8 @@ MainWindow::MainWindow(Application &application,
                 for(auto &modelsRef : application.getViewInterfaces())
                 {
                     StocksModelsWidget *w =
-                            new StocksModelsWidget(modelsRef.stocks,
-                                                   modelsRef.buyRequests);
+                            new StocksModelsWidget(modelsRef.stocksInterfaces,
+                                                   modelsRef.buyRequestInterfaces);
                     QHBoxLayout *viewLay = new QHBoxLayout;
                     viewLay->setMargin(0);
 
@@ -50,7 +50,6 @@ MainWindow::MainWindow(Application &application,
                 }
                 {
                     auto portfolioModel = new PortfolioModel(application.getPortfolioInterface(), this);
-                    application.getPortfolioInterface().setView(portfolioModel);
                     auto *portfolioWidget =
                             new PortfolioWidget(portfolioModel, application);
                     tabWidget->addTab(portfolioWidget, QIcon("://img/portfolio.png"), tr("Portfolio"));

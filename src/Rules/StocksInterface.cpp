@@ -1,57 +1,59 @@
 #include "StocksInterface.h"
 
-#include "RulesFasade.h"
-
+#include "Entities/Entities.h"
+#include "LoadStocksInteractor.h"
+#include "EditBuyRequestInteractor.h"
+#include "EditPortfolioInteractor.h"
+#include "Subscriptions.h"
 #include <QDebug>
 
-StocksInterface::StocksInterface(RulesFasade *const rules,
-                                 const stocksListHandler handler) :
-    handler(handler),
-    rules(rules)
-{
-
+StocksInterface::StocksInterface(const Entities &entities,
+                                 Subscriptions &subscriptions,
+                                 LoadStocksInteractor &loadStocksInteractor,
+                                 EditBuyRequestInteractor &editBuyRequestInteractor,
+                                 EditPortfolioInteractor &editPortfolioInteractor,
+                                 const stocksListHandler handler)
+    : handler(handler)
+    , entities(entities)
+    , subscriptions(subscriptions)
+    , loadStocksInteractor(loadStocksInteractor)
+    , editBuyRequestInteractor(editBuyRequestInteractor)
+    , editPortfolioInteractor(editPortfolioInteractor)
+{    
 }
 
 size_t StocksInterface::size() const
 {
-    return rules->getStocksCount(handler);
+    return entities.getStocksCount(handler);
 }
 
 Stock StocksInterface::getStock(const size_t i) const
 {
-    return rules->getStock(handler, i);
+    return entities.getStock(handler, i);
 }
 
 Stock StocksInterface::getStock(const char *const ticker) const
 {
-    return rules->getStock(handler, ticker);
+    return entities.getStock(handler, ticker);
 }
 
 std::string StocksInterface::getActualizationTime() const
 {
-    return rules->getStocksActualizationTime(handler);
-}
-
-void StocksInterface::setView(AbstractStocksView * const view)
-{
-    this->view = view;
+    return entities.getStocksActualizationTime(handler);
 }
 
 void StocksInterface::addToPortfolio(const char *const ticker, const int quantity)
 {
-    rules->addToPortfolio(handler, ticker, quantity);
+    editPortfolioInteractor.addToPortfolio(handler, ticker, quantity);
 }
 
 void StocksInterface::addLimit(const char *const ticker, float limit)
 {
     qDebug() << __PRETTY_FUNCTION__ << __LINE__;
-    rules->addLimit(handler, ticker, limit);
+    editBuyRequestInteractor.addLimit(handler, ticker, limit);
 }
 
-void StocksInterface::update()
+void StocksInterface::subscribeForChanges(AbstractStocksView *view)
 {
-    if(view)
-    {
-        view->stocksUpdated();
-    }
+    subscriptions.subscribeForStocksChanges(handler, view);
 }
