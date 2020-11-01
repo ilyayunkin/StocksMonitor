@@ -7,8 +7,6 @@
 #include "SourcePluginInterface.h"
 #include "AbstractDialogs.h"
 #include "AbstractStocksReceiver.h"
-#include "ViewInterfaces.h"
-#include "PortfolioInterface.h"
 #include "Entities/Entities.h"
 #include "Entities/StockId.h"
 #include "Entities/Statistics.h"
@@ -43,9 +41,6 @@ class RulesFasade
     EditPortfolioInteractor editPortfolioInteractor;
     EditBuyRequestInteractor editBuyRequestInteractor;
 
-    ViewInterfacesList viewInterfaces;
-    PortfolioInterface portfolioInterface;
-
     AbstractCurrencyConverter *converter = nullptr;
     AbstractDialogs *dialogs = nullptr;
 public:
@@ -53,8 +48,7 @@ public:
     ~RulesFasade();
 
     const Entities &getEntities(){return entities;}
-    ViewInterfacesList &getViewInterfaces(){return viewInterfaces;}
-    PortfolioInterface &getPortfolioInterface(){return portfolioInterface;}
+    Subscriptions &getSubscriptions(){return subscriptions;}
     StatisticsInteractor &getStatisticsInteractor(){return statisticsInteractor;}
     LoadStocksInteractor &getLoadStocksInteractor(){return loadStocksInteractor;}
     EditPortfolioInteractor &getEditPortfolioInteractor(){return editPortfolioInteractor;}

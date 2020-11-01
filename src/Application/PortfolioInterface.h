@@ -1,7 +1,7 @@
 #ifndef PORTFOLIOINTERFACE_H
 #define PORTFOLIOINTERFACE_H
 
-#include "AbstractStocksView.h"
+#include "Rules/AbstractStocksView.h"
 
 #include <cstdlib>
 

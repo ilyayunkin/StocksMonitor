@@ -8,9 +8,9 @@ class SourcePluginInterface;
 
 #include <QObject>
 
-#include "Rules/PortfolioInterface.h"
-#include "Rules/ViewInterfaces.h"
+#include "PortfolioInterface.h"
 #include "Entities/StockId.h"
+#include "ViewInterfaces.h"
 
 class RulesFasade;
 class CurrencyConverter;
@@ -31,8 +31,8 @@ class Application : public QObject
 public:
     explicit Application(QObject *parent = nullptr);
     ~Application();
-    ViewInterfacesList &getViewInterfaces();
-    PortfolioInterface &getPortfolioInterface();
+    ViewInterfacesList &getViewInterfaces(){return viewInterfaces;}
+    PortfolioInterface &getPortfolioInterface(){return  *portfolioInterface.get();}
     StatisticsController &getStatisticsController();
     QString getPortfolioPrice(const char *const currency);
     QString getPortfolioPrice();
@@ -44,6 +44,9 @@ public:
     void setStatisticsConfigView(AbstractStatisticsConfigView *configView);
 private:
 
+    ViewInterfacesList viewInterfaces;
+
+    std::shared_ptr<PortfolioInterface> portfolioInterface;
     std::vector<std::shared_ptr<StocksMonitor>> monitors;
     std::shared_ptr<RulesFasade> rules;
     std::shared_ptr<CurrencyConverter> converter;

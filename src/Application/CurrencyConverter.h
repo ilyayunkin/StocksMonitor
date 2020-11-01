@@ -3,7 +3,7 @@
 
 #include "Rules/AbstractCurrencyConverter.h"
 #include "Entities/CurrencyCounter.h"
-#include "Rules/StocksInterface.h"
+#include "StocksInterface.h"
 
 class CurrencyConverter final : public AbstractCurrencyConverter
 {

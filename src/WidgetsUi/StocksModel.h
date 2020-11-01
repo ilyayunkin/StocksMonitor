@@ -5,7 +5,7 @@
 
 #include <cstdlib>
 
-#include "Rules/StocksInterface.h"
+#include "Application/StocksInterface.h"
 #include "Rules/AbstractStocksView.h"
 /**
  * @brief Класс Модели (архитектура Модель/Представление), реализующей

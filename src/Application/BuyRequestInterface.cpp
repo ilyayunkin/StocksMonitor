@@ -1,10 +1,10 @@
 #include "BuyRequestInterface.h"
 
 #include "Entities/Entities.h"
-#include "LoadStocksInteractor.h"
-#include "EditPortfolioInteractor.h"
-#include "EditBuyRequestInteractor.h"
-#include "Subscriptions.h"
+#include "Rules/LoadStocksInteractor.h"
+#include "Rules/EditPortfolioInteractor.h"
+#include "Rules/EditBuyRequestInteractor.h"
+#include "Rules/Subscriptions.h"
 
 BuyRequestInterface::BuyRequestInterface(
         const Entities &entities,

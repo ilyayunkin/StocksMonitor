@@ -1,7 +1,7 @@
 #include "PortfolioInterface.h"
 #include "Entities/Entities.h"
-#include "Subscriptions.h"
-#include "EditPortfolioInteractor.h"
+#include "Rules/Subscriptions.h"
+#include "Rules/EditPortfolioInteractor.h"
 
 PortfolioInterface::PortfolioInterface(
         const Entities &entities,

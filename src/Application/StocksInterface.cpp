@@ -1,10 +1,11 @@
 #include "StocksInterface.h"
 
 #include "Entities/Entities.h"
-#include "LoadStocksInteractor.h"
-#include "EditBuyRequestInteractor.h"
-#include "EditPortfolioInteractor.h"
-#include "Subscriptions.h"
+#include "Rules/LoadStocksInteractor.h"
+#include "Rules/EditBuyRequestInteractor.h"
+#include "Rules/EditPortfolioInteractor.h"
+#include "Rules/Subscriptions.h"
+
 #include <QDebug>
 
 StocksInterface::StocksInterface(const Entities &entities,

@@ -78,18 +78,25 @@ Application::Application(QObject *parent) :
         auto plugin = plugins.at(i);
         auto db = std::make_shared<BuyRequestDatabase>(plugin->getName());
         buyRequestDatabases.push_back(db);
-        auto handler = rules->addStocksSource(
-                    StocksSource{plugin->getName(),
-                                 plugin->getCurrencyCode(),
-                                 db.get()});
+        StocksSource source{plugin->getName(),
+                     plugin->getCurrencyCode(),
+                     db.get()};
+        auto handler = rules->addStocksSource(source);
 
+        viewInterfaces.push_back(ViewInterfacesPair(source.name,
+                                                    rules->getEntities(),
+                                                    rules->getSubscriptions(),
+                                                    rules->getLoadStocksInteractor(),
+                                                    rules->getEditPortfolioInteractor(),
+                                                    rules->getEditBuyRequestInteractor(),
+                                                    handler));
         auto monitor = std::make_shared<StocksMonitor>(rules->getLoadStocksInteractor(),
                                                        handler,
                                                        plugin->createParser(),
                                                        plugin->getUrl());
         monitors.push_back(monitor);
     }
-    for(auto &interface : rules->getViewInterfaces())
+    for(auto &interface :  viewInterfaces)
     {
         if(interface.name == "CBRF-Currency")
         {
@@ -100,17 +107,16 @@ Application::Application(QObject *parent) :
     rules->setConverter(converter.get());
     portfolioDatabase = std::make_shared<PortfolioDatabase>();
     rules->getEditPortfolioInteractor().setPortfolioDatabase(portfolioDatabase.get());
+    portfolioInterface = std::make_shared<PortfolioInterface>(
+                rules->getEntities(),
+                rules->getSubscriptions(),
+                rules->getEditPortfolioInteractor());
     statisticsController = std::make_shared<StatisticsController>(
                 rules->getStatisticsInteractor(), *csvSaver.get());
 }
 
 Application::~Application()
 {
-}
-
-ViewInterfacesList &Application::getViewInterfaces()
-{
-    return rules->getViewInterfaces();
 }
 
 QString Application::getPortfolioPrice(const char * const currency)
@@ -136,11 +142,6 @@ QStringList Application::getPluginsList() const
 StockIdList Application::getStockIdList(const QString &plugin) const
 {
     return rules->getStockIdList(plugin);
-}
-
-PortfolioInterface &Application::getPortfolioInterface()
-{
-    return rules->getPortfolioInterface();
 }
 
 StatisticsController &Application::getStatisticsController()

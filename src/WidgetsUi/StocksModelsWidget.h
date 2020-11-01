@@ -2,9 +2,9 @@
 #define STOCKSMODELSWIDGET_H
 
 #include <QWidget>
-#include "Rules/StocksInterface.h"
-#include "Rules/BuyRequestInterface.h"
-#include "Rules/PortfolioInterface.h"
+#include "Application/StocksInterface.h"
+#include "Application/BuyRequestInterface.h"
+#include "Application/PortfolioInterface.h"
 
 namespace Ui {
 class StocksModelsWidget;

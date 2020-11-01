@@ -42,7 +42,6 @@ RulesFasade::RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb)
     , loadStocksInteractor(entities, subscriptions)
     , editPortfolioInteractor(entities, subscriptions)
     , editBuyRequestInteractor(entities, subscriptions)
-    , portfolioInterface(entities, subscriptions, editPortfolioInteractor)
 {
     qDebug() << __PRETTY_FUNCTION__;
 }
@@ -55,13 +54,6 @@ stocksListHandler RulesFasade::addStocksSource(const StocksSource &source)
                                             source.currencyCode,
                                             source.db->getAll()});
     editBuyRequestInteractor.addDatabase(source.db);
-    viewInterfaces.push_back(ViewInterfacesPair(source.name,
-                                                entities,
-                                                subscriptions,
-                                                loadStocksInteractor,
-                                                editPortfolioInteractor,
-                                                editBuyRequestInteractor,
-                                                handler));
     entities.registerStockSourceInPortfolio(source.name, handler);
     return handler;
 }

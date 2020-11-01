@@ -1,7 +1,7 @@
      #ifndef STOCKSINTERFACE_H
 #define STOCKSINTERFACE_H
 
-#include "AbstractStocksView.h"
+#include "Rules/AbstractStocksView.h"
 
 #include <cstdlib>
 

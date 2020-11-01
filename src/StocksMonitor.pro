@@ -26,20 +26,20 @@ SOURCES += \
     Application/StatisticsCsvSaver.cpp \
     Application/StocksMonitor.cpp \
     Application/Controllers/StatisticsController.cpp \
+    Application/PortfolioInterface.cpp \
+    Application/StocksInterface.cpp \
+    Application/BuyRequestInterface.cpp \
     Entities/Entities.cpp \
     Entities/StockId.cpp \
     Entities/CurrencyCounter.cpp \
-    Rules/BuyRequestInterface.cpp \
     Rules/EditBuyRequestInteractor.cpp \
     Rules/EditPortfolioInteractor.cpp \
     Rules/LoadStocksInteractor.cpp \
-    Rules/PortfolioInterface.cpp \
     Rules/RulesFasade.cpp \
     Presenters/LimitBackgrounColor.cpp \
     Presenters/StockHint.cpp \
     Presenters/CurrencyPresenter.cpp \
     Rules/StatisticsInteractor.cpp \
-    Rules/StocksInterface.cpp \
     Rules/Subscriptions.cpp \
     WidgetsUi/Dialogs.cpp \
     WidgetsUi/LimitsEventFilter.cpp \
@@ -75,6 +75,10 @@ HEADERS += \
     Application/StatisticsCsvSaver.h \
     Application/StocksMonitor.h \
     Application/Controllers/StatisticsController.h \
+    Application/ViewInterfaces.h \
+    Application/BuyRequestInterface.h \
+    Application/PortfolioInterface.h \
+    Application/StocksInterface.h \
     Color.h \
     Entities/Entities.h \
     Entities/PortfolioEntry.h \
@@ -93,16 +97,12 @@ HEADERS += \
     Rules/StatisticsInteractor.h \
     Rules/StatisticsResults.h \
     Rules/Subscriptions.h \
-    Rules/ViewInterfaces.h \
     Rules/AbstractBuyRequestDatabase.h \
     Rules/AbstractCurrencyConverter.h \
     Rules/AbstractPortfolioDatabase.h \
     Rules/AbstractStocksReceiver.h \
     Rules/AbstractStocksView.h \
-    Rules/BuyRequestInterface.h \
-    Rules/PortfolioInterface.h \
     Rules/RulesFasade.h \
-    Rules/StocksInterface.h \
     Presenters/LimitBackgrounColor.h \
     Presenters/StockHint.h \
     Presenters/CurrencyPresenter.h \

@@ -6,7 +6,7 @@
 #include <QAbstractTableModel>
 
 #include "Entities/PortfolioEntry.h"
-#include "Rules/PortfolioInterface.h"
+#include "Application/PortfolioInterface.h"
 #include "Rules/AbstractStocksView.h"
 
 class PortfolioModel : public QAbstractTableModel, public AbstractStocksView

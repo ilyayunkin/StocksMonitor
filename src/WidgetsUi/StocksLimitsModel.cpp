@@ -9,8 +9,8 @@
 
 #include "Presenters/StockHint.h"
 #include "Presenters/LimitBackgrounColor.h"
-#include "Rules/BuyRequestInterface.h"
-#include "Rules/StocksInterface.h"
+#include "Application/BuyRequestInterface.h"
+#include "Application/StocksInterface.h"
 
 StocksLimitsModel::StocksLimitsModel(BuyRequestInterface &stockLimits,
                                      StocksInterface &stocksInterface,

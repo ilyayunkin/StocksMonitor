@@ -1,7 +1,7 @@
 #ifndef BUYREQUESTINTERFACE_H
 #define BUYREQUESTINTERFACE_H
 
-#include "AbstractStocksView.h"
+#include "Rules/AbstractStocksView.h"
 
 #include <cstdlib>
 

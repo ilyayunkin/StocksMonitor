@@ -1,8 +1,8 @@
 #ifndef VIEWINTERFACES_H
 #define VIEWINTERFACES_H
 
-#include "Rules/StocksInterface.h"
-#include "Rules/BuyRequestInterface.h"
+#include "StocksInterface.h"
+#include "BuyRequestInterface.h"
 
 #include <vector>
 
