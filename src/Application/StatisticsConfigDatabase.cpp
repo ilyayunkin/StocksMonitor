@@ -8,7 +8,7 @@ const auto itemsTableName = "items";
 const auto dbName = "StatisticsConfig";
 }
 
-QStringList StatisticsConfigDatabase::getAllCategories()
+QStringList StatisticsConfigDatabase::getAllCategories()const
 {
     QStringList ret;
     QSqlQuery q = executeQueryException(
@@ -23,7 +23,7 @@ QStringList StatisticsConfigDatabase::getAllCategories()
     return ret;
 }
 
-QStringList StatisticsConfigDatabase::getAllGroups(const QString &category)
+QStringList StatisticsConfigDatabase::getAllGroups(const QString &category)const
 {
     QStringList ret;
     QSqlQuery q = executeQueryException(
@@ -41,7 +41,7 @@ QStringList StatisticsConfigDatabase::getAllGroups(const QString &category)
     return ret;
 }
 
-StockIdList StatisticsConfigDatabase::getAllItems(const QString &group)
+StockIdList StatisticsConfigDatabase::getAllItems(const QString &group)const
 {
     StockIdList ret;
     QSqlQuery q = executeQueryException(
@@ -245,7 +245,7 @@ StatisticsConfigDatabase::~StatisticsConfigDatabase()
     QSqlDatabase::removeDatabase(dbName);
 }
 
-StatisticsConfigList StatisticsConfigDatabase::getAll()
+StatisticsConfigList StatisticsConfigDatabase::getAll()const
 {
     StatisticsConfigList ret;
     for(const auto &catName : getAllCategories())
@@ -266,7 +266,135 @@ StatisticsConfigList StatisticsConfigDatabase::getAll()
     return ret;
 }
 
-QSqlQuery StatisticsConfigDatabase::executeQuery(const QString &query)
+bool StatisticsConfigDatabase::isEmpty() const
+{
+    {
+        if(getCategoryCount() > 0)
+            return false;
+    }
+    {
+        QSqlQuery q = executeQueryException(
+                    QString(
+                        "SELECT COUNT(*) FROM "
+                        "%1"
+                        ";")
+                    .arg(groupTableName));
+
+        QSqlRecord rec = q.record();
+        if(q.next())
+        {
+            bool ok;
+            int count = q.value(0).toInt(&ok);
+
+            if(!ok)
+                throw SqlQueryWrongResultTypeException();
+
+            if(count > 0)
+                return false;
+        }else
+            throw SqlQueryEmptyResultException();
+    }
+    {
+        QSqlQuery q = executeQueryException(
+                    QString(
+                        "SELECT COUNT(*) FROM "
+                        "%1"
+                        ";")
+                    .arg(itemsTableName));
+
+        QSqlRecord rec = q.record();
+        if(q.next())
+        {
+            bool ok;
+            int count = q.value(0).toInt(&ok);
+
+            if(!ok)
+                throw SqlQueryWrongResultTypeException();
+
+            if(count > 0)
+                return false;
+        }else
+            throw SqlQueryEmptyResultException();
+    }
+    return true;
+}
+
+size_t StatisticsConfigDatabase::getCategoryCount() const
+{
+    QSqlQuery q = executeQueryException(
+                QString(
+                    "SELECT COUNT(*) FROM "
+                    "%1"
+                    ";")
+                .arg(categoryTableName));
+
+    QSqlRecord rec = q.record();
+    if(q.next())
+    {
+        bool ok;
+        int count = q.value(0).toInt(&ok);
+
+        if(!ok)
+            throw SqlQueryWrongResultTypeException();
+
+        return count;
+    }else
+        throw SqlQueryEmptyResultException();
+}
+
+size_t StatisticsConfigDatabase::getGroupCount(const QString &category) const
+{
+    QSqlQuery q = executeQueryException(
+                QString(
+                    "SELECT COUNT(*) FROM "
+                    "%1"
+                    " WHERE category='%2' "
+                    ";")
+                .arg(groupTableName)
+                .arg(category));
+
+    QSqlRecord rec = q.record();
+    if(q.next())
+    {
+        bool ok;
+        int count = q.value(0).toInt(&ok);
+
+        if(!ok)
+            throw SqlQueryWrongResultTypeException();
+
+        return count;
+    }else
+        throw SqlQueryEmptyResultException();
+}
+
+size_t StatisticsConfigDatabase::getItemsCount(const QString &category,
+                                               const QString &group) const
+{
+    Q_UNUSED(category);
+    QSqlQuery q = executeQueryException(
+                QString(
+                    "SELECT COUNT(*) FROM "
+                    "%1"
+                    " WHERE groupName='%2' "
+                    ";")
+                .arg(itemsTableName)
+                .arg(group));
+
+    QSqlRecord rec = q.record();
+    if(q.next())
+    {
+        bool ok;
+        int count = q.value(0).toInt(&ok);
+
+        if(!ok)
+            throw SqlQueryWrongResultTypeException();
+
+        return count;
+    }else
+        throw SqlQueryEmptyResultException();
+}
+
+QSqlQuery StatisticsConfigDatabase::executeQuery(const QString &query) const
 {
     QSqlQuery q = db.exec(query);
     qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();
@@ -276,7 +404,7 @@ QSqlQuery StatisticsConfigDatabase::executeQuery(const QString &query)
     return q;
 }
 
-QSqlQuery StatisticsConfigDatabase::executeQueryException(const QString &query)
+QSqlQuery StatisticsConfigDatabase::executeQueryException(const QString &query) const
 {
     QSqlQuery q = db.exec(query);
     qDebug() << __PRETTY_FUNCTION__ << __LINE__ << q.lastQuery();

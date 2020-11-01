@@ -19,6 +19,19 @@ public:
     ~StatisticsDbTest();
 
 private slots:
+    void test_NewDbIsEmpty();
+    void test_NewDbIsNotEmptyAfterAddCategory();
+    void test_DbIsEmptyAfterRemovingOnlyCategory();
+    void test_CategoryCountIsOneAfterAddCategory();
+    void test_CategoryCountIsTwoAfterAddingTwoCategories();
+    void test_GroupCountIsOneAfterAddingGroup();
+    void test_GroupCountIsTwoAfterAddingTwoGroups();
+    void test_GroupCountIsOneAfterAddingGroupToAnotherCategory();
+    void test_ItemsCountIsOneAfterAddingItem();
+    void test_ItemsCountIsTwoAfterAddingTwoItems();
+    void test_ItemsCountIsOneAfterAddingItemToAnotherGroup();
+    void test_DbIsEmptyAfterRemovingCategoryWithGroupsAndItems();
+
     void test_AddCategory();
     void test_AddGroup();
     void test_AddItem();
@@ -35,6 +48,178 @@ StatisticsDbTest::StatisticsDbTest()
 StatisticsDbTest::~StatisticsDbTest()
 {
 
+}
+
+void StatisticsDbTest::test_NewDbIsEmpty()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    QVERIFY(db.isEmpty());
+}
+
+void StatisticsDbTest::test_NewDbIsNotEmptyAfterAddCategory()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+    QVERIFY(!db.isEmpty());
+}
+
+void StatisticsDbTest::test_DbIsEmptyAfterRemovingOnlyCategory()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    auto category = "Cat";
+    db.addCategory(category);
+    db.removeCategory(category);
+    QVERIFY(db.isEmpty());
+}
+
+void StatisticsDbTest::test_CategoryCountIsOneAfterAddCategory()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+    QCOMPARE(db.getCategoryCount(), 1u);
+}
+
+void StatisticsDbTest::test_CategoryCountIsTwoAfterAddingTwoCategories()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+    const auto category2 = "Another Cat";
+    db.addCategory(category2);
+    QCOMPARE(db.getCategoryCount(), 2u);
+}
+
+void StatisticsDbTest::test_GroupCountIsOneAfterAddingGroup()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+    const auto group = "Group";
+    db.addGroup(category, group);
+    QCOMPARE(db.getGroupCount(category), 1u);
+}
+
+void StatisticsDbTest::test_GroupCountIsTwoAfterAddingTwoGroups()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+
+    const auto group = "Group";
+    db.addGroup(category, group);
+    const auto group2 = "Another Group";
+    db.addGroup(category, group2);
+    QCOMPARE(db.getGroupCount(category), 2u);
+}
+
+void StatisticsDbTest::test_GroupCountIsOneAfterAddingGroupToAnotherCategory()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+    const auto category2 = "Another Cat";
+    db.addCategory(category2);
+
+    const auto group = "Group";
+    db.addGroup(category, group);
+    const auto group2 = "Another Group";
+    db.addGroup(category2, group2);
+    QCOMPARE(db.getGroupCount(category), 1u);
+    QCOMPARE(db.getGroupCount(category2), 1u);
+}
+
+void StatisticsDbTest::test_ItemsCountIsOneAfterAddingItem()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+
+    const auto group = "Group";
+    db.addGroup(category, group);
+
+    const auto item = StockId("ITEM", "Item");
+    db.addItem(group, item);
+    QCOMPARE(db.getItemsCount(category, group), 1u);
+}
+
+void StatisticsDbTest::test_ItemsCountIsTwoAfterAddingTwoItems()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+
+    const auto group = "Group";
+    db.addGroup(category, group);
+    const auto group2 = "Another Group";
+    db.addGroup(category, group2);
+
+    const auto item = StockId("ITEM", "Item");
+    db.addItem(group, item);
+    const auto item2 = StockId("ITEM2", "Another Item");
+    db.addItem(group2, item2);
+    QCOMPARE(db.getItemsCount(category, group), 1u);
+    QCOMPARE(db.getItemsCount(category, group2), 1u);
+}
+
+void StatisticsDbTest::test_ItemsCountIsOneAfterAddingItemToAnotherGroup()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+
+    const auto group = "Group";
+    db.addGroup(category, group);
+
+    const auto item = StockId("ITEM", "Item");
+    db.addItem(group, item);
+    const auto item2 = StockId("ITEM2", "Another Item");
+    db.addItem(group, item2);
+    QCOMPARE(db.getItemsCount(category, group), 2u);
+}
+
+void StatisticsDbTest::test_DbIsEmptyAfterRemovingCategoryWithGroupsAndItems()
+{
+    clean();
+
+    StatisticsConfigDatabase db;
+    const auto category = "Cat";
+    db.addCategory(category);
+
+    const auto group = "Group";
+    db.addGroup(category, group);
+
+    const auto item = StockId("ITEM", "Item");
+    db.addItem(group, item);
+    const auto item2 = StockId("ITEM2", "Another Item");
+    db.addItem(group, item2);
+
+    QVERIFY(!db.isEmpty());
+    db.removeCategory(category);
+    QVERIFY(db.isEmpty());
 }
 
 void StatisticsDbTest::test_AddCategory()

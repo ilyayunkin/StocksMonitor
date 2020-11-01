@@ -58,6 +58,16 @@ public:
     SqlQueryErrorException() : std::runtime_error("SqlQueryErrorException") { }
 };
 
+class SqlQueryWrongResultTypeException : public std::runtime_error {
+public:
+    SqlQueryWrongResultTypeException() : std::runtime_error("SqlQueryWrongResultTypeException") { }
+};
+
+class SqlQueryEmptyResultException : public std::runtime_error {
+public:
+    SqlQueryEmptyResultException() : std::runtime_error("SqlQueryEmptyResultException") { }
+};
+
 class NoSuchItemInStatisticsConfig : public std::runtime_error {
 public:
     NoSuchItemInStatisticsConfig() : std::runtime_error("NoSuchItemInStatisticsConfig") { }

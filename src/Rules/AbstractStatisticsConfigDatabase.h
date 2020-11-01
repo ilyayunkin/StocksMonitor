@@ -8,11 +8,16 @@ class AbstractStatisticsConfigDatabase
 {
 public:
     virtual ~AbstractStatisticsConfigDatabase() = default;
-    virtual StatisticsConfigList getAll() = 0;
+    virtual StatisticsConfigList getAll()const = 0;
+    virtual bool isEmpty()const = 0;
+    virtual size_t getCategoryCount()const = 0;
+    virtual size_t getGroupCount(const QString &category)const = 0;
+    virtual size_t getItemsCount(const QString &category,
+                                 const QString &group)const = 0;
 
-    virtual QStringList getAllCategories() = 0;
-    virtual QStringList getAllGroups(const QString &category) = 0;
-    virtual StockIdList getAllItems(const QString &group) = 0;
+    virtual QStringList getAllCategories()const = 0;
+    virtual QStringList getAllGroups(const QString &category)const = 0;
+    virtual StockIdList getAllItems(const QString &group)const = 0;
 
     virtual void addCategory(const QString &category) = 0;
     virtual void addGroup(const QString &category, const QString &group) = 0;
