@@ -43,7 +43,6 @@ private:
     AbstractCurrencyConverter * converter = nullptr;
     AbstractDialogs * dialogs = nullptr;
     CurrencyCountersList getPortfolioSum() const;
-    Stock getStockForPortfolioEntry(const size_t i) const;
     Stock getStock(const stocksListHandler handler,
                    const char *const ticker) const;
 

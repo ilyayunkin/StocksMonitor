@@ -6,6 +6,7 @@
 
 #include "ExceptionClasses.h"
 #include "Presenters/StockHint.h"
+#include "Application/PortfolioInterface.h"
 
 void PortfolioModel::stocksUpdated()
 {    

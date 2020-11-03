@@ -250,7 +250,7 @@ Statistics StatisticsInteractor::processStatistics() const
 
         for(size_t i = 0; i < entities.portfolio.size(); ++i)
         {
-            auto stock = getStockForPortfolioEntry(i);
+            auto stock = entities.getStockForPortfolioEntry(i);
             auto portfolioEntry = entities.portfolio[i];
             if(stock.derivation > 0)
             {
@@ -324,12 +324,6 @@ CurrencyCountersList StatisticsInteractor::getPortfolioSum() const
     }
 
     return counters;
-}
-
-Stock StatisticsInteractor::getStockForPortfolioEntry(const size_t i) const
-{
-    auto const &entry = entities.portfolio.at(i);
-    return getStock(entry.handler, entry.ticker.data());
 }
 
 Stock StatisticsInteractor::getStock(const stocksListHandler handler, const char * const ticker) const

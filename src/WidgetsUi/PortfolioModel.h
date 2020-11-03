@@ -5,9 +5,8 @@
 
 #include <QAbstractTableModel>
 
-#include "Entities/PortfolioEntry.h"
-#include "Application/PortfolioInterface.h"
 #include "Rules/AbstractStocksView.h"
+class PortfolioInterface;
 
 class PortfolioModel : public QAbstractTableModel, public AbstractStocksView
 {
