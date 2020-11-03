@@ -32,7 +32,7 @@ public:
     explicit Application(QObject *parent = nullptr);
     ~Application();
     ViewInterfacesList &getViewInterfaces(){return viewInterfaces;}
-    PortfolioInterface &getPortfolioInterface(){return  *portfolioInterface.get();}
+    PortfolioInterface &getPortfolioInterface(){return  *portfolioInterface;}
     StatisticsController &getStatisticsController();
     QString getPortfolioPrice(const char *const currency);
     QString getPortfolioPrice();

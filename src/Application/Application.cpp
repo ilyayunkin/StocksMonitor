@@ -112,7 +112,7 @@ Application::Application(QObject *parent) :
                 rules->getSubscriptions(),
                 rules->getEditPortfolioInteractor());
     statisticsController = std::make_shared<StatisticsController>(
-                rules->getStatisticsInteractor(), *csvSaver.get());
+                rules->getStatisticsInteractor(), *csvSaver);
 }
 
 Application::~Application()
