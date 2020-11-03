@@ -29,7 +29,7 @@ private:
     Ui::SoundDialog *ui;
 
     const QString dir;
-    std::shared_ptr<QSound> sound;
+    std::unique_ptr<QSound> sound;
 
     void setupFile(const QString &filename);
 };

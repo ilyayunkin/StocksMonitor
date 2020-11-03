@@ -11,7 +11,7 @@
 class AbstractParser
 {
 public:
-    typedef std::shared_ptr<AbstractParser> Ptr;
+    typedef std::unique_ptr<AbstractParser> Ptr;
 
     virtual ~AbstractParser(){};
     virtual void parse(const QByteArray &m_DownloadeAwholeDocumentdData,

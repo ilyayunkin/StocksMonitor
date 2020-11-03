@@ -17,7 +17,7 @@ public:
     void signalize() override;
     void changeSound() override;
 private:
-    std::shared_ptr<QSound> sound;
+    std::unique_ptr<QSound> sound;
     void setupFile(const QString &filename);
 };
 

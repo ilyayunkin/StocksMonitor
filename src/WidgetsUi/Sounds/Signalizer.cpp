@@ -8,7 +8,7 @@
 void Signalizer::setupFile(const QString &filename)
 {
     if(!filename.isEmpty()){
-        sound = std::make_shared<QSound>(filename);
+        sound = std::make_unique<QSound>(filename);
     }
 }
 

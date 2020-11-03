@@ -46,7 +46,7 @@ void SoundDialog::on_stopButton_clicked()
 void SoundDialog::setupFile(const QString &filename)
 {
     if(!filename.isEmpty()){
-        sound = std::make_shared<QSound>(filename);
+        sound = std::make_unique<QSound>(filename);
         ui->playButton->setEnabled(true);
         ui->stopButton->setEnabled(true);
         ui->okButton->setEnabled(true);

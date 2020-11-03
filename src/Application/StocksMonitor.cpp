@@ -22,10 +22,10 @@ StocksMonitor::StocksMonitor(AbstractStocksReceiver &model,
     QObject(parent),
     model(model),
     handler(handler),
-    parser(parser),
+    parser(std::move(parser)),
     url(url)
 {
-    assert(parser.get() != nullptr);
+    assert(this->parser.get() != nullptr);
 
     {
         bool ssl = QSslSocket::supportsSsl();
