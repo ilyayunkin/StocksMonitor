@@ -48,12 +48,12 @@ private:
 
     std::shared_ptr<PortfolioInterface> portfolioInterface;
     std::vector<std::shared_ptr<StocksMonitor>> monitors;
+    std::shared_ptr<StatisticsCsvSaver> csvSaver;
+    std::shared_ptr<StatisticsConfigDatabase> statisticsConfigDatabase;
     std::shared_ptr<RulesFasade> rules;
     std::shared_ptr<CurrencyConverter> converter;
     std::vector<std::shared_ptr<BuyRequestDatabase>> buyRequestDatabases;
     std::shared_ptr<PortfolioDatabase> portfolioDatabase;
-    std::shared_ptr<StatisticsCsvSaver> csvSaver;
-    std::shared_ptr<StatisticsConfigDatabase> statisticsConfigDatabase;
     std::shared_ptr<StatisticsController> statisticsController;
 };
 

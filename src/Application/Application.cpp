@@ -58,6 +58,9 @@ PluginsList loadPlugins()
 
 Application::Application(QObject *parent) :
     QObject(parent)
+  , csvSaver(new StatisticsCsvSaver)
+  , statisticsConfigDatabase(new StatisticsConfigDatabase)
+  , rules(new RulesFasade(statisticsConfigDatabase.get()))
 {
     QDir pluginsDir( "./plugins" );
     PluginsList plugins = loadPlugins();
@@ -68,33 +71,27 @@ Application::Application(QObject *parent) :
         throw NoPluginsException();
     }
 
-    csvSaver = std::make_shared<StatisticsCsvSaver>();
-    statisticsConfigDatabase = std::make_shared<StatisticsConfigDatabase>();
-    rules = std::make_shared<RulesFasade>(statisticsConfigDatabase.get());
-
     StocksInterface *currencyStocksInterface = nullptr;
-    for(PluginsList::size_type i = 0; i < plugins.size(); ++i)
+    for(const auto &plugin : plugins)
     {
-        auto plugin = plugins.at(i);
-        auto db = std::make_shared<BuyRequestDatabase>(plugin->getName());
-        buyRequestDatabases.push_back(db);
-        StocksSource source{plugin->getName(),
-                     plugin->getCurrencyCode(),
-                     db.get()};
-        auto handler = rules->addStocksSource(source);
+        buyRequestDatabases.emplace_back(new BuyRequestDatabase(plugin->getName()));
+        auto handler = rules->addStocksSource(
+                    StocksSource{plugin->getName(),
+                                 plugin->getCurrencyCode(),
+                                 buyRequestDatabases.back().get()});
 
-        viewInterfaces.push_back(ViewInterfacesPair(source.name,
+        viewInterfaces.push_back(ViewInterfacesPair(plugin->getName(),
                                                     rules->getEntities(),
                                                     rules->getSubscriptions(),
                                                     rules->getLoadStocksInteractor(),
                                                     rules->getEditPortfolioInteractor(),
                                                     rules->getEditBuyRequestInteractor(),
                                                     handler));
-        auto monitor = std::make_shared<StocksMonitor>(rules->getLoadStocksInteractor(),
-                                                       handler,
-                                                       plugin->createParser(),
-                                                       plugin->getUrl());
-        monitors.push_back(monitor);
+        monitors.emplace_back(new StocksMonitor(
+                                  rules->getLoadStocksInteractor(),
+                                  handler,
+                                  plugin->createParser(),
+                                  plugin->getUrl()));
     }
     for(auto &interface :  viewInterfaces)
     {
@@ -103,16 +100,16 @@ Application::Application(QObject *parent) :
             currencyStocksInterface = &interface.stocksInterfaces;
         }
     }
-    converter = std::make_shared<CurrencyConverter>("RUB", currencyStocksInterface);
+    converter.reset(new CurrencyConverter("RUB", currencyStocksInterface));
     rules->setConverter(converter.get());
-    portfolioDatabase = std::make_shared<PortfolioDatabase>();
+    portfolioDatabase.reset(new PortfolioDatabase);
     rules->getEditPortfolioInteractor().setPortfolioDatabase(portfolioDatabase.get());
-    portfolioInterface = std::make_shared<PortfolioInterface>(
-                rules->getEntities(),
-                rules->getSubscriptions(),
-                rules->getEditPortfolioInteractor());
-    statisticsController = std::make_shared<StatisticsController>(
-                rules->getStatisticsInteractor(), *csvSaver);
+    portfolioInterface.reset(new PortfolioInterface(
+                                 rules->getEntities(),
+                                 rules->getSubscriptions(),
+                                 rules->getEditPortfolioInteractor()));
+    statisticsController.reset(new StatisticsController(
+                                   rules->getStatisticsInteractor(), *csvSaver));
 }
 
 Application::~Application()
