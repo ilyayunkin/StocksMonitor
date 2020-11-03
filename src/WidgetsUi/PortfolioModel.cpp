@@ -96,6 +96,18 @@ QVariant PortfolioModel::headerData(int section, Qt::Orientation orientation, in
             case SUM:
                 ret = tr("Sum");
                 break;
+            case DERIVATION:
+                ret = tr("%\nDay");
+                break;
+            case DERIVATION_WEEK:
+                ret = tr("%\nWeek");
+                break;
+            case DERIVATION_MONTH:
+                ret = tr("%\nMonth");
+                break;
+            case DERIVATION_YEAR:
+                ret = tr("%\nYear");
+                break;
             case SELL_PRICE:
                 ret = tr("Sell price");
                 break;
@@ -141,6 +153,18 @@ QVariant PortfolioModel::data(const QModelIndex &index, int role) const
             case SUM:
                 ret = entry.sum;
                 break;
+            case DERIVATION:
+                ret = entry.derivation;
+                break;
+            case DERIVATION_WEEK:
+                ret = entry.derivationWeek;
+                break;
+            case DERIVATION_MONTH:
+                ret = entry.derivationMonth;
+                break;
+            case DERIVATION_YEAR:
+                ret = entry.derivationYear;
+                break;
             case SELL_PRICE:
                 ret = entry.sellPrice;
                 break;
@@ -159,13 +183,45 @@ QVariant PortfolioModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::BackgroundRole)
     {
-        if(uRow < (size = portfolioInterface.size()))
+        if(uRow < (size = portfolioInterface.size()) && col == SELL_PRICE)
         {
             const PortfolioEntry &entry = portfolioInterface.getPortfolioEntry(row);
             if(entry.sellPrice > 0
                     && entry.price >= entry.sellPrice)
             {
                 ret = QBrush(Qt::red);
+            }
+        }
+    }
+    if (role == Qt::ForegroundRole)
+    {
+        if(uRow < (size = portfolioInterface.size()))
+        {
+            const PortfolioEntry &entry = portfolioInterface.getPortfolioEntry(row);
+            float number = 0.0;
+            switch (col) {
+            case DERIVATION:
+                number = entry.derivation;
+                break;
+            case DERIVATION_WEEK:
+                number = entry.derivationWeek;
+                break;
+            case DERIVATION_MONTH:
+                number = entry.derivationMonth;
+                break;
+            case DERIVATION_YEAR:
+                number = entry.derivationYear;
+                break;
+            default:
+                break;
+            }
+            if(number < 0.)
+            {
+                return QBrush(Qt::GlobalColor::darkRed);
+            }
+            if(number > 0.)
+            {
+                return QBrush(Qt::GlobalColor::darkGreen);
             }
         }
     }

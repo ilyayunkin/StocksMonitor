@@ -20,6 +20,10 @@ public:
         PRICE_BASE_CURRENCY,
         CURRENCY,
         SUM,
+        DERIVATION,
+        DERIVATION_WEEK,
+        DERIVATION_MONTH,
+        DERIVATION_YEAR,
         SELL_PRICE,
 
         COL_COUNT
