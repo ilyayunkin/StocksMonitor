@@ -1,14 +1,16 @@
 #include "ProcessStatisticsInteractor.h"
 
 #include "AbstractCurrencyConverter.h"
-#include "Entities/Entities.h"
 #include "StatisticsResults.h"
 
 #include <assert.h>
 #include <set>
 
-ProcessStatisticsInteractor::ProcessStatisticsInteractor(const Entities &entities)
-    : entities(entities)
+ProcessStatisticsInteractor::ProcessStatisticsInteractor(
+        const Portfolio &entities,
+        const StatisticsConfigList &statisticsConfig)
+    : portfolio(entities)
+    , statisticsConfig(statisticsConfig)
 {
 }
 
@@ -21,10 +23,10 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
 {
     Statistics statistics;
     {
-        auto const sum = converter->convert("RUB", entities.getPortfolioSum());
+        auto const sum = converter->convert("RUB", portfolio.sum());
         statistics.totalSum = sum.list.front().sum;
     }
-    for(const auto &entry : entities.statistics)
+    for(const auto &entry : statisticsConfig)
     {
         StatisticsCounter gcList(entry.name);
         for(const auto &group : entry.list)
@@ -33,7 +35,7 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
             gcList.list.push_back(groupCounter);
         }
         StatisticsGroupCounter unknownCounter("UNKNOWN");
-        for(const auto &portfolioEntry : entities.portfolio)
+        for(const auto &portfolioEntry : portfolio.portfolio)
         {
             auto f = [&portfolioEntry](const auto &group)
             {return std::any_of(group.list.begin(), group.list.end(),
@@ -64,14 +66,14 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
         statistics.list.push_back(gcList);
     }
     {
-        const auto &portfolioSum = entities.getPortfolioSum();
+        const auto &portfolioSum = portfolio.sum();
         StatisticsCounter gcList("Currency");
         for(const auto &currency : portfolioSum.list)
         {
             StatisticsGroupCounter groupCounter(currency.currency.data());
             gcList.list.push_back(groupCounter);
         }
-        for(const auto &portfolioEntry : entities.portfolio)
+        for(const auto &portfolioEntry : portfolio.portfolio)
         {
             auto f = [&portfolioEntry](auto const &gc)
             {return gc.name == portfolioEntry.currency.data();};
@@ -91,11 +93,9 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
         StatisticsGroupCounter positiveGroup("Positive");
         StatisticsGroupCounter negativeGroup("Negative");
 
-        for(size_t i = 0; i < entities.portfolio.size(); ++i)
+        for(const auto &portfolioEntry : portfolio)
         {
-            auto stock = entities.getStockForPortfolioEntry(i);
-            auto portfolioEntry = entities.portfolio[i];
-            if(stock.derivation > 0)
+            if(portfolioEntry.derivation > 0)
             {
                 positiveGroup.sum+= converter->convert(
                             "RUB",
@@ -121,8 +121,8 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
 
         {
             std::set<QString> plugins;
-            std::transform(entities.portfolio.begin(),
-                           entities.portfolio.end(),
+            std::transform(portfolio.portfolio.begin(),
+                           portfolio.portfolio.end(),
                            std::inserter(plugins, plugins.begin()),
                            [](const auto &entry){return entry.plugin;});
             for(const auto &plugin : plugins)
@@ -131,7 +131,7 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
                 gcList.list.push_back(groupCounter);
             }
         }
-        for(const auto &portfolioEntry : entities.portfolio)
+        for(const auto &portfolioEntry : portfolio.portfolio)
         {
             auto f = [&portfolioEntry](auto const &gc)
             {return gc.name == portfolioEntry.plugin;};

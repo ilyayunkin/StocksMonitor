@@ -86,40 +86,9 @@ size_t Entities::getStockBuyRequestsCount(const stocksListHandler handler) const
     return limits.size();
 }
 
-size_t Entities::getPortfolioSize() const
-{
-    return portfolio.size();
-}
-
-PortfolioEntry Entities::getPortfolioEntry(const size_t i) const
-{
-    return portfolio.at(i);
-}
-
 Stock Entities::getStockForPortfolioEntry(const size_t i) const
 {
-    auto const &entry = portfolio.at(i);
+    auto const &entry = portfolio.portfolio.at(i);
     return getStock(entry.handler, entry.ticker.data());
 }
 
-void Entities::registerStockSourceInPortfolio(const QString &name, const stocksListHandler handler)
-{
-    for(auto &e : portfolio)
-    {
-        if(e.plugin == name)
-        {
-            e.handler = handler;
-        }
-    }
-}
-
-CurrencyCountersList Entities::getPortfolioSum() const
-{
-    CurrencyCountersList counters;
-    for(auto &e : portfolio)
-    {
-        counters.add(e.currency.data(), e.price * e.quantity);
-    }
-
-    return counters;
-}

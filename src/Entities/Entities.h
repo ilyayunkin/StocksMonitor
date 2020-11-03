@@ -3,9 +3,8 @@
 
 #include "StockLimit.h"
 #include "StocksList.h"
-#include "PortfolioEntry.h"
+#include "Portfolio.h"
 #include "Statistics.h"
-#include "CurrencyCounter.h"
 #include <vector>
 #include <string>
 
@@ -26,7 +25,7 @@ struct StockListsPair
 struct Entities
 {
     std::vector<StockListsPair> pairs;
-    PortfolioEntryList portfolio;
+    Portfolio portfolio;
     StatisticsConfigList statistics;
 
     float getStockPrice(const stocksListHandler handler,
@@ -42,14 +41,7 @@ struct Entities
     StockLimit getStockBuyRequest(const stocksListHandler handler,
                                   const char *const ticker) const;
     size_t getStockBuyRequestsCount(const stocksListHandler handler) const;
-
-    size_t getPortfolioSize() const;
-    PortfolioEntry getPortfolioEntry(const size_t i) const;
     Stock getStockForPortfolioEntry(const size_t i) const;
-    void registerStockSourceInPortfolio(const QString &name,
-                                        const stocksListHandler handler);
-
-    CurrencyCountersList getPortfolioSum() const;
 };
 
 #endif // ENTITIES_H

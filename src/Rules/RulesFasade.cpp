@@ -39,7 +39,7 @@ RulesFasade::RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb)
     , subscriptions()
     , statisticsDb(statisticsDb)
     , statisticsInteractor(*statisticsDb, entities)
-    , processStatisticsInteractor(entities)
+    , processStatisticsInteractor(entities.portfolio, entities.statistics)
     , loadStocksInteractor(entities, subscriptions)
     , editPortfolioInteractor(entities, subscriptions)
     , editBuyRequestInteractor(entities, subscriptions)
@@ -55,7 +55,7 @@ stocksListHandler RulesFasade::addStocksSource(const StocksSource &source)
                                             source.currencyCode,
                                             source.db->getAll()});
     editBuyRequestInteractor.addDatabase(source.db);
-    entities.registerStockSourceInPortfolio(source.name, handler);
+    entities.portfolio.registerStockSourceInPortfolio(source.name, handler);
     return handler;
 }
 
@@ -81,7 +81,7 @@ RulesFasade::~RulesFasade()
 
 QStringList RulesFasade::getAvailibleCurrencies()
 {
-    auto counters = entities.getPortfolioSum();
+    auto counters = entities.portfolio.sum();
 
     assert(!counters.list.empty());
 

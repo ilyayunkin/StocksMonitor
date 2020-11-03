@@ -63,7 +63,7 @@ void LoadStocksInteractor::updatePortfolioPricesFromStocks(const stocksListHandl
 {
     const auto currency = entities.pairs[handler].currencyCode;
     bool needUpdate = false;
-    for(auto &e : entities.portfolio)
+    for(auto &e : entities.portfolio.portfolio)
     {
         if(e.handler == handler)
         {
@@ -79,6 +79,10 @@ void LoadStocksInteractor::updatePortfolioPricesFromStocks(const stocksListHandl
                         && e.price < e.sellPrice
                         && stock.price >= e.sellPrice;
                 e.price = stock.price;
+                e.derivation = stock.derivation;
+                e.derivationWeek = stock.derivationWeek;
+                e.derivationYear = stock.derivationYear;
+                e.derivationMonth = stock.derivationMonth;
                 e.sum = e.price * e.quantity;
                 e.currency = currency;
 

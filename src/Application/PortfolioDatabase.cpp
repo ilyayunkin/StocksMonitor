@@ -84,10 +84,7 @@ PortfolioEntryList PortfolioDatabase::getAll()
         //                        stock.price, sellPrice, stock.price * quantity,
         //                        stockModel->currencyCode(), stockModel};
 
-        PortfolioEntry newEntry{plugin, "", ticker.data(), quantity,
-                    float(), sellPrice, float(),
-                    "", stocksListHandler()};
-        entries.push_back(newEntry);
+        entries.push_back(PortfolioEntry{plugin, ticker.data(), quantity, sellPrice});
         //        }
     }
     return entries;

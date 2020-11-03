@@ -31,6 +31,7 @@ SOURCES += \
     Application/StocksInterface.cpp \
     Application/BuyRequestInterface.cpp \
     Entities/Entities.cpp \
+    Entities/Portfolio.cpp \
     Entities/StockId.cpp \
     Entities/CurrencyCounter.cpp \
     Rules/EditBuyRequestInteractor.cpp \
@@ -85,6 +86,7 @@ HEADERS += \
     Application/AbstractStatisticsView.h \
     Color.h \
     Entities/Entities.h \
+    Entities/Portfolio.h \
     Entities/PortfolioEntry.h \
     Entities/Statistics.h \
     Entities/StocksListHandler.h \

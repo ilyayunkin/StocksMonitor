@@ -21,11 +21,11 @@ void EditPortfolioInteractor::setDialogs(AbstractDialogs * const dialogs)
 void EditPortfolioInteractor::setPortfolioDatabase(AbstractPortfolioDatabase *const portfolioDb)
 {
     this->portfolioDb = portfolioDb;
-    entities.portfolio = portfolioDb->getAll();
+    entities.portfolio.portfolio = portfolioDb->getAll();
     for(stocksListHandler handler = 0; handler < entities.pairs.size(); ++handler)
     {
         const auto &pair = entities.pairs[handler];
-        entities.registerStockSourceInPortfolio(pair.name, handler);
+        entities.portfolio.registerStockSourceInPortfolio(pair.name, handler);
     }
 }
 
@@ -36,15 +36,15 @@ void EditPortfolioInteractor::setConverter(AbstractCurrencyConverter * const con
 
 void EditPortfolioInteractor::addToPortfolio(const stocksListHandler handler, const char *const ticker, const int quantity)
 {
-    auto entryIt = std::find_if(entities.portfolio.begin(), entities.portfolio.end(),
+    auto entryIt = std::find_if(entities.portfolio.portfolio.begin(), entities.portfolio.portfolio.end(),
                                 [&](const PortfolioEntry &e){return e.ticker == ticker;});
-    const bool alreadyInPortfolio = entryIt != entities.portfolio.end();
+    const bool alreadyInPortfolio = entryIt != entities.portfolio.portfolio.end();
     if(alreadyInPortfolio)
     {
         if(dialogs->askAddQuantityToPortfolio(entryIt->ticker.data()))
         {
             entryIt->quantity+= quantity;
-            int row = entryIt - entities.portfolio.begin();
+            int row = entryIt - entities.portfolio.portfolio.begin();
             portfolioDb->update(*entryIt);
             subscriptions.updatePortfolioView(row);
         }
@@ -54,9 +54,8 @@ void EditPortfolioInteractor::addToPortfolio(const stocksListHandler handler, co
     {
         const auto &pair = entities.pairs[handler];
         Stock stock = entities.getStock(handler, ticker);
-        entities.portfolio.push_back(
-                    PortfolioEntry{pair.name, stock.name, ticker, quantity,
-                                   stock.price, 0, stock.price * quantity,
+        entities.portfolio.portfolio.push_back(
+                    PortfolioEntry{pair.name, stock, quantity,
                                    pair.currencyCode, handler});
         portfolioDb->add(pair.name, ticker, quantity);
         subscriptions.updatePortfolioView();
@@ -65,8 +64,8 @@ void EditPortfolioInteractor::addToPortfolio(const stocksListHandler handler, co
 
 void EditPortfolioInteractor::deletePortfolioEntry(size_t row)
 {
-    auto ticker = entities.portfolio.at(row).ticker;
-    std::remove_if(entities.portfolio.begin(), entities.portfolio.end(),
+    auto ticker = entities.portfolio.portfolio.at(row).ticker;
+    std::remove_if(entities.portfolio.portfolio.begin(), entities.portfolio.portfolio.end(),
                    [&ticker](const PortfolioEntry &e){return ticker == e.ticker;});
     portfolioDb->deleteEntry(ticker.data());
     subscriptions.updatePortfolioView();
@@ -76,16 +75,16 @@ bool EditPortfolioInteractor::setPortfolioEntryQuantity(size_t row, int quantity
 {
     assert(quantity > 0);
 
-    entities.portfolio[row].quantity = quantity;
-    portfolioDb->update(entities.portfolio.at(row));
+    entities.portfolio.portfolio[row].quantity = quantity;
+    portfolioDb->update(entities.portfolio.portfolio.at(row));
     subscriptions.updatePortfolioView();
     return true;
 }
 
 bool EditPortfolioInteractor::setPortfolioEntryReferencePrice(size_t row, float referencePrice)
 {
-    entities.portfolio[row].sellPrice = referencePrice;
-    portfolioDb->update(entities.portfolio.at(row));
+    entities.portfolio.portfolio[row].sellPrice = referencePrice;
+    portfolioDb->update(entities.portfolio.portfolio.at(row));
     subscriptions.updatePortfolioView();
     return true;
 }
@@ -93,11 +92,11 @@ bool EditPortfolioInteractor::setPortfolioEntryReferencePrice(size_t row, float 
 QString EditPortfolioInteractor::getPortfolioPrice(const char * const currency)
 {
     assert(converter);
-    return CurrencyPresenter::toText(converter->convert(currency, entities.getPortfolioSum()));
+    return CurrencyPresenter::toText(converter->convert(currency, entities.portfolio.sum()));
 }
 
 QString EditPortfolioInteractor::getPortfolioPrice()
 {
-    return CurrencyPresenter::toText(entities.getPortfolioSum());
+    return CurrencyPresenter::toText(entities.portfolio.sum());
 }
 

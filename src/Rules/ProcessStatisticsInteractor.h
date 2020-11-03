@@ -5,19 +5,22 @@
 
 #include "Entities/CurrencyCounter.h"
 #include "StatisticsResults.h"
+#include "Entities/Entities.h"
 
-class Entities;
+class Portfolio;
 class AbstractCurrencyConverter;
 
 class ProcessStatisticsInteractor
 {
 public:
-    ProcessStatisticsInteractor(const Entities &entities);
+    ProcessStatisticsInteractor(const Portfolio &portfolio,
+                                const StatisticsConfigList &statisticsConfig);
 
     void setConverter(AbstractCurrencyConverter *const converter);
     Statistics processStatistics() const;
 private:
-    const Entities &entities;
+    const Portfolio &portfolio;
+    const StatisticsConfigList &statisticsConfig;
     AbstractCurrencyConverter * converter = nullptr;
 };
 

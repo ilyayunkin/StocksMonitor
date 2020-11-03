@@ -15,12 +15,12 @@ PortfolioInterface::PortfolioInterface(
 
 size_t PortfolioInterface::size() const
 {
-    return entities.getPortfolioSize();
+    return entities.portfolio.size();
 }
 
 PortfolioEntry PortfolioInterface::getPortfolioEntry(const size_t i) const
 {
-    return entities.getPortfolioEntry(i);
+    return entities.portfolio.getPortfolioEntry(i);
 }
 
 Stock PortfolioInterface::getStock(const size_t i) const
