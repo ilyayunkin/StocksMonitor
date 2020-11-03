@@ -22,6 +22,7 @@ class AbstractDialogs;
 class StatisticsCsvSaver;
 class StatisticsConfigDatabase;
 class StatisticsController;
+class ProcessStatisticsController;
 class AbstractStatisticsConfigView;
 
 class Application : public QObject
@@ -34,6 +35,8 @@ public:
     ViewInterfacesList &getViewInterfaces(){return viewInterfaces;}
     PortfolioInterface &getPortfolioInterface(){return  *portfolioInterface;}
     StatisticsController &getStatisticsController();
+    ProcessStatisticsController &getProcessStatisticsController()
+    {return *processStatisticsController;}
     QString getPortfolioPrice(const char *const currency);
     QString getPortfolioPrice();
     QStringList getAvailibleCurrencies();
@@ -55,6 +58,7 @@ private:
     std::vector<std::shared_ptr<BuyRequestDatabase>> buyRequestDatabases;
     std::shared_ptr<PortfolioDatabase> portfolioDatabase;
     std::shared_ptr<StatisticsController> statisticsController;
+    std::shared_ptr<ProcessStatisticsController> processStatisticsController;
 };
 
 #endif // APPLICATION_H

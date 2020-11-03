@@ -1,7 +1,7 @@
 #include "StatisticsWidget.h"
 #include "ui_StatisticsWidget.h"
 #include "StatisticsModel.h"
-
+#include "Application/Controllers/ProcessStatisticsController.h"
 #include <algorithm>
 #include <assert.h>
 
@@ -29,7 +29,7 @@ StatisticsWidget::StatisticsWidget(Application &application, QWidget *parent)
     connect(ui->pluginsComboBox, QOverload<const QString &>::of(&QComboBox::activated)
             , this, &StatisticsWidget::updateStocksList);
     connect(ui->processButton, &QPushButton::clicked,
-            [&application](){application.getStatisticsController().processStatistics();});
+            [&application](){application.getProcessStatisticsController().processStatistics();});
     connect(ui->addButton, &QPushButton::clicked
             , this, &StatisticsWidget::addStatisticsConfigElement);
     connect(ui->removeButton, &QPushButton::clicked

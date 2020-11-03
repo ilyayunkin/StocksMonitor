@@ -1,15 +1,12 @@
 #include "StatisticsController.h"
 #include "Rules/StatisticsInteractor.h"
-#include "Application/AbstractStatisticsView.h"
 #include "ExceptionClasses.h"
 #include "AbstractStatisticsConfigView.h"
 
 #include <QMessageBox>
 
-StatisticsController::StatisticsController(StatisticsInteractor &rules,
-                                           AbstractStatisticsView &view)
+StatisticsController::StatisticsController(StatisticsInteractor &rules)
     : rules(rules)
-    , resultView(view)
 {
 }
 
@@ -88,9 +85,4 @@ bool StatisticsController::removeCategory(const StatisticsConfigCategoryIndex &i
         configView->removeCategory(index);
     }
     return ok;
-}
-
-void StatisticsController::processStatistics() const
-{
-    resultView.show(rules.processStatistics());
 }

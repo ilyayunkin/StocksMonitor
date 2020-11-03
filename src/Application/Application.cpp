@@ -11,6 +11,7 @@
 #include "StatisticsCsvSaver.h"
 #include "StatisticsConfigDatabase.h"
 #include "Controllers/StatisticsController.h"
+#include "Controllers/ProcessStatisticsController.h"
 
 namespace  {
 typedef std::vector<std::shared_ptr<SourcePluginInterface>> PluginsList;
@@ -109,7 +110,11 @@ Application::Application(QObject *parent) :
                                  rules->getSubscriptions(),
                                  rules->getEditPortfolioInteractor()));
     statisticsController.reset(new StatisticsController(
-                                   rules->getStatisticsInteractor(), *csvSaver));
+                                   rules->getStatisticsInteractor()));
+    processStatisticsController.reset(
+                new ProcessStatisticsController(
+                    rules->getProcessStatisticsInteractor(),
+                    *csvSaver));
 }
 
 Application::~Application()

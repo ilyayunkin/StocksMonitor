@@ -20,6 +20,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     Application/Application.cpp \
     Application/BuyRequestDatabase.cpp \
+    Application/Controllers/ProcessStatisticsController.cpp \
     Application/PortfolioDatabase.cpp \
     Application/CurrencyConverter.cpp \
     Application/StatisticsConfigDatabase.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
     Rules/EditBuyRequestInteractor.cpp \
     Rules/EditPortfolioInteractor.cpp \
     Rules/LoadStocksInteractor.cpp \
+    Rules/ProcessStatisticsInteractor.cpp \
     Rules/RulesFasade.cpp \
     Presenters/LimitBackgrounColor.cpp \
     Presenters/StockHint.cpp \
@@ -68,6 +70,7 @@ HEADERS += \
     Application/Application.h \
     Application/BuyRequestDatabase.h \
     Application/Controllers/AbstractStatisticsConfigView.h \
+    Application/Controllers/ProcessStatisticsController.h \
     Application/Controllers/StatisticsConfigIndex.h \
     Application/PortfolioDatabase.h \
     Application/CurrencyConverter.h \
@@ -79,6 +82,7 @@ HEADERS += \
     Application/BuyRequestInterface.h \
     Application/PortfolioInterface.h \
     Application/StocksInterface.h \
+    Application/AbstractStatisticsView.h \
     Color.h \
     Entities/Entities.h \
     Entities/PortfolioEntry.h \
@@ -87,13 +91,13 @@ HEADERS += \
     Entities/StockLimit.h \
     Entities/StockId.h \
     Entities/CurrencyCounter.h \
-    Entities/AbstractStatisticsView.h \
     Rules/AbstractDialogs.h \
     Rules/AbstractNotifier.h \
     Rules/AbstractStatisticsConfigDatabase.h \
     Rules/EditBuyRequestInteractor.h \
     Rules/EditPortfolioInteractor.h \
     Rules/LoadStocksInteractor.h \
+    Rules/ProcessStatisticsInteractor.h \
     Rules/StatisticsInteractor.h \
     Rules/StatisticsResults.h \
     Rules/Subscriptions.h \

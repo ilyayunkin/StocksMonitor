@@ -6,13 +6,10 @@
 #include "Entities/Statistics.h"
 #include "Entities/StocksListHandler.h"
 #include "StocksList.h"
-#include "Entities/CurrencyCounter.h"
-#include "StatisticsResults.h"
 
 class AbstractStatisticsConfigDatabase;
 class Entities;
 class AbstractDialogs;
-class AbstractCurrencyConverter;
 
 class StatisticsInteractor
 {
@@ -20,7 +17,6 @@ public:
     StatisticsInteractor(AbstractStatisticsConfigDatabase &db,
                          Entities &entities);
 
-    void setConverter(AbstractCurrencyConverter *const converter);
     void setDialogs(AbstractDialogs *const dialogs);
 
     const StatisticsConfigList &getStatisticsConfig()const;
@@ -36,15 +32,10 @@ public:
     bool removeStatisticsGroup(const QString &category,
                                const QString &group);
     bool removeStatisticsCategory(const QString &category);
-    Statistics processStatistics() const;
 private:
     AbstractStatisticsConfigDatabase &db;
     Entities &entities;
-    AbstractCurrencyConverter * converter = nullptr;
     AbstractDialogs * dialogs = nullptr;
-    CurrencyCountersList getPortfolioSum() const;
-    Stock getStock(const stocksListHandler handler,
-                   const char *const ticker) const;
 
     bool isItemInCategory(const StatisticsConfigList::iterator category, const char *ticker);
 };

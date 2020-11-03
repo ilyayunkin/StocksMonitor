@@ -39,6 +39,7 @@ RulesFasade::RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb)
     , subscriptions()
     , statisticsDb(statisticsDb)
     , statisticsInteractor(*statisticsDb, entities)
+    , processStatisticsInteractor(entities)
     , loadStocksInteractor(entities, subscriptions)
     , editPortfolioInteractor(entities, subscriptions)
     , editBuyRequestInteractor(entities, subscriptions)
@@ -61,7 +62,7 @@ stocksListHandler RulesFasade::addStocksSource(const StocksSource &source)
 void RulesFasade::setConverter(AbstractCurrencyConverter * const converter)
 {
     this->converter = converter;
-    statisticsInteractor.setConverter(converter);
+    processStatisticsInteractor.setConverter(converter);
     editPortfolioInteractor.setConverter(converter);
 }
 

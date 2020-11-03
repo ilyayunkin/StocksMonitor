@@ -14,6 +14,7 @@
 #include "LoadStocksInteractor.h"
 #include "EditPortfolioInteractor.h"
 #include "EditBuyRequestInteractor.h"
+#include "ProcessStatisticsInteractor.h"
 #include "Subscriptions.h"
 
 class AbstractBuyRequestDatabase;
@@ -37,6 +38,7 @@ class RulesFasade
     Subscriptions subscriptions;
     AbstractStatisticsConfigDatabase *statisticsDb = nullptr;
     StatisticsInteractor statisticsInteractor;
+    ProcessStatisticsInteractor processStatisticsInteractor;
     LoadStocksInteractor loadStocksInteractor;
     EditPortfolioInteractor editPortfolioInteractor;
     EditBuyRequestInteractor editBuyRequestInteractor;
@@ -53,6 +55,7 @@ public:
     LoadStocksInteractor &getLoadStocksInteractor(){return loadStocksInteractor;}
     EditPortfolioInteractor &getEditPortfolioInteractor(){return editPortfolioInteractor;}
     EditBuyRequestInteractor &getEditBuyRequestInteractor(){return editBuyRequestInteractor;}
+    ProcessStatisticsInteractor &getProcessStatisticsInteractor(){return processStatisticsInteractor;}
 
     stocksListHandler addStocksSource(const StocksSource &source);
     void setConverter(AbstractCurrencyConverter *const converter);
