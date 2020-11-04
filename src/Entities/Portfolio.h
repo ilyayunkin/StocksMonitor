@@ -9,6 +9,9 @@ struct Portfolio{
     PortfolioEntryList portfolio;
     CurrencyCountersList sum() const;
     size_t size() const;
+    auto empty() const {return portfolio.empty();}
+    void clear() {portfolio.clear();}
+
     PortfolioEntry getPortfolioEntry(const size_t i) const;
     void registerStockSourceInPortfolio(const QString &name,
                                         const stocksListHandler handler);

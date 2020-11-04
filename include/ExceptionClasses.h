@@ -88,4 +88,9 @@ public:
     ItemAlreadyIsInStatisticsConfig() : std::runtime_error("ItemAlreadyIsInStatisticsConfig") { }
 };
 
+class EmptyPortfolioException : public std::runtime_error {
+public:
+    EmptyPortfolioException() : std::runtime_error("EmptyPortfolioException") { }
+};
+
 #endif // EXCEPTIONCLASSES_H

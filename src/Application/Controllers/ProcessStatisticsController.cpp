@@ -2,6 +2,8 @@
 #include "Rules/ProcessStatisticsInteractor.h"
 #include "Application/AbstractStatisticsView.h"
 
+#include "ExceptionClasses.h"
+
 #include <QMessageBox>
 
 ProcessStatisticsController::ProcessStatisticsController(ProcessStatisticsInteractor &rules,
@@ -13,5 +15,12 @@ ProcessStatisticsController::ProcessStatisticsController(ProcessStatisticsIntera
 
 void ProcessStatisticsController::processStatistics() const
 {
-    resultView.show(rules.processStatistics());
+    try {
+        resultView.show(rules.processStatistics());
+    } catch (EmptyPortfolioException &e) {
+        QMessageBox::critical(nullptr,
+                              QObject::tr("Portfolio if empty."),
+                              QObject::tr("Nothing to analyze."));
+
+    }
 }

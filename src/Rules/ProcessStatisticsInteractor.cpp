@@ -3,6 +3,8 @@
 #include "AbstractCurrencyConverter.h"
 #include "StatisticsResults.h"
 
+#include "ExceptionClasses.h"
+
 #include <assert.h>
 #include <set>
 
@@ -21,6 +23,9 @@ void ProcessStatisticsInteractor::setConverter(AbstractCurrencyConverter * const
 
 Statistics ProcessStatisticsInteractor::processStatistics() const
 {
+    if(portfolio.empty())
+        throw EmptyPortfolioException();
+
     Statistics statistics;
     {
         auto const sum = converter->convert("RUB", portfolio.sum());
