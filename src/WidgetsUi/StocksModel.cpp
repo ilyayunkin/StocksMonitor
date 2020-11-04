@@ -47,9 +47,6 @@ QVariant StocksModel::headerData(int section,
         if (orientation == Qt::Horizontal)
         {
             switch (section) {
-            case NUM:
-                ret = tr("#");
-                break;
             case NAME:
                 ret = tr("Name");
                 break;
@@ -74,6 +71,8 @@ QVariant StocksModel::headerData(int section,
             default:
                 break;
             }
+        }else{
+            ret = section + 1;
         }
     }
     return ret;
@@ -94,9 +93,6 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
         {
             const Stock &stock = stocks.getStock(row);
             switch (col) {
-            case NUM:
-                ret = stock.rowNum;
-                break;
             case NAME:
                 ret = stock.name;
                 break;

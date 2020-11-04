@@ -1,6 +1,7 @@
 #include "SmartLabMmvbParser.h"
 
 #include <assert.h>
+#include <tuple>
 
 #include <QDateTime>
 #include <QDebug>
@@ -142,9 +143,11 @@ QByteArrayList getCols(const QByteArray &table)
 
     return ret;
 }
-
-void getA(const QByteArray &tableCol, QString &name, std::string &url)
+typedef std::tuple<QString, std::string> NameUrlTuple;
+NameUrlTuple getA(const QByteArray &tableCol)
 {
+    QString name;
+    std::string url;
     QByteArray ret = tableCol;
     constexpr char divBegin[] = "<a";
     constexpr char divEnd[] = "</a>";
@@ -153,7 +156,7 @@ void getA(const QByteArray &tableCol, QString &name, std::string &url)
     // There could be unformated text like <td>ИСУ ГК-3</td>
     if(beginPos == -1)
     {
-        return;
+        return NameUrlTuple();
     }
     {
         const QByteArray hrefBegin = "href=\"";
@@ -179,19 +182,20 @@ void getA(const QByteArray &tableCol, QString &name, std::string &url)
     int fieldBegin = tableCol.indexOf(">", beginPos);
     if(fieldBegin == -1)
     {
-        return;
+        return NameUrlTuple();
     }
     ++fieldBegin;
 
     const int fieldEnd = tableCol.indexOf(divEnd, fieldBegin);
     if(fieldEnd == -1)
     {
-        return;
+        return NameUrlTuple();
     }
 
     ret = tableCol.mid(fieldBegin, fieldEnd - fieldBegin);
 
     name = QString(ret);
+    return NameUrlTuple(name, url);
 }
 
 float getPercentage(const QByteArray &tableCol)
@@ -257,17 +261,17 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                 int rowNum = QString(tableCols[NUM]).toInt(&b);
                 if(b)
                 {
-                    Stock stock;
-                    stock.rowNum = rowNum;
-                    getA(tableCols.at(NAME), stock.name, stock.url);
-                    stock.ticker = tableCols.at(TICKER).data();
-                    stock.price = QString(tableCols.at(PRICE)).toDouble();
-                    stock.derivation = getPercentage(tableCols.at(DERIVATION_PC));
-                    stock.derivationWeek = getPercentage(tableCols.at(DERIVATION_PC_WEEK));
-                    stock.derivationMonth = getPercentage(tableCols.at(DERIVATION_PC_MONTH));
-                    stock.derivationYear = getPercentage(tableCols.at(DERIVATION_PC_YEAR));
-
-                    stocks.push_back(stock);
+                    QString name;
+                    std::string url;
+                    std::tie(name, url) = getA(tableCols.at(NAME));
+                    stocks.push_back(Stock(name,
+                                           tableCols.at(TICKER).data(),
+                                           url,
+                                           QString(tableCols.at(PRICE)).toDouble(),
+                                           getPercentage(tableCols.at(DERIVATION_PC)),
+                                           getPercentage(tableCols.at(DERIVATION_PC_WEEK)),
+                                           getPercentage(tableCols.at(DERIVATION_PC_MONTH)),
+                                           getPercentage(tableCols.at(DERIVATION_PC_YEAR))));
                 }else if(i == 1)
                 {
                     time = tableCols.at(TIME).data();

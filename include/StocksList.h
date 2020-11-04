@@ -8,7 +8,6 @@
 
 struct Stock
 {
-    int rowNum;
     QString name;
     std::string ticker;
     std::string url;
@@ -19,14 +18,16 @@ struct Stock
     float derivationYear;
 
     Stock() :
-        rowNum(-1),
         price(-1),
         derivation(-1),
         derivationWeek(-1),
         derivationMonth(-1),
         derivationYear(-1)
     {}
-    Stock(QString name, std::string ticker, std::string url, float price,
+    Stock(QString name,
+          std::string ticker,
+          std::string url,
+          float price,
           float derivation = -1,
           float derivationWeek = -1,
           float derivationMonth = -1,

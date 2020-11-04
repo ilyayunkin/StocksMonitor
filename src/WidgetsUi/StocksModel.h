@@ -17,7 +17,6 @@ class StocksModel final: public QAbstractTableModel, public AbstractStocksView
 public:
     enum
     {
-        NUM,
         NAME,
         TICKER,
         PRICE,

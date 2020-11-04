@@ -26,7 +26,7 @@ StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
         ui->stocksTableView->setModel(proxyModel);
         ui->stocksTableView->setSortingEnabled(true);
         ui->stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-        ui->stocksTableView->sortByColumn(StocksModel::NUM, Qt::AscendingOrder);
+        ui->stocksTableView->sortByColumn(StocksModel::DERIVATION, Qt::AscendingOrder);
         new StocksEventFilter(stocksInterface, ui->stocksTableView);
         connect(model, &StocksModel::time,
                 [this](std::string t){this->ui->timeLabel->setText(t.data());});

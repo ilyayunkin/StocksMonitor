@@ -73,7 +73,6 @@ void CbrfCurrencyParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
     while(!currencyNode.isNull())
     {
         Stock stock;
-        stock.rowNum = i;
         QDomElement element = currencyNode.toElement(); // try to convert the node to an element.
         if(!element.isNull())
         {
