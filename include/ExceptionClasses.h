@@ -93,4 +93,9 @@ public:
     EmptyPortfolioException() : std::runtime_error("EmptyPortfolioException") { }
 };
 
+class CantOpenFileException : public std::runtime_error {
+public:
+    CantOpenFileException() : std::runtime_error("CantOpenFileException") { }
+};
+
 #endif // EXCEPTIONCLASSES_H

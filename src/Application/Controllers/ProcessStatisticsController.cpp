@@ -21,6 +21,9 @@ void ProcessStatisticsController::processStatistics() const
         QMessageBox::critical(nullptr,
                               QObject::tr("Portfolio if empty."),
                               QObject::tr("Nothing to analyze."));
-
+    } catch (CantOpenFileException &e) {
+        QMessageBox::critical(nullptr,
+                              QObject::tr("Can't open the file."),
+                              QObject::tr("Can't open the file."));
     }
 }
