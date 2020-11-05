@@ -1,5 +1,7 @@
 #include "BuyRequestDatabase.h"
 
+#include "ExceptionClasses.h"
+
 #include <QMessageBox>
 
 QSqlQuery BuyRequestDatabase::executeQuery(const QString &query)
@@ -19,7 +21,8 @@ BuyRequestDatabase::BuyRequestDatabase(const QString &name)
 
     if (!db.open()) {
         qDebug() << db.lastError().text();
-    }else
+        throw CantOpenDatabaseException();
+    }
     {
         QSqlQuery q = executeQuery(
                     "create table if not exists "

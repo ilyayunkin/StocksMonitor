@@ -209,32 +209,31 @@ StatisticsConfigDatabase::StatisticsConfigDatabase()
 
     if (!db.open()) {
         qDebug() << db.lastError().text();
-    }else
+        throw CantOpenDatabaseException();
+    }
     {
-        {
-            QSqlQuery q = executeQueryException(
-                        QString(
-                            "create table if not exists "
-                            "%1 (name TEXT NOT NULL UNIQUE)"
-                            ";")
-                        .arg(categoryTableName));
-        }
-        {
-            QSqlQuery q = executeQueryException(
-                        QString(
-                            "create table if not exists "
-                            "%1 (category TEXT NOT NULL, name TEXT NOT NULL UNIQUE)"
-                            ";")
-                        .arg(groupTableName));
-        }
-        {
-            QSqlQuery q = executeQueryException(
-                        QString(
-                            "create table if not exists "
-                            "%1 (groupName TEXT NOT NULL, ticker TEXT NOT NULL, name TEXT NOT NULL)"
-                            ";")
-                        .arg(itemsTableName));
-        }
+        QSqlQuery q = executeQueryException(
+                    QString(
+                        "create table if not exists "
+                        "%1 (name TEXT NOT NULL UNIQUE)"
+                        ";")
+                    .arg(categoryTableName));
+    }
+    {
+        QSqlQuery q = executeQueryException(
+                    QString(
+                        "create table if not exists "
+                        "%1 (category TEXT NOT NULL, name TEXT NOT NULL UNIQUE)"
+                        ";")
+                    .arg(groupTableName));
+    }
+    {
+        QSqlQuery q = executeQueryException(
+                    QString(
+                        "create table if not exists "
+                        "%1 (groupName TEXT NOT NULL, ticker TEXT NOT NULL, name TEXT NOT NULL)"
+                        ";")
+                    .arg(itemsTableName));
     }
 }
 

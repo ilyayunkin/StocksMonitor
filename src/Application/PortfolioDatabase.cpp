@@ -1,5 +1,7 @@
 #include "PortfolioDatabase.h"
 
+#include "ExceptionClasses.h"
+
 namespace  {
 QString tableName = "Pocket";
 }
@@ -10,7 +12,8 @@ PortfolioDatabase::PortfolioDatabase()
     db.setDatabaseName("pocket.sqlite");
     if (!db.open()) {
         qDebug() << __PRETTY_FUNCTION__ << db.lastError().text();
-    }else
+        throw CantOpenDatabaseException();
+    }
     {
         QSqlQuery q = executeQuery(
                     QString("create table if not exists "

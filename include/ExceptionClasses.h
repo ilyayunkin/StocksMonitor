@@ -98,4 +98,9 @@ public:
     CantOpenFileException() : std::runtime_error("CantOpenFileException") { }
 };
 
+class CantOpenDatabaseException : public std::runtime_error {
+public:
+    CantOpenDatabaseException() : std::runtime_error("CantOpenDatabaseException") { }
+};
+
 #endif // EXCEPTIONCLASSES_H
