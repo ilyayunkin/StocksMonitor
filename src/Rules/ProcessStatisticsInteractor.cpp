@@ -224,7 +224,20 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
         processors.emplace_back(PluginsProcessor(portfolio, converter, statistics));
 
         for(const auto &portfolioEntry : portfolio.portfolio)
+        {
             std::for_each(processors.begin(), processors.end(),[&](auto &f){f(portfolioEntry);});
+            if(portfolioEntry.derivation >= -1)
+            {
+                auto price = converter->convert(
+                            "RUB",
+                            portfolioEntry.currency.data(),
+                            portfolioEntry.sum);
+                statistics.totalDerivation+= price / (100 - portfolioEntry.derivation) * portfolioEntry.derivation;
+                statistics.totalDerivationWeek+= price / (100 - portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
+                statistics.totalDerivationMonth+= price / (100 - portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
+                statistics.totalDerivationYear+= price / (100 - portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
+            }
+        }
     }
 
     statistics.totalSum = converter->convert("RUB", portfolio.sum()).list.front().sum;

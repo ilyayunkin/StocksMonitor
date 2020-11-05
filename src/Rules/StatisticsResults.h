@@ -34,9 +34,17 @@ typedef std::list<StatisticsCounter> StatisticsCounterList;
 struct Statistics
 {
     float totalSum;
+    float totalDerivation;
+    float totalDerivationWeek;
+    float totalDerivationMonth;
+    float totalDerivationYear;
     StatisticsCounterList list;
     Statistics()
         : totalSum(0)
+        , totalDerivation(0)
+        , totalDerivationWeek(0)
+        , totalDerivationMonth(0)
+        , totalDerivationYear(0)
     {}
 };
 

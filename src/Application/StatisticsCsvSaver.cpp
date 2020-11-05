@@ -37,7 +37,7 @@ void StatisticsCsvSaver::show(const Statistics &statistics)
                 {
                     stream << counter.name << '\n';;
                     stream << QObject::tr("Group")
-                           << separator << QObject::tr("Sum")
+                           << separator << QObject::tr("Sum, RUB")
                            << separator << QObject::tr("%")
                            << separator << QObject::tr("Tickers")
                            << '\n';
@@ -59,6 +59,34 @@ void StatisticsCsvSaver::show(const Statistics &statistics)
                            << '\n';
                     stream << '\n';
                 }
+                stream << '\n';
+                stream << '\n';
+                stream << QObject::tr("Total, RUB")
+                       << separator << QObject::tr("~ Day, RUB")
+                       << separator << QObject::tr("~ Week, RUB")
+                       << separator << QObject::tr("~ Month, RUB")
+                       << separator << QObject::tr("~ Year, RUB")
+                       << '\n';
+                stream << statistics.totalSum
+                       << separator << locale.toString(statistics.totalDerivation)
+                       << separator << locale.toString(statistics.totalDerivationWeek)
+                       << separator << locale.toString(statistics.totalDerivationMonth)
+                       << separator << locale.toString(statistics.totalDerivationYear)
+                       << '\n';
+                stream << '\n';
+                stream << '\n';
+                stream << QObject::tr("Total")
+                       << separator << QObject::tr("~ Day, %")
+                       << separator << QObject::tr("~ Week, %")
+                       << separator << QObject::tr("~ Month, %")
+                       << separator << QObject::tr("~ Year, %")
+                       << '\n';
+                stream << statistics.totalSum
+                       << separator << locale.toString(statistics.totalDerivation / (statistics.totalSum - statistics.totalDerivation) * 100)
+                       << separator << locale.toString(statistics.totalDerivationWeek / (statistics.totalSum - statistics.totalDerivationWeek) * 100)
+                       << separator << locale.toString(statistics.totalDerivationMonth / (statistics.totalSum - statistics.totalDerivationMonth) * 100)
+                       << separator << locale.toString(statistics.totalDerivationYear / (statistics.totalSum - statistics.totalDerivationYear) * 100)
+                       << '\n';
             }
         }
         openFileInDefaultApp(filename);
