@@ -3,6 +3,8 @@
 #include <QBrush>
 #include <QMessageBox>
 #include <QDebug>
+#include <QMimeData>
+#include <QInputDialog>
 
 #include <algorithm>
 #include <assert.h>
@@ -38,6 +40,7 @@ Qt::ItemFlags StocksLimitsModel::flags(const QModelIndex & index) const
 {    
     Qt::ItemFlags ret =QAbstractTableModel::flags(index) |
             Qt::ItemIsEnabled |
+            Qt::ItemIsDropEnabled |
             Qt::ItemIsSelectable;
     if(index.column() == BASE_PRICE)
     {
@@ -161,6 +164,40 @@ bool StocksLimitsModel::setData(const QModelIndex &index,
         }
     }
     return false;
+}
+
+QString StocksLimitsModel::mimeType() const
+{
+    return "application/x-ticker";
+}
+
+QStringList StocksLimitsModel::mimeTypes() const
+{
+    return QStringList() << mimeType();
+}
+
+bool StocksLimitsModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+{
+    Q_UNUSED(column);
+    Q_UNUSED(action)
+    Q_UNUSED(row);
+    Q_UNUSED(parent);
+    bool ret = true;
+
+    qDebug() << __PRETTY_FUNCTION__ << __LINE__ << data->data(mimeType());
+    auto ticker = data->data(mimeType());
+    if(!ticker.isEmpty())
+    {
+        stocksInterface.addLimit(ticker.data());
+    }
+
+    return ret;
+}
+
+
+Qt::DropActions StocksLimitsModel::supportedDropActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
 }
 
 void StocksLimitsModel::stocksUpdated()

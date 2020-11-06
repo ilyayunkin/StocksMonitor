@@ -2,6 +2,7 @@
 
 #include <QBrush>
 #include <QDebug>
+#include <QMimeData>
 
 #include <algorithm>
 
@@ -34,6 +35,7 @@ Qt::ItemFlags StocksModel::flags(const QModelIndex & index) const
 {    
     return QAbstractTableModel::flags(index) |
             Qt::ItemIsEnabled |
+            Qt::ItemIsDragEnabled |
             Qt::ItemIsSelectable;
 }
 
@@ -152,6 +154,35 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
         }
     }
     return ret;
+}
+
+QString StocksModel::mimeType() const
+{
+    return "application/x-ticker";
+}
+
+QStringList StocksModel::mimeTypes() const
+{
+    return QStringList() << mimeType();
+}
+
+QMimeData *StocksModel::mimeData(const QModelIndexList &indexes) const
+{
+    if(indexes.size())
+    {
+        const Stock &stock = stocks.getStock(indexes.front().row());
+
+        QMimeData *mimeData = new QMimeData;
+        mimeData->setData(mimeType(), QByteArray(stock.ticker.data()));
+        return mimeData;
+    }
+
+    return nullptr;
+}
+
+Qt::DropActions StocksModel::supportedDropActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
 }
 
 void StocksModel::stocksUpdated()

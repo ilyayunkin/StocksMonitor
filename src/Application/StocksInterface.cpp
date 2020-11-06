@@ -7,6 +7,7 @@
 #include "Rules/Subscriptions.h"
 
 #include <QDebug>
+#include <QInputDialog>
 
 StocksInterface::StocksInterface(const Entities &entities,
                                  Subscriptions &subscriptions,
@@ -48,10 +49,19 @@ void StocksInterface::addToPortfolio(const char *const ticker, const int quantit
     editPortfolioInteractor.addToPortfolio(handler, ticker, quantity);
 }
 
-void StocksInterface::addLimit(const char *const ticker, float limit)
+void StocksInterface::addLimit(const char * const ticker)
 {
-    qDebug() << __PRETTY_FUNCTION__ << __LINE__;
-    editBuyRequestInteractor.addLimit(handler, ticker, limit);
+    Stock stock = getStock(ticker);
+    bool ok;
+    float basePrice = QInputDialog::getDouble(nullptr,
+                                              stock.name,
+                                              QObject::tr("Price"),
+                                              stock.price,
+                                              0, 100000, 10, &ok);
+    if(ok)
+    {
+        editBuyRequestInteractor.addLimit(handler, ticker, basePrice);
+    }
 }
 
 void StocksInterface::subscribeForChanges(AbstractStocksView *view)

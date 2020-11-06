@@ -99,14 +99,5 @@ void StocksEventFilter::addLimit(const QModelIndex &sortModelIndex)
     const auto row = static_cast<QSortFilterProxyModel *>(
                 table->model())->mapToSource(sortModelIndex).row();
     Stock stock = this->stocksInterface.getStock(row);
-    bool ok;
-    float basePrice = QInputDialog::getDouble(table,
-                                              stock.name,
-                                              tr("Price"),
-                                              stock.price,
-                                              0, 100000, 10, &ok);
-    if(ok)
-    {
-        stocksInterface.addLimit(stock.ticker.data(), basePrice);
-    }
+    stocksInterface.addLimit(stock.ticker.data());
 }

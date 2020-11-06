@@ -30,7 +30,7 @@ public:
     Stock getStock(const char *const ticker) const;
     std::string getActualizationTime() const;
     void addToPortfolio(const char *const ticker, const int quantity);
-    void addLimit(const char *const ticker, float limit);
+    void addLimit(const char *const ticker);
     void subscribeForChanges(AbstractStocksView *view);
 private:
     const stocksListHandler handler;

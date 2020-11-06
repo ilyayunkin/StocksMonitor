@@ -14,6 +14,8 @@ class StocksInterface;
 class StocksLimitsModel final: public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
+
+    QString mimeType() const;
 public:
     enum
     {
@@ -36,6 +38,10 @@ public:
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+
+    QStringList mimeTypes() const override;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+    Qt::DropActions supportedDropActions() const override;
 
     void stocksUpdated() override;
     void stocksUpdated(size_t row) override;

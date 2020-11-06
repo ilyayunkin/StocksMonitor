@@ -14,6 +14,8 @@
 class StocksModel final: public QAbstractTableModel, public AbstractStocksView
 {
     Q_OBJECT
+
+    QString mimeType() const;
 public:
     enum
     {
@@ -36,6 +38,10 @@ public:
                         Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    QStringList mimeTypes() const override;
+    QMimeData *mimeData(const QModelIndexList &indexes) const override;
+    Qt::DropActions supportedDropActions() const override;
 
     void stocksUpdated() override;
     void stocksUpdated(size_t row) override;

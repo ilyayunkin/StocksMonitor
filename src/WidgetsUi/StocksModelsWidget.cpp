@@ -24,6 +24,7 @@ StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
         StocksModel *model = new StocksModel(stocksInterface, this);
         proxyModel->setSourceModel(model);
         ui->stocksTableView->setModel(proxyModel);
+        ui->stocksTableView->setDragDropMode(QAbstractItemView::DragOnly);
         ui->stocksTableView->setSortingEnabled(true);
         ui->stocksTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         ui->stocksTableView->sortByColumn(StocksModel::DERIVATION, Qt::AscendingOrder);
@@ -36,6 +37,7 @@ StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
         StocksLimitsModel *model = new StocksLimitsModel(buyRequestInterface, stocksInterface, this);
         proxyModel->setSourceModel(model);
         ui->stocksLimitsTableView->setModel(proxyModel);
+        ui->stocksLimitsTableView->setDragDropMode(QAbstractItemView::DropOnly);
         ui->stocksLimitsTableView->setSortingEnabled(true);
         ui->stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         ui->stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
