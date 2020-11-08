@@ -10,6 +10,7 @@ public:
     static void showPopUpWindow(const QString &text, int timeMs = 10000);
 private:
     explicit PopUpWindow(const QString &text, int timeMs = 10000);
+    ~PopUpWindow();
     void mousePressEvent(QMouseEvent *event);
 };
 

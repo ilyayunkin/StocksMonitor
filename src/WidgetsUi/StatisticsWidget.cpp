@@ -1,6 +1,6 @@
 #include "StatisticsWidget.h"
 #include "ui_StatisticsWidget.h"
-#include "StatisticsModel.h"
+#include "ViewModels/StatisticsModel.h"
 #include "Application/Controllers/ProcessStatisticsController.h"
 #include <algorithm>
 #include <assert.h>

@@ -45,21 +45,22 @@ SOURCES += \
     Rules/StatisticsInteractor.cpp \
     Rules/Subscriptions.cpp \
     WidgetsUi/Dialogs.cpp \
-    WidgetsUi/LimitsEventFilter.cpp \
     WidgetsUi/Notifier.cpp \
-    WidgetsUi/PopUpWindow.cpp \
+    WidgetsUi/PopUp/PopUpLayout.cpp \
     WidgetsUi/PortfolioWidget.cpp \
-    WidgetsUi/Sounds/Signalizer.cpp \
-    WidgetsUi/Sounds/SoundDialog.cpp \
-    WidgetsUi/StatisticsModel.cpp \
     WidgetsUi/StatisticsWidget.cpp \
-    WidgetsUi/StocksEventFilter.cpp \
     WidgetsUi/StoryWidget.cpp \
     WidgetsUi/StocksModelsWidget.cpp \
     WidgetsUi/mainwindow.cpp \
-    WidgetsUi/StocksModel.cpp \
-    WidgetsUi/StocksLimitsModel.cpp \
-    WidgetsUi/PortfolioModel.cpp \
+    WidgetsUi/EventFilters/LimitsEventFilter.cpp \
+    WidgetsUi/EventFilters/StocksEventFilter.cpp \
+    WidgetsUi/PopUp/PopUpWindow.cpp \
+    WidgetsUi/Sounds/Signalizer.cpp \
+    WidgetsUi/Sounds/SoundDialog.cpp \
+    WidgetsUi/ViewModels/StatisticsModel.cpp \
+    WidgetsUi/ViewModels/StocksModel.cpp \
+    WidgetsUi/ViewModels/StocksLimitsModel.cpp \
+    WidgetsUi/ViewModels/PortfolioModel.cpp \
     logger.cpp \
     main.cpp
 
@@ -113,22 +114,23 @@ HEADERS += \
     Presenters/StockHint.h \
     Presenters/CurrencyPresenter.h \
     WidgetsUi/Dialogs.h \
-    WidgetsUi/LimitsEventFilter.h \
     WidgetsUi/Notifier.h \
+    WidgetsUi/PopUp/PopUpLayout.h \
     WidgetsUi/PortfolioWidget.h \
-    WidgetsUi/Sounds/AbstractSignalizer.h \
-    WidgetsUi/Sounds/Signalizer.h \
-    WidgetsUi/Sounds/SoundDialog.h \
-    WidgetsUi/StatisticsModel.h \
     WidgetsUi/StatisticsWidget.h \
-    WidgetsUi/StocksEventFilter.h \
     WidgetsUi/StocksModelsWidget.h \
     WidgetsUi/StoryWidget.h \
     WidgetsUi/mainwindow.h \
-    WidgetsUi/PopUpWindow.h \
-    WidgetsUi/StocksModel.h \
-    WidgetsUi/PortfolioModel.h \
-    WidgetsUi/StocksLimitsModel.h \
+    WidgetsUi/EventFilters/LimitsEventFilter.h \
+    WidgetsUi/EventFilters/StocksEventFilter.h \
+    WidgetsUi/PopUp/PopUpWindow.h \
+    WidgetsUi/Sounds/AbstractSignalizer.h \
+    WidgetsUi/Sounds/Signalizer.h \
+    WidgetsUi/Sounds/SoundDialog.h \
+    WidgetsUi/ViewModels/StatisticsModel.h \
+    WidgetsUi/ViewModels/StocksModel.h \
+    WidgetsUi/ViewModels/PortfolioModel.h \
+    WidgetsUi/ViewModels/StocksLimitsModel.h \
     logger.h
 
 INCLUDEPATH+=../include/

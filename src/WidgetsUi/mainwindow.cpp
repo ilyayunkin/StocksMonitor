@@ -13,9 +13,9 @@
 #include "StoryWidget.h"
 #include "StocksModelsWidget.h"
 #include "PortfolioWidget.h"
-#include "PortfolioModel.h"
-#include "StocksLimitsModel.h"
-#include "StocksModel.h"
+#include "ViewModels/PortfolioModel.h"
+#include "ViewModels/StocksLimitsModel.h"
+#include "ViewModels/StocksModel.h"
 #include "Sounds/Signalizer.h"
 #include "StatisticsWidget.h"
 

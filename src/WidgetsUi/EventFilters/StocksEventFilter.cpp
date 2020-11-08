@@ -1,4 +1,4 @@
-#include "LimitsEventFilter.h"
+#include "StocksEventFilter.h"
 
 #include <QEvent>
 #include <QContextMenuEvent>
@@ -11,10 +11,10 @@
 #include <QInputDialog>
 #include <QDesktopServices>
 
-#include "StocksModel.h"
-#include "StocksLimitsModel.h"
+#include "WidgetsUi/ViewModels/StocksModel.h"
+#include "WidgetsUi/ViewModels/StocksLimitsModel.h"
 
-LimitsEventFilter::LimitsEventFilter(StocksInterface &stocksInterface,
+StocksEventFilter::StocksEventFilter(StocksInterface &stocksInterface,
                                      QTableView *table) :
     QObject(table),
     table(table),
@@ -23,12 +23,17 @@ LimitsEventFilter::LimitsEventFilter(StocksInterface &stocksInterface,
     table->installEventFilter(this);
     menu = new QMenu;
     portfolioAction = new QAction("To Portfolio", this);
+    limitsAction = new QAction("Set limit", this);
     urlAction = new QAction("Open in the Internet", this);
     menu->addAction(portfolioAction);
+    menu->addAction(limitsAction);
     menu->addAction(urlAction);
+
+    connect(table, &QAbstractItemView::doubleClicked,
+            this, &StocksEventFilter::addLimit);
 }
 
-bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
+bool StocksEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     switch (event->type()) {
     case QEvent::ContextMenu:
@@ -42,12 +47,15 @@ bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
 
             if(sortModelIndex.isValid())
             {
-                auto ticker = model->data(model->index(sortModelIndex.row(), StocksLimitsModel::TICKER)).toByteArray();
+                auto ticker = model->data(model->index(sortModelIndex.row(), StocksModel::TICKER)).toByteArray();
                 auto selected = menu->exec(globalPos);
                 if(selected == portfolioAction)
                 {
                     auto quantity = QInputDialog::getInt(0, tr("Input quantity"), tr("Quantity"), 1, 1);
                     stocksInterface.addToPortfolio(ticker, quantity);
+                }else if(selected == limitsAction)
+                {
+                    addLimit(sortModelIndex);
                 }else if(selected == urlAction)
                 {
                     const auto stock = stocksInterface.getStock(ticker.data());
@@ -83,4 +91,13 @@ bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
         break;
     }
     return QObject::eventFilter(obj, event);
+}
+
+void StocksEventFilter::addLimit(const QModelIndex &sortModelIndex)
+{
+    qDebug() << __PRETTY_FUNCTION__;
+    const auto row = static_cast<QSortFilterProxyModel *>(
+                table->model())->mapToSource(sortModelIndex).row();
+    Stock stock = this->stocksInterface.getStock(row);
+    stocksInterface.addLimit(stock.ticker.data());
 }

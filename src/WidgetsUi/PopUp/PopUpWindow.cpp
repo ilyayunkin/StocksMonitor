@@ -7,6 +7,8 @@
 #include <QTimer>
 #include <QHBoxLayout>
 
+#include "PopUpLayout.h"
+
 PopUpWindow::PopUpWindow(const QString &text, int timeMs)
 {
     QHBoxLayout *lay = new QHBoxLayout(this);
@@ -25,17 +27,17 @@ PopUpWindow::PopUpWindow(const QString &text, int timeMs)
     show();
     adjustSize();
 
-    QRect window = QApplication::desktop()->availableGeometry();
-    setGeometry(window.width() - 40 - width() + window.x(),
-                window.height() - 40 - height() + window.y(),
-                width(),
-                height());
-
+    PopUpLayout::instance().place(this);
     {
         QTimer *t = new QTimer(this);
         connect(t, &QTimer::timeout, this, &QObject::deleteLater);
         t->start(timeMs);
     }
+}
+
+PopUpWindow::~PopUpWindow()
+{
+    PopUpLayout::instance().remove(this);
 }
 
 void PopUpWindow::mousePressEvent(QMouseEvent *event)

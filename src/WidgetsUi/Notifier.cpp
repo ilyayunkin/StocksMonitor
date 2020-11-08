@@ -3,7 +3,7 @@
 #include <QApplication>
 
 #include "logger.h"
-#include "PopUpWindow.h"
+#include "PopUp/PopUpWindow.h"
 #include "Sounds/AbstractSignalizer.h"
 
 Notifier::Notifier(QWidget * const alertWidget, AbstractSignalizer * const signalizer) :

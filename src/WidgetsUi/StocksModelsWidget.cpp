@@ -5,10 +5,10 @@
 
 #include <QInputDialog>
 
-#include "StocksEventFilter.h"
-#include "LimitsEventFilter.h"
-#include "StocksModel.h"
-#include "StocksLimitsModel.h"
+#include "EventFilters/StocksEventFilter.h"
+#include "EventFilters/LimitsEventFilter.h"
+#include "ViewModels/StocksModel.h"
+#include "ViewModels/StocksLimitsModel.h"
 
 StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
                                        BuyRequestInterface &buyRequestInterface,

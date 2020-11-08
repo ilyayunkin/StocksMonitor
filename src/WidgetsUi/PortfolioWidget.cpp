@@ -10,7 +10,7 @@
 #include <assert.h>
 
 #include "Application/Application.h"
-#include "PortfolioModel.h"
+#include "ViewModels/PortfolioModel.h"
 
 PortfolioWidget::PortfolioWidget(PortfolioModel *model,
                                  Application &application,
