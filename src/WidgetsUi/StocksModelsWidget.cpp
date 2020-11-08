@@ -41,7 +41,7 @@ StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
         ui->stocksLimitsTableView->setSortingEnabled(true);
         ui->stocksLimitsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         ui->stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
-        new LimitsEventFilter(stocksInterface, ui->stocksLimitsTableView);
+        new LimitsEventFilter(buyRequestInterface, ui->stocksLimitsTableView);
     }
 }
 

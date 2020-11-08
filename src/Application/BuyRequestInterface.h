@@ -30,7 +30,9 @@ public:
     StockLimit getStockBuyRequest(const char *const ticker) const;
     bool setReferencePrice(size_t row, float referencePrice);
     void addToPortfolio(const char *const ticker, const int quantity);
+    void remove(const char *const ticker);
     void subscribeForChanges(AbstractStocksView *view);
+    void openUrl(const char *const ticker)const;
 private:
     const stocksListHandler handler;
     const Entities &entities;

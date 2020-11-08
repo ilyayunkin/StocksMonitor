@@ -8,6 +8,8 @@
 
 #include <QDebug>
 #include <QInputDialog>
+#include <QDesktopServices>
+#include <QUrl>
 
 StocksInterface::StocksInterface(const Entities &entities,
                                  Subscriptions &subscriptions,
@@ -67,4 +69,9 @@ void StocksInterface::addLimit(const char * const ticker)
 void StocksInterface::subscribeForChanges(AbstractStocksView *view)
 {
     subscriptions.subscribeForStocksChanges(handler, view);
+}
+
+void StocksInterface::openUrl(const char * const ticker) const
+{
+    QDesktopServices::openUrl(QUrl(entities.getUrl(handler, ticker).data()));
 }

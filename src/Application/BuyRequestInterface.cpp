@@ -6,6 +6,9 @@
 #include "Rules/EditBuyRequestInteractor.h"
 #include "Rules/Subscriptions.h"
 
+#include <QDesktopServices>
+#include <QUrl>
+
 BuyRequestInterface::BuyRequestInterface(
         const Entities &entities,
         Subscriptions &subscriptions,
@@ -47,7 +50,17 @@ void BuyRequestInterface::addToPortfolio(const char *const ticker, const int qua
     editPortfolioInteractor.addToPortfolio(handler, ticker, quantity);
 }
 
+void BuyRequestInterface::remove(const char * const ticker)
+{
+    editBuyRequestInteractor.remove(handler, ticker);
+}
+
 void BuyRequestInterface::subscribeForChanges(AbstractStocksView *view)
 {
     subscriptions.subscribeForBuyRequestChanges(handler, view);
+}
+
+void BuyRequestInterface::openUrl(const char * const ticker) const
+{
+    QDesktopServices::openUrl(QUrl(entities.getUrl(handler, ticker).data()));
 }

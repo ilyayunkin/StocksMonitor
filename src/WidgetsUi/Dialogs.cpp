@@ -10,11 +10,19 @@ Dialogs::Dialogs(QWidget * const w) :
 
 bool Dialogs::askReplaceBuyRequest(const char *const ticker, const float sellPrice) const
 {
-    return
-            QMessageBox::question(w,QObject::tr("Replace?"),
+    return QMessageBox::question(w,QObject::tr("Replace?"),
                                   QObject::tr("There already is %1:\n %1 %2")
                                   .arg(QString(ticker))
                                   .arg(sellPrice))
+            == QMessageBox::Yes;
+}
+
+bool Dialogs::askDeleteBuyRequest(const char * const ticker) const
+{
+    return QMessageBox::question(w,
+                                 QObject::tr("Delete buy request?"),
+                                 QObject::tr("Delete buy request %1?")
+                                 .arg(QString(ticker)))
             == QMessageBox::Yes;
 }
 

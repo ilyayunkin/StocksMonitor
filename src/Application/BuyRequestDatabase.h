@@ -10,8 +10,9 @@ public:
     explicit BuyRequestDatabase(const QString &name);
 
     // AbstractBuyRequestDatabase interface
-    void add(const StockLimit &stockLimit);
-    void update(const StockLimit &stockLimit);
+    void add(const StockLimit &stockLimit) override;
+    void remove(const char *const ticker) override;
+    void update(const StockLimit &stockLimit) override;
     StockLimitsList getAll();
 private:
     QSqlDatabase db;

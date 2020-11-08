@@ -24,6 +24,8 @@ public:
     bool setReferencePrice(const stocksListHandler handler,
                            size_t row,
                            float referencePrice);
+    void remove(const stocksListHandler handler,
+                const char *const ticker);
 private:
     Entities &entities;
     Subscriptions &subscriptions;

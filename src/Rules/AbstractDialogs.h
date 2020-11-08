@@ -8,6 +8,7 @@ class AbstractDialogs
 public:
     virtual bool askReplaceBuyRequest(const char *const ticker
                                       , const float sellPrice)const = 0;
+    virtual bool askDeleteBuyRequest(const char *const ticker)const = 0;
     virtual bool askDeleteFromPortfolio(const char *const ticker)const = 0;
     virtual bool askAddQuantityToPortfolio(const char *const ticker)const = 0;
     virtual bool askReplaceItemFromStatistics(const char *const ticker)const = 0;

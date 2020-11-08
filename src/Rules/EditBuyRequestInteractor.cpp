@@ -62,3 +62,16 @@ bool EditBuyRequestInteractor::setReferencePrice(const stocksListHandler handler
     buyRequestDatabases[handler]->update(limits.at(row));
     return true;
 }
+
+void EditBuyRequestInteractor::remove(const stocksListHandler handler, const char * const ticker)
+{
+    assert(ticker);
+    if(dialogs->askDeleteBuyRequest(ticker))
+    {
+        auto &pair = entities.pairs[handler];
+        auto &limits = pair.limits;
+        limits.erase(std::remove_if(limits.begin(), limits.end(), [&](auto const &buyRequest){return buyRequest.ticker == ticker;}));
+        subscriptions.updateBuyRequestView(handler);
+        buyRequestDatabases[handler]->remove(ticker);
+    }
+}

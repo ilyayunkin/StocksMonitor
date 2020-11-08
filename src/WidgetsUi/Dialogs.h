@@ -10,6 +10,7 @@ public:
     Dialogs(QWidget *const w = nullptr);
     bool askReplaceBuyRequest(const char *const ticker
                               , const float sellPrice)const override;
+    bool askDeleteBuyRequest(const char *const ticker)const override;
     bool askDeleteFromPortfolio(const char *const ticker)const override;
     bool askAddQuantityToPortfolio(const char *const ticker)const override;
     bool askReplaceItemFromStatistics(const char *const ticker)const override;

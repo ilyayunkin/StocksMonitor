@@ -42,6 +42,8 @@ struct Entities
                                   const char *const ticker) const;
     size_t getStockBuyRequestsCount(const stocksListHandler handler) const;
     Stock getStockForPortfolioEntry(const size_t i) const;
+    std::string getUrl(const stocksListHandler handler,
+                       const char *const ticker) const;
 };
 
 #endif // ENTITIES_H

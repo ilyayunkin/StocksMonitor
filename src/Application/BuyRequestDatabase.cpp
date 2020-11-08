@@ -36,6 +36,16 @@ void BuyRequestDatabase::add(const StockLimit &stockLimit)
                  .arg(QString(stockLimit.ticker.data())).arg(stockLimit.name).arg(stockLimit.basePrice));
 }
 
+void BuyRequestDatabase::remove(const char * const ticker)
+{
+    executeQuery(QString("DELETE FROM "
+                         "Limits "
+                         "WHERE "
+                         "ticker = '%1'"
+                         ";")
+                 .arg(ticker));
+}
+
 void BuyRequestDatabase::update(const StockLimit &stockLimit)
 {
     executeQuery(QString("UPDATE Limits "

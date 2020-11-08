@@ -92,3 +92,8 @@ Stock Entities::getStockForPortfolioEntry(const size_t i) const
     return getStock(entry.handler, entry.ticker.data());
 }
 
+std::string Entities::getUrl(const stocksListHandler handler, const char * const ticker) const
+{
+    return getStock(handler, ticker).url;
+}
+

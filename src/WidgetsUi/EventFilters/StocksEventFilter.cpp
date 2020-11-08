@@ -9,7 +9,6 @@
 #include <QMenu>
 #include <QAction>
 #include <QInputDialog>
-#include <QDesktopServices>
 
 #include "WidgetsUi/ViewModels/StocksModel.h"
 #include "WidgetsUi/ViewModels/StocksLimitsModel.h"
@@ -58,11 +57,7 @@ bool StocksEventFilter::eventFilter(QObject *obj, QEvent *event)
                     addLimit(sortModelIndex);
                 }else if(selected == urlAction)
                 {
-                    const auto stock = stocksInterface.getStock(ticker.data());
-                    if(!stock.url.empty())
-                    {
-                        QDesktopServices::openUrl(QUrl(stock.url.data()));
-                    }
+                    stocksInterface.openUrl(ticker.data());
                 }
             }
         }

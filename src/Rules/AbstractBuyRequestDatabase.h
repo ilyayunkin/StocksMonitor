@@ -8,6 +8,7 @@ class AbstractBuyRequestDatabase
 public:
     virtual ~AbstractBuyRequestDatabase() = default;
     virtual void add(const StockLimit &stockLimit) = 0;
+    virtual void remove(const char *const ticker) = 0;
     virtual void update(const StockLimit &stockLimit) = 0;
     virtual StockLimitsList getAll() = 0;
 };

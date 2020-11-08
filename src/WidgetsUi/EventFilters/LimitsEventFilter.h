@@ -6,14 +6,14 @@
 class QTableView;
 class QMenu;
 class QAction;
-class StocksInterface;
+class BuyRequestInterface;
 
 class LimitsEventFilter : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit LimitsEventFilter(StocksInterface &stocksInterface,
+    explicit LimitsEventFilter(BuyRequestInterface &buyRequestInterface,
                                QTableView *table);
     bool eventFilter(QObject *obj, QEvent *event) override;
 private:
@@ -21,7 +21,7 @@ private:
     QMenu *menu;
     QAction *portfolioAction;
     QAction *urlAction;
-    StocksInterface &stocksInterface;
+    BuyRequestInterface &buyRequestInterface;
 };
 
 #endif // LIMITSEVENTFILTER_H

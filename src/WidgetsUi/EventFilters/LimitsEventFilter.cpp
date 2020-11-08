@@ -9,16 +9,16 @@
 #include <QMenu>
 #include <QAction>
 #include <QInputDialog>
-#include <QDesktopServices>
+#include <QKeyEvent>
 
-#include "WidgetsUi/ViewModels/StocksModel.h"
+#include "Application/BuyRequestInterface.h"
 #include "WidgetsUi/ViewModels/StocksLimitsModel.h"
 
-LimitsEventFilter::LimitsEventFilter(StocksInterface &stocksInterface,
+LimitsEventFilter::LimitsEventFilter(BuyRequestInterface &stocksInterface,
                                      QTableView *table) :
     QObject(table),
     table(table),
-    stocksInterface(stocksInterface)
+    buyRequestInterface(stocksInterface)
 {
     table->installEventFilter(this);
     menu = new QMenu;
@@ -47,19 +47,33 @@ bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
                 if(selected == portfolioAction)
                 {
                     auto quantity = QInputDialog::getInt(0, tr("Input quantity"), tr("Quantity"), 1, 1);
-                    stocksInterface.addToPortfolio(ticker, quantity);
+                    buyRequestInterface.addToPortfolio(ticker, quantity);
                 }else if(selected == urlAction)
                 {
-                    const auto stock = stocksInterface.getStock(ticker.data());
-                    if(!stock.url.empty())
-                    {
-                        QDesktopServices::openUrl(QUrl(stock.url.data()));
-                    }
+                    buyRequestInterface.openUrl(ticker.data());
                 }
             }
         }
     }
         break;
+    case QEvent::KeyPress:
+    {
+        QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+        if (ke->key() == Qt::Key_Delete)
+        {
+            auto model = table->model();
+            if(model)
+            {
+                auto index = table->currentIndex();
+                if(index.isValid())
+                {
+                    auto ticker = model->data(model->index(index.row(), StocksLimitsModel::TICKER)).toByteArray();
+                    buyRequestInterface.remove(ticker);
+                }
+            }
+        }
+    }
+    break;
 #if 0
     case QEvent::MouseButtonDblClick:
     {
