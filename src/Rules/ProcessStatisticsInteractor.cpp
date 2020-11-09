@@ -57,6 +57,10 @@ struct CathegoryProcessor
         {return std::any_of(group.list.begin(), group.list.end(),
                             [&portfolioEntry](auto const&id){ return portfolioEntry.ticker == id.ticker;});};
         auto group = std::find_if(entry.list.begin(), entry.list.end(), f);
+        const auto price = converter->convert(
+                    "RUB",
+                    portfolioEntry.currency.data(),
+                    portfolioEntry.sum);
         if(group != entry.list.end())
         {
             auto f = [&group](auto const &gc)
@@ -64,17 +68,19 @@ struct CathegoryProcessor
             auto groupCounter =
                     std::find_if(gcList->list.begin(), gcList->list.end(), f);
             assert(groupCounter != gcList->list.end());
-            groupCounter->sum+= converter->convert(
-                        "RUB",
-                        portfolioEntry.currency.data(),
-                        portfolioEntry.sum);
+            groupCounter->totalSum+= price;
+            groupCounter->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
+            groupCounter->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
+            groupCounter->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
+            groupCounter->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
             groupCounter->tickers.push_back(portfolioEntry.ticker);
         }else
         {
-            unknownCounter->sum+= converter->convert(
-                        "RUB",
-                        portfolioEntry.currency.data(),
-                        portfolioEntry.sum);
+            unknownCounter->totalSum+= price;
+            unknownCounter->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
+            unknownCounter->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
+            unknownCounter->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
+            unknownCounter->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
             unknownCounter->tickers.push_back(portfolioEntry.ticker);
         }
     }
@@ -109,10 +115,15 @@ struct CurrencyProcessor
         auto groupCounter =
                 std::find_if(gcList->list.begin(), gcList->list.end(), f);
         assert(groupCounter != gcList->list.end());
-        groupCounter->sum+= converter->convert(
+        const auto price = converter->convert(
                     "RUB",
                     portfolioEntry.currency.data(),
                     portfolioEntry.sum);
+        groupCounter->totalSum+= price;
+        groupCounter->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
+        groupCounter->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
+        groupCounter->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
+        groupCounter->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
         groupCounter->tickers.push_back(portfolioEntry.ticker);
     }
 };
@@ -145,19 +156,25 @@ struct TrendProcessor
     }
     void operator()(const PortfolioEntry &portfolioEntry)
     {
+        const auto price = converter->convert(
+                    "RUB",
+                    portfolioEntry.currency.data(),
+                    portfolioEntry.sum);
         if(portfolioEntry.derivation > 0)
         {
-            positiveGroup->sum+= converter->convert(
-                        "RUB",
-                        portfolioEntry.currency.data(),
-                        portfolioEntry.sum);
+            positiveGroup->totalSum+= price;
+            positiveGroup->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
+            positiveGroup->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
+            positiveGroup->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
+            positiveGroup->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
             positiveGroup->tickers.push_back(portfolioEntry.ticker);
         }else
         {
-            negativeGroup->sum+= converter->convert(
-                        "RUB",
-                        portfolioEntry.currency.data(),
-                        portfolioEntry.sum);
+            negativeGroup->totalSum+= price;
+            negativeGroup->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
+            negativeGroup->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
+            negativeGroup->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
+            negativeGroup->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
             negativeGroup->tickers.push_back(portfolioEntry.ticker);
         }
     }
@@ -198,10 +215,15 @@ struct PluginsProcessor
         auto groupCounter =
                 std::find_if(gcList->list.begin(), gcList->list.end(), f);
         assert(groupCounter != gcList->list.end());
-        groupCounter->sum+= converter->convert(
+        const auto price = converter->convert(
                     "RUB",
                     portfolioEntry.currency.data(),
                     portfolioEntry.sum);
+        groupCounter->totalSum+= price;
+        groupCounter->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
+        groupCounter->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
+        groupCounter->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
+        groupCounter->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
         groupCounter->tickers.push_back(portfolioEntry.ticker);
     }
 };
@@ -228,24 +250,56 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
             std::for_each(processors.begin(), processors.end(),[&](auto &f){f(portfolioEntry);});
             if(portfolioEntry.derivation >= -1)
             {
-                auto price = converter->convert(
+                const auto price = converter->convert(
                             "RUB",
                             portfolioEntry.currency.data(),
                             portfolioEntry.sum);
-                statistics.totalDerivation+= price / (100 - portfolioEntry.derivation) * portfolioEntry.derivation;
-                statistics.totalDerivationWeek+= price / (100 - portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
-                statistics.totalDerivationMonth+= price / (100 - portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
-                statistics.totalDerivationYear+= price / (100 - portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
+                statistics.totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
+                statistics.totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
+                statistics.totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
+                statistics.totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
             }
         }
     }
-
     statistics.totalSum = converter->convert("RUB", portfolio.sum()).list.front().sum;
+    const auto dayAgo = (statistics.totalSum - statistics.totalDerivation) ;
+    const auto weekAgo = (statistics.totalSum - statistics.totalDerivationWeek);
+    const auto monthAgo = (statistics.totalSum - statistics.totalDerivationMonth);
+    const auto yearAgo = (statistics.totalSum - statistics.totalDerivationYear);
+    statistics.totalDerivationPercent = (dayAgo > 0)
+            ? (statistics.totalDerivation / dayAgo * 100)
+            : 0;
+    statistics.totalDerivationWeekPercent = (weekAgo > 0)
+            ? (statistics.totalDerivationWeek / weekAgo * 100)
+            : 0;
+    statistics.totalDerivationMonthPercent = (monthAgo > 0)
+            ? (statistics.totalDerivationMonth / monthAgo * 100)
+            : 0;
+    statistics.totalDerivationYearPercent = (yearAgo > 0)
+            ? (statistics.totalDerivationYear / yearAgo * 100)
+            : 0;
+
     for(auto &entry : statistics.list)
     {
-        for(auto &groupCounter : entry.list)
+        for(auto &group : entry.list)
         {
-            groupCounter.fractionPercent = groupCounter.sum
+            auto dayAgo = (group.totalSum - group.totalDerivation) ;
+            auto weekAgo = (group.totalSum - group.totalDerivationWeek);
+            auto monthAgo = (group.totalSum - group.totalDerivationMonth);
+            auto yearAgo = (group.totalSum - group.totalDerivationYear);
+            group.totalDerivationPercent = (dayAgo > 0)
+                    ? (group.totalDerivation / dayAgo * 100)
+                    : 0;
+            group.totalDerivationWeekPercent = (weekAgo > 0)
+                    ? (group.totalDerivationWeek / weekAgo * 100)
+                    : 0;
+            group.totalDerivationMonthPercent = (monthAgo > 0)
+                    ? (group.totalDerivationMonth / monthAgo * 100)
+                    : 0;
+            group.totalDerivationYearPercent = (yearAgo > 0)
+                    ? (group.totalDerivationYear / yearAgo * 100)
+                    : 0;
+            group.fractionPercent = group.totalSum
                     / statistics.totalSum
                     * 100;
         }

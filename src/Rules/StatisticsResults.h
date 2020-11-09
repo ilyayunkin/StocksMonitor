@@ -10,13 +10,32 @@
 struct StatisticsGroupCounter
 {
     QString name;
-    float sum;
+    float totalSum;
+
+    float totalDerivation;
+    float totalDerivationWeek;
+    float totalDerivationMonth;
+    float totalDerivationYear;
+
+    float totalDerivationPercent;
+    float totalDerivationWeekPercent;
+    float totalDerivationMonthPercent;
+    float totalDerivationYearPercent;
+
     float fractionPercent;
     std::vector<std::string> tickers;
 
     StatisticsGroupCounter(const QString &name)
         : name(name)
-        , sum(0)
+        , totalSum(0)
+        , totalDerivation(0)
+        , totalDerivationWeek(0)
+        , totalDerivationMonth(0)
+        , totalDerivationYear(0)
+        , totalDerivationPercent(0)
+        , totalDerivationWeekPercent(0)
+        , totalDerivationMonthPercent(0)
+        , totalDerivationYearPercent(0)
         , fractionPercent(0)
     {}
 };
@@ -34,10 +53,17 @@ typedef std::list<StatisticsCounter> StatisticsCounterList;
 struct Statistics
 {
     float totalSum;
+
     float totalDerivation;
     float totalDerivationWeek;
     float totalDerivationMonth;
     float totalDerivationYear;
+
+    float totalDerivationPercent;
+    float totalDerivationWeekPercent;
+    float totalDerivationMonthPercent;
+    float totalDerivationYearPercent;
+
     StatisticsCounterList list;
     Statistics()
         : totalSum(0)
@@ -45,6 +71,10 @@ struct Statistics
         , totalDerivationWeek(0)
         , totalDerivationMonth(0)
         , totalDerivationYear(0)
+        , totalDerivationPercent(0)
+        , totalDerivationWeekPercent(0)
+        , totalDerivationMonthPercent(0)
+        , totalDerivationYearPercent(0)
     {}
 };
 
