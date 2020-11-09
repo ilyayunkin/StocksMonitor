@@ -263,7 +263,12 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                 {
                     QString name;
                     std::string url;
-                    std::tie(name, url) = getA(tableCols.at(NAME));
+                    if(tableCols.at(NAME).contains("href"))
+                    {
+                        std::tie(name, url) = getA(tableCols.at(NAME));
+                    }else{
+                        name = tableCols.at(NAME).data();
+                    }
                     stocks.push_back(Stock(name,
                                            tableCols.at(TICKER).data(),
                                            url,
