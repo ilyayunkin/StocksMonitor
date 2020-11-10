@@ -72,7 +72,6 @@ Application::Application(QObject *parent) :
         throw NoPluginsException();
     }
 
-    StocksInterface *currencyStocksInterface = nullptr;
     for(const auto &plugin : plugins)
     {
         buyRequestDatabases.emplace_back(new BuyRequestDatabase(plugin->getName()));
@@ -94,13 +93,13 @@ Application::Application(QObject *parent) :
                                   plugin->createParser(),
                                   plugin->getUrl()));
     }
-    for(auto &interface :  viewInterfaces)
-    {
-        if(interface.name == "CBRF-Currency")
-        {
-            currencyStocksInterface = &interface.stocksInterfaces;
-        }
-    }
+    auto currencyStocksInterface = [&]{
+        auto cbrfInterface = std::find_if(viewInterfaces.begin(), viewInterfaces.end(),
+                                          [](const auto &interface){return interface.name == "CBRF-Currency";});
+        if(cbrfInterface != viewInterfaces.end())
+            return &(cbrfInterface->stocksInterfaces);
+        return static_cast<StocksInterface *>(nullptr);
+    }();
     converter.reset(new CurrencyConverter("RUB", currencyStocksInterface));
     rules->setConverter(converter.get());
     portfolioDatabase.reset(new PortfolioDatabase);
