@@ -8,8 +8,6 @@
 
 #include <QInputDialog>
 
-#include <QDebug>
-
 CurrencyConverter::CurrencyConverter(const char *const currencyCode,
                                      StocksInterface * const currencyModel) :
     currencyModel(currencyModel),
@@ -22,7 +20,7 @@ CurrencyCountersList CurrencyConverter::convert(const char *const targetCurrency
 {
     assert(targetCurrency);
     assert(strlen(targetCurrency) != 0);
-    qDebug() << __PRETTY_FUNCTION__ << targetCurrency;
+
     CurrencyCountersList convertedCounters;
     for(const auto &currency : counters.list)
     {
@@ -79,13 +77,10 @@ float CurrencyConverter::convert(const char * const targetCurrency,
         {
             cource = getDouble();
         }
-        qDebug() << __PRETTY_FUNCTION__ << currency << cource;
 
-        qDebug() << __PRETTY_FUNCTION__ << currency << value * cource;
         return value * cource;
     }else
     {
-        qDebug() << __PRETTY_FUNCTION__ << currency;
         return value;
     }
 }
