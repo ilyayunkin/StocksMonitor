@@ -171,12 +171,10 @@ bool StatisticsInteractor::isItemInCategory(const StatisticsConfigList::iterator
 {
     for(const auto &group : category->list)
     {
-        for(const auto &item : group.list)
+        if(std::any_of(group.list.begin(), group.list.end(),
+                       [&](auto const &item){return item.ticker == ticker;}))
         {
-            if(item.ticker == ticker)
-            {
-                return true;
-            }
+            return true;
         }
     }
     return false;
