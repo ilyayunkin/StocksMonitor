@@ -64,9 +64,12 @@ void EditPortfolioInteractor::addToPortfolio(const stocksListHandler handler, co
 
 void EditPortfolioInteractor::deletePortfolioEntry(size_t row)
 {
-    auto ticker = entities.portfolio.portfolio.at(row).ticker;
-    std::remove_if(entities.portfolio.portfolio.begin(), entities.portfolio.portfolio.end(),
-                   [&ticker](const PortfolioEntry &e){return ticker == e.ticker;});
+    const auto ticker = entities.portfolio.portfolio.at(row).ticker;
+    const auto afterEnd = std::remove_if(entities.portfolio.portfolio.begin(),
+                                   entities.portfolio.portfolio.end(),
+                                   [&ticker](const PortfolioEntry &e){return ticker == e.ticker;});
+    if(afterEnd != entities.portfolio.portfolio.end())
+        entities.portfolio.portfolio.erase(afterEnd, entities.portfolio.portfolio.end());
     portfolioDb->deleteEntry(ticker.data());
     subscriptions.updatePortfolioView();
 }
