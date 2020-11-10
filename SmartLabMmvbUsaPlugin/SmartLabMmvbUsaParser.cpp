@@ -36,10 +36,10 @@ enum
     DERIVATION_PC_MONTH,
     DERIVATION_PC_YTD,
     DERIVATION_PC_YEAR,
-//    CAPITAL,
+    //    CAPITAL,
     CAPITAL_USD,
     VALUE_DERIVATION,
-//    POS_VAL_DER,
+    //    POS_VAL_DER,
 
     COL_COUNT,
     // Two last columns are icons with site's controls
@@ -207,11 +207,10 @@ float getPercentage(const QByteArray &tableCol)
 }
 
 void SmartLabMmvbUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
-                          StocksList &stocks,
-                          std::string &time)
+                                  StocksList &stocks,
+                                  std::string &time)
 {
     assert(stocks.empty());
-    time = QTime::currentTime().toString().toLatin1().data();
 
     if(m_DownloadeAwholeDocumentdData.isEmpty())
     {
@@ -280,6 +279,10 @@ void SmartLabMmvbUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdDa
                                            getPercentage(tableCols.at(DERIVATION_PC_WEEK)),
                                            getPercentage(tableCols.at(DERIVATION_PC_MONTH)),
                                            getPercentage(tableCols.at(DERIVATION_PC_YEAR))));
+                    if(i == 1)
+                    {
+                        time = tableCols.at(TIME).data();
+                    }
                 }
             }
             ++i;
