@@ -39,7 +39,7 @@ struct PortfolioEntry
         , sum(0)
         , handler(0)
     {};
-    PortfolioEntry(QString plugin, Stock stock,
+    PortfolioEntry(const QString &plugin, const Stock &stock,
                    int quantity,
                    const std::string &currency,
                    stocksListHandler handler)
