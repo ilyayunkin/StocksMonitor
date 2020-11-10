@@ -21,9 +21,9 @@ class StatisticsTreeElement
 public:
     StatisticsTreeElement(const StatisticsModelElementType type,
                           const QString &name);
-    StatisticsTreeElement(const StatisticsConfigList &statisticsConfig);
-    StatisticsTreeElement(const StatisticsCathegoryConfig &statistics);
-    StatisticsTreeElement(const StatisticsGroupConfig &group);
+    explicit StatisticsTreeElement(const StatisticsConfigList &statisticsConfig);
+    explicit StatisticsTreeElement(const StatisticsCathegoryConfig &statistics);
+    explicit StatisticsTreeElement(const StatisticsGroupConfig &group);
     StatisticsTreeElement(const QString &stock, const char *const ticker);
     ~StatisticsTreeElement();
     const QByteArray &getTicker() const {return ticker;}
@@ -51,7 +51,7 @@ class StatisticsModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    StatisticsModel(const StatisticsConfigList &config,
+    explicit StatisticsModel(const StatisticsConfigList &config,
                     QObject *parent = nullptr);
 
     QVariant data(const QModelIndex &index, int role) const override;

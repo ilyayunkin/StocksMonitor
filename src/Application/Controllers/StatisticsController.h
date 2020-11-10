@@ -13,7 +13,7 @@ class AbstractStatisticsConfigView;
 class StatisticsController
 {
 public:
-    StatisticsController(StatisticsInteractor &rules);
+    explicit StatisticsController(StatisticsInteractor &rules);
     void setConfigView(AbstractStatisticsConfigView *configView);
 
     const StatisticsConfigList &getStatisticsConfig()const;

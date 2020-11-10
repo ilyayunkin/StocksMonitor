@@ -46,7 +46,7 @@ class RulesFasade
     AbstractCurrencyConverter *converter = nullptr;
     AbstractDialogs *dialogs = nullptr;
 public:
-    RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb);
+    explicit RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb);
     ~RulesFasade();
 
     const Entities &getEntities(){return entities;}

@@ -87,7 +87,7 @@ void StatisticsTreeElement::reserve(const int s)
 struct StatisticsModelPrivate
 {
     StatisticsTreeElement root;
-    StatisticsModelPrivate(const StatisticsConfigList &config)
+    explicit  StatisticsModelPrivate(const StatisticsConfigList &config)
         : root(config)
     {
     }

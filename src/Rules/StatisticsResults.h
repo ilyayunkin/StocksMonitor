@@ -25,7 +25,7 @@ struct StatisticsGroupCounter
     float fractionPercent;
     std::vector<std::string> tickers;
 
-    StatisticsGroupCounter(const QString &name)
+    explicit StatisticsGroupCounter(const QString &name)
         : name(name)
         , totalSum(0)
         , totalDerivation(0)
@@ -44,7 +44,7 @@ struct StatisticsCounter
 {
     QString name;
     std::vector<StatisticsGroupCounter> list;
-    StatisticsCounter(const QString &name)
+    explicit StatisticsCounter(const QString &name)
         : name(name)
     {}
 };
