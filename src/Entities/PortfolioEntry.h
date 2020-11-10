@@ -25,15 +25,23 @@ struct PortfolioEntry
     std::string currency;
     stocksListHandler handler;
 
-    PortfolioEntry(QString plugin, std::string ticker,
+    PortfolioEntry(const QString &plugin, const std::string &ticker,
                    int quantity, float sellPrice)
         : plugin(plugin)
         , ticker(ticker)
         , quantity(quantity)
+        , price(0)
+        , derivation(0)
+        , derivationWeek(0)
+        , derivationMonth(0)
+        , derivationYear(0)
         , sellPrice(sellPrice)
+        , sum(0)
+        , handler(0)
     {};
     PortfolioEntry(QString plugin, Stock stock,
-                   int quantity, std::string currency,
+                   int quantity,
+                   const std::string &currency,
                    stocksListHandler handler)
         : plugin(plugin)
         , name(stock.name)
@@ -44,6 +52,7 @@ struct PortfolioEntry
         , derivationWeek(stock.derivationWeek)
         , derivationMonth(stock.derivationMonth)
         , derivationYear(stock.derivationYear)
+        , sellPrice(0)
         , sum(price * quantity)
         , currency(currency)
         , handler(handler)
