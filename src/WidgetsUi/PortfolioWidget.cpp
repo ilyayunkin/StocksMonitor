@@ -11,6 +11,7 @@
 
 #include "Application/Application.h"
 #include "ViewModels/PortfolioModel.h"
+#include "EventFilters/PortfolioEventFilter.h"
 
 PortfolioWidget::PortfolioWidget(PortfolioModel *model,
                                  Application &application,
@@ -26,6 +27,7 @@ PortfolioWidget::PortfolioWidget(PortfolioModel *model,
     ui->tableView->setModel(proxyModel);
     ui->tableView->setSortingEnabled(true);
     ui->tableView->sortByColumn(PortfolioModel::NAME, Qt::AscendingOrder);
+    new PortfolioEventFilter(application.getPortfolioInterface(), ui->tableView);
     {
         auto priceUpdater = [this, &application]()
         {ui->sumTextEdit->setText(application.getPortfolioPrice());};

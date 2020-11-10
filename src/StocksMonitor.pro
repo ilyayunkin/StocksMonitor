@@ -45,6 +45,7 @@ SOURCES += \
     Rules/StatisticsInteractor.cpp \
     Rules/Subscriptions.cpp \
     WidgetsUi/Dialogs.cpp \
+    WidgetsUi/EventFilters/PortfolioEventFilter.cpp \
     WidgetsUi/Notifier.cpp \
     WidgetsUi/PopUp/PopUpLayout.cpp \
     WidgetsUi/PortfolioWidget.cpp \
@@ -114,6 +115,7 @@ HEADERS += \
     Presenters/StockHint.h \
     Presenters/CurrencyPresenter.h \
     WidgetsUi/Dialogs.h \
+    WidgetsUi/EventFilters/PortfolioEventFilter.h \
     WidgetsUi/Notifier.h \
     WidgetsUi/PopUp/PopUpLayout.h \
     WidgetsUi/PortfolioWidget.h \

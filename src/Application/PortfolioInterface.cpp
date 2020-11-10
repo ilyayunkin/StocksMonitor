@@ -3,6 +3,9 @@
 #include "Rules/Subscriptions.h"
 #include "Rules/EditPortfolioInteractor.h"
 
+#include <QDesktopServices>
+#include <QUrl>
+
 PortfolioInterface::PortfolioInterface(
         const Entities &entities,
         Subscriptions &subscriptions,
@@ -46,4 +49,11 @@ bool PortfolioInterface::setPortfolioEntryReferencePrice(size_t row, float refer
 void PortfolioInterface::subscribeForChanges(AbstractStocksView *view)
 {
     subscriptions.subscribeForPortfolioChanges(view);
+}
+
+void PortfolioInterface::openUrl(size_t row) const
+{
+    auto entry = entities.portfolio.getPortfolioEntry(row);
+    QDesktopServices::openUrl(
+                QUrl(entities.getUrl(entry.handler, entry.ticker.data()).data()));
 }

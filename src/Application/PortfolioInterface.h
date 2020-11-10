@@ -28,6 +28,7 @@ public:
     bool setPortfolioEntryQuantity(size_t row, int quantity);
     bool setPortfolioEntryReferencePrice(size_t row, float referencePrice);
     void subscribeForChanges(AbstractStocksView *view);
+    void openUrl(size_t row)const;
 private:
     Entities const &entities;
     Subscriptions &subscriptions;
