@@ -220,17 +220,15 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
         for(const auto &portfolioEntry : portfolio.portfolio)
         {
             std::for_each(processors.begin(), processors.end(),[&](auto &f){f(portfolioEntry);});
-            if(portfolioEntry.derivation >= -1)
-            {
-                const auto price = converter->convert(
-                            "RUB",
-                            portfolioEntry.currency.data(),
-                            portfolioEntry.sum);
-                statistics.totalDerivation+= percentDertivationToTotal(price, portfolioEntry.derivation);
-                statistics.totalDerivationWeek+= percentDertivationToTotal(price, portfolioEntry.derivationWeek);
-                statistics.totalDerivationMonth+= percentDertivationToTotal(price, portfolioEntry.derivationMonth);
-                statistics.totalDerivationYear+= percentDertivationToTotal(price, portfolioEntry.derivationYear);
-            }
+
+            const auto price = converter->convert(
+                        "RUB",
+                        portfolioEntry.currency.data(),
+                        portfolioEntry.sum);
+            statistics.totalDerivation+= percentDertivationToTotal(price, portfolioEntry.derivation);
+            statistics.totalDerivationWeek+= percentDertivationToTotal(price, portfolioEntry.derivationWeek);
+            statistics.totalDerivationMonth+= percentDertivationToTotal(price, portfolioEntry.derivationMonth);
+            statistics.totalDerivationYear+= percentDertivationToTotal(price, portfolioEntry.derivationYear);
         }
     }
     statistics.totalSum = converter->convert("RUB", portfolio.sum()).list.front().sum;
