@@ -171,9 +171,6 @@ NameUrlTuple getA(const QByteArray &tableCol)
                 {
                     urlTmp.prepend("https://smart-lab.ru");
                     url = urlTmp.data();
-#if DEBUG_PRINT
-                    qDebug() << url;
-#endif
                 }
             }
         }
@@ -214,8 +211,9 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
     {
         throw PageUnavailibleException();
     }
-
+#if DEBUG_PRINT
     QDateTime begin = QDateTime::currentDateTime();
+#endif
 #if WRITE_DEBUG_FILES
     {
         QFile f(htmlName);
@@ -229,9 +227,10 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
         }
     }
 #endif
+#if DEBUG_PRINT
     QDateTime t1 = QDateTime::currentDateTime();
-
-    QByteArrayList tableRows;
+#endif
+    QByteArrayList tableRows = [&]
     {
         QByteArray table = getTable(m_DownloadeAwholeDocumentdData);
 #if WRITE_DEBUG_FILES
@@ -247,9 +246,12 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
             }
         }
 #endif
-        tableRows = getRows(table);
-    }
+        return  getRows(table);
+    }();
+    stocks.reserve(tableRows.size());
+#if DEBUG_PRINT
     QDateTime t2 = QDateTime::currentDateTime();
+#endif
     {
         int i = 0;
         for(auto &row : tableRows)
@@ -259,6 +261,7 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
             {
                 bool b = false;
                 int rowNum = QString(tableCols[NUM]).toInt(&b);
+                (void)rowNum;
                 if(b)
                 {
                     QString name;
@@ -285,12 +288,14 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
             ++i;
         }
     }
+#if DEBUG_PRINT
     QDateTime t3 = QDateTime::currentDateTime();
+#endif
 #if DEBUG_PRINT
     qDebug() << __PRETTY_FUNCTION__
-             << "Timings: " << begin.secsTo(t1)
-             << t1.secsTo(t2)
-             << t2.secsTo(t3);
+             << "Timings: " << begin.msecsTo(t1)
+             << t1.msecsTo(t2)
+             << t2.msecsTo(t3);
     qDebug() << __PRETTY_FUNCTION__
              << "Stocks count: " << stocks.size();
 #endif

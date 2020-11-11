@@ -31,15 +31,15 @@ enum
     CHART2,
     PRICE,
     DERIVATION_PC,
-//    VALUE,
+    //    VALUE,
     DERIVATION_PC_WEEK,
     DERIVATION_PC_MONTH,
     DERIVATION_PC_YTD,
     DERIVATION_PC_YEAR,
-//    CAPITAL,
+    //    CAPITAL,
     CAPITAL_USD,
-//    VALUE_DERIVATION,
-//    POS_VAL_DER,
+    //    VALUE_DERIVATION,
+    //    POS_VAL_DER,
 
     COL_COUNT,
     // Two last columns are icons with site's controls
@@ -172,9 +172,6 @@ NameUrlTuple getA(const QByteArray &tableCol)
                 {
                     urlTmp.prepend("https://smart-lab.ru");
                     url = urlTmp.data();
-#if DEBUG_PRINT
-                    qDebug() << url;
-#endif
                 }
             }
         }
@@ -207,16 +204,14 @@ float getPercentage(const QByteArray &tableCol)
 }
 
 void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
-                          StocksList &stocks,
-                          std::string &time)
+                              StocksList &stocks,
+                              std::string &time)
 {
     assert(stocks.empty());
     time = QTime::currentTime().toString().toLatin1().data();
 
     if(m_DownloadeAwholeDocumentdData.isEmpty())
-    {
         throw PageUnavailibleException();
-    }
 
     QDateTime begin = QDateTime::currentDateTime();
 #if WRITE_DEBUG_FILES
@@ -232,9 +227,10 @@ void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
         }
     }
 #endif
+#if DEBUG_PRINT
     QDateTime t1 = QDateTime::currentDateTime();
-
-    QByteArrayList tableRows;
+#endif
+    QByteArrayList tableRows = [&]
     {
         QByteArray table = getTable(m_DownloadeAwholeDocumentdData);
 #if WRITE_DEBUG_FILES
@@ -250,9 +246,13 @@ void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
             }
         }
 #endif
-        tableRows = getRows(table);
-    }
+        return getRows(table);
+    }();
+
+    stocks.reserve(tableRows.size());
+#if DEBUG_PRINT
     QDateTime t2 = QDateTime::currentDateTime();
+#endif
     {
         int i = 0;
         for(auto &row : tableRows)
@@ -262,6 +262,7 @@ void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
             {
                 bool b = false;
                 int rowNum = QString(tableCols[NUM]).toInt(&b);
+                (void)rowNum;
                 if(b)
                 {
                     QString name;
@@ -280,12 +281,12 @@ void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
             ++i;
         }
     }
-    QDateTime t3 = QDateTime::currentDateTime();
 #if DEBUG_PRINT
+    QDateTime t3 = QDateTime::currentDateTime();
     qDebug() << __PRETTY_FUNCTION__
-             << "Timings: " << begin.secsTo(t1)
-             << t1.secsTo(t2)
-             << t2.secsTo(t3);
+             << "Timings: " << begin.msecsTo(t1)
+             << t1.msecsTo(t2)
+             << t2.msecsTo(t3);
 #endif
 
     if(stocks.empty())
