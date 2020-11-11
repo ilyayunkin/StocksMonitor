@@ -12,10 +12,11 @@ class CurrencyConverter : public AbstractCurrencyConverter
 public:
     CurrencyCountersList convert(
             const char * const targetCurrency,
-            const CurrencyCountersList &counters){
+            const CurrencyCountersList &counters)const{
+        Q_UNUSED(targetCurrency);
         return counters;
     }
-    float convert(const char * const targetCurrency, const char * const currency, const float value){
+    float convert(const char * const targetCurrency, const char * const currency, const float value)const{
         if(!strcmp(targetCurrency, currency)){
             return value;
         }else{

@@ -11,10 +11,10 @@ public:
     explicit CurrencyConverter(const char *const currencyCode,
                       StocksInterface *const currencyModel = nullptr);
     CurrencyCountersList convert(const char *const targetCurrency,
-                                 const CurrencyCountersList &counters) override;
+                                 const CurrencyCountersList &counters)const override;
     float convert(const char *const targetCurrency,
                               const char *const currency,
-                              const float value) override;
+                              const float value)const override;
 private:
     StocksInterface * const currencyModel;
     const QByteArray currencyCode;

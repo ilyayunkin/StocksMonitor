@@ -22,6 +22,26 @@ void ProcessStatisticsInteractor::setConverter(AbstractCurrencyConverter * const
     this->converter = converter;
 }
 namespace  {
+auto percentDertivationToTotal(float price, float percent)
+{
+    return price / (100 + percent) * percent;
+}
+
+void inlist(StatisticsGroupCounter *groupCounter, const PortfolioEntry &portfolioEntry,
+            const AbstractCurrencyConverter *const converter)
+{
+    const auto price = converter->convert(
+                "RUB",
+                portfolioEntry.currency.data(),
+                portfolioEntry.sum);
+    groupCounter->totalSum+= price;
+    groupCounter->totalDerivation+= percentDertivationToTotal(price, portfolioEntry.derivation);
+    groupCounter->totalDerivationWeek+= percentDertivationToTotal(price, portfolioEntry.derivationWeek);
+    groupCounter->totalDerivationMonth+= percentDertivationToTotal(price, portfolioEntry.derivationMonth);
+    groupCounter->totalDerivationYear+= percentDertivationToTotal(price, portfolioEntry.derivationYear);
+    groupCounter->tickers.push_back(portfolioEntry.ticker);
+}
+
 struct CathegoryProcessor
 {
     const Portfolio &portfolio;
@@ -53,36 +73,23 @@ struct CathegoryProcessor
     }
     void operator()(const PortfolioEntry &portfolioEntry)
     {
-        auto f = [&portfolioEntry](const auto &group)
-        {return std::any_of(group.list.begin(), group.list.end(),
-                            [&portfolioEntry](auto const&id){ return portfolioEntry.ticker == id.ticker;});};
-        auto group = std::find_if(entry.list.begin(), entry.list.end(), f);
-        const auto price = converter->convert(
-                    "RUB",
-                    portfolioEntry.currency.data(),
-                    portfolioEntry.sum);
-        if(group != entry.list.end())
-        {
-            auto f = [&group](auto const &gc)
-            {return gc.name == group->name;};
-            auto groupCounter =
-                    std::find_if(gcList->list.begin(), gcList->list.end(), f);
-            assert(groupCounter != gcList->list.end());
-            groupCounter->totalSum+= price;
-            groupCounter->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
-            groupCounter->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
-            groupCounter->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
-            groupCounter->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
-            groupCounter->tickers.push_back(portfolioEntry.ticker);
-        }else
-        {
-            unknownCounter->totalSum+= price;
-            unknownCounter->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
-            unknownCounter->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
-            unknownCounter->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
-            unknownCounter->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
-            unknownCounter->tickers.push_back(portfolioEntry.ticker);
-        }
+        auto groupCounter =[&]{
+            auto f = [&portfolioEntry](const auto &group)
+            {return std::any_of(group.list.begin(), group.list.end(),
+                                [&portfolioEntry](auto const&id){ return portfolioEntry.ticker == id.ticker;});};
+            auto group = std::find_if(entry.list.begin(), entry.list.end(), f);
+            if(group != entry.list.end())
+            {
+                auto f = [&group](auto const &gc)
+                {return gc.name == group->name;};
+                auto groupCounter =
+                        std::find_if(gcList->list.begin(), gcList->list.end(), f);
+                assert(groupCounter != gcList->list.end());
+                return &*groupCounter;
+            }
+            return unknownCounter;
+        }();
+        inlist(groupCounter, portfolioEntry, converter);
     }
 };
 struct CurrencyProcessor
@@ -115,16 +122,7 @@ struct CurrencyProcessor
         auto groupCounter =
                 std::find_if(gcList->list.begin(), gcList->list.end(), f);
         assert(groupCounter != gcList->list.end());
-        const auto price = converter->convert(
-                    "RUB",
-                    portfolioEntry.currency.data(),
-                    portfolioEntry.sum);
-        groupCounter->totalSum+= price;
-        groupCounter->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
-        groupCounter->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
-        groupCounter->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
-        groupCounter->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
-        groupCounter->tickers.push_back(portfolioEntry.ticker);
+        inlist(&*groupCounter, portfolioEntry, converter);
     }
 };
 struct TrendProcessor
@@ -156,27 +154,10 @@ struct TrendProcessor
     }
     void operator()(const PortfolioEntry &portfolioEntry)
     {
-        const auto price = converter->convert(
-                    "RUB",
-                    portfolioEntry.currency.data(),
-                    portfolioEntry.sum);
-        if(portfolioEntry.derivation > 0)
-        {
-            positiveGroup->totalSum+= price;
-            positiveGroup->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
-            positiveGroup->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
-            positiveGroup->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
-            positiveGroup->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
-            positiveGroup->tickers.push_back(portfolioEntry.ticker);
-        }else
-        {
-            negativeGroup->totalSum+= price;
-            negativeGroup->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
-            negativeGroup->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
-            negativeGroup->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
-            negativeGroup->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
-            negativeGroup->tickers.push_back(portfolioEntry.ticker);
-        }
+        auto groupCounter = (portfolioEntry.derivation > 0)
+                ? positiveGroup
+                : negativeGroup;
+        inlist(groupCounter, portfolioEntry, converter);
     }
 };
 struct PluginsProcessor
@@ -215,16 +196,7 @@ struct PluginsProcessor
         auto groupCounter =
                 std::find_if(gcList->list.begin(), gcList->list.end(), f);
         assert(groupCounter != gcList->list.end());
-        const auto price = converter->convert(
-                    "RUB",
-                    portfolioEntry.currency.data(),
-                    portfolioEntry.sum);
-        groupCounter->totalSum+= price;
-        groupCounter->totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
-        groupCounter->totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
-        groupCounter->totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
-        groupCounter->totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
-        groupCounter->tickers.push_back(portfolioEntry.ticker);
+        inlist(&*groupCounter, portfolioEntry, converter);
     }
 };
 }
@@ -254,30 +226,32 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
                             "RUB",
                             portfolioEntry.currency.data(),
                             portfolioEntry.sum);
-                statistics.totalDerivation+= price / (100 + portfolioEntry.derivation) * portfolioEntry.derivation;
-                statistics.totalDerivationWeek+= price / (100 + portfolioEntry.derivationWeek) * portfolioEntry.derivationWeek;
-                statistics.totalDerivationMonth+= price / (100 + portfolioEntry.derivationMonth) * portfolioEntry.derivationMonth;
-                statistics.totalDerivationYear+= price / (100 + portfolioEntry.derivationYear) * portfolioEntry.derivationYear;
+                statistics.totalDerivation+= percentDertivationToTotal(price, portfolioEntry.derivation);
+                statistics.totalDerivationWeek+= percentDertivationToTotal(price, portfolioEntry.derivationWeek);
+                statistics.totalDerivationMonth+= percentDertivationToTotal(price, portfolioEntry.derivationMonth);
+                statistics.totalDerivationYear+= percentDertivationToTotal(price, portfolioEntry.derivationYear);
             }
         }
     }
     statistics.totalSum = converter->convert("RUB", portfolio.sum()).list.front().sum;
-    const auto dayAgo = (statistics.totalSum - statistics.totalDerivation) ;
-    const auto weekAgo = (statistics.totalSum - statistics.totalDerivationWeek);
-    const auto monthAgo = (statistics.totalSum - statistics.totalDerivationMonth);
-    const auto yearAgo = (statistics.totalSum - statistics.totalDerivationYear);
-    statistics.totalDerivationPercent = (dayAgo > 0)
-            ? (statistics.totalDerivation / dayAgo * 100)
-            : 0;
-    statistics.totalDerivationWeekPercent = (weekAgo > 0)
-            ? (statistics.totalDerivationWeek / weekAgo * 100)
-            : 0;
-    statistics.totalDerivationMonthPercent = (monthAgo > 0)
-            ? (statistics.totalDerivationMonth / monthAgo * 100)
-            : 0;
-    statistics.totalDerivationYearPercent = (yearAgo > 0)
-            ? (statistics.totalDerivationYear / yearAgo * 100)
-            : 0;
+    {
+        const auto dayAgo = (statistics.totalSum - statistics.totalDerivation) ;
+        const auto weekAgo = (statistics.totalSum - statistics.totalDerivationWeek);
+        const auto monthAgo = (statistics.totalSum - statistics.totalDerivationMonth);
+        const auto yearAgo = (statistics.totalSum - statistics.totalDerivationYear);
+        statistics.totalDerivationPercent = (dayAgo > 0)
+                ? (statistics.totalDerivation / dayAgo * 100)
+                : 0;
+        statistics.totalDerivationWeekPercent = (weekAgo > 0)
+                ? (statistics.totalDerivationWeek / weekAgo * 100)
+                : 0;
+        statistics.totalDerivationMonthPercent = (monthAgo > 0)
+                ? (statistics.totalDerivationMonth / monthAgo * 100)
+                : 0;
+        statistics.totalDerivationYearPercent = (yearAgo > 0)
+                ? (statistics.totalDerivationYear / yearAgo * 100)
+                : 0;
+    }
 
     for(auto &entry : statistics.list)
     {

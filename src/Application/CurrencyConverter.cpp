@@ -16,7 +16,7 @@ CurrencyConverter::CurrencyConverter(const char *const currencyCode,
 }
 
 CurrencyCountersList CurrencyConverter::convert(const char *const targetCurrency,
-                                                const CurrencyCountersList &counters)
+                                                const CurrencyCountersList &counters) const
 {
     assert(targetCurrency);
     assert(strlen(targetCurrency) != 0);
@@ -35,7 +35,7 @@ CurrencyCountersList CurrencyConverter::convert(const char *const targetCurrency
 
 float CurrencyConverter::convert(const char * const targetCurrency,
                                  const char * const currency,
-                                 const float value)
+                                 const float value) const
 {
     assert(targetCurrency);
     assert(strlen(targetCurrency) != 0);
