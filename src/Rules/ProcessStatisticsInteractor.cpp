@@ -265,7 +265,7 @@ void ProcessStatisticsInteractor::processCategoies(Statistics &statistics) const
     for(const auto &portfolioEntry : portfolio.portfolio)
     {
         std::for_each(processors.begin(), processors.end(),
-                      [&](auto &f){(*f)(portfolioEntry);});
+                      [&](const auto &f){(*f)(portfolioEntry);});
 
         const auto price = converter->convert(
                     "RUB",
@@ -277,5 +277,5 @@ void ProcessStatisticsInteractor::processCategoies(Statistics &statistics) const
         statistics.totalDerivationYear+= percentDertivationToTotal(price, portfolioEntry.derivationYear);
     }
     std::for_each(processors.begin(), processors.end(),
-                  [&](auto &f){statistics.list.push_back((*f).getCounter());});
+                  [&](const auto &f){statistics.list.push_back((*f).getCounter());});
 }
