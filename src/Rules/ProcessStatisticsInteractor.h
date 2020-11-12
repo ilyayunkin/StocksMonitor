@@ -22,6 +22,7 @@ private:
     const Portfolio &portfolio;
     const StatisticsConfigList &statisticsConfig;
     AbstractCurrencyConverter * converter = nullptr;
+    void processCategoies(Statistics &statistics) const;
 };
 
 #endif // ProcessStatisticsInteractor_H

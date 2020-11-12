@@ -4,7 +4,6 @@
 #include <QString>
 
 #include <vector>
-#include <list>
 #include <string>
 
 struct StatisticsGroupCounter
@@ -48,7 +47,7 @@ struct StatisticsCounter
         : name(name)
     {}
 };
-typedef std::list<StatisticsCounter> StatisticsCounterList;
+typedef std::vector<StatisticsCounter> StatisticsCounterList;
 
 struct Statistics
 {
