@@ -74,7 +74,7 @@ public:
     void remove(StatisticsTreeElement *item);
 private:
     std::shared_ptr<StatisticsModelPrivate> pimpl;
-    QModelIndex index(const StatisticsTreeElement * const item);
+    QModelIndex index(const StatisticsTreeElement * const item) const;
 };
 
 #endif // STATISTICSMODEL_H

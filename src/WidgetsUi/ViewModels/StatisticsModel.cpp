@@ -293,7 +293,7 @@ QVariant StatisticsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QModelIndex StatisticsModel::index(const StatisticsTreeElement *const item)
+QModelIndex StatisticsModel::index(const StatisticsTreeElement *const item) const
 {
     if(item == nullptr)
     {
