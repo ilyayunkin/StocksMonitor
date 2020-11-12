@@ -130,8 +130,8 @@ struct CathegoryProcessor : AbstractCategoryProcessor
         gcList.list.emplace_back("UNKNOWN");
         unknownCounter = &gcList.list.back();
     }
-    StatisticsCounter getCounter() {return gcList;}
-    void operator()(const PortfolioEntry &portfolioEntry)
+    StatisticsCounter getCounter() override {return gcList;}
+    void operator()(const PortfolioEntry &portfolioEntry) override
     {
         auto groupCounter =[&]{
             auto f = [&portfolioEntry](const auto &group)
@@ -172,8 +172,8 @@ struct CurrencyProcessor : AbstractCategoryProcessor
             gcList.list.emplace_back(currency.currency.data());
         }
     }
-    StatisticsCounter getCounter() {return gcList;}
-    void operator()(const PortfolioEntry &portfolioEntry)
+    StatisticsCounter getCounter() override {return gcList;}
+    void operator()(const PortfolioEntry &portfolioEntry) override
     {
         auto f = [&portfolioEntry](auto const &gc)
         {return gc.name == portfolioEntry.currency.data();};
@@ -205,8 +205,8 @@ struct TrendProcessor : AbstractCategoryProcessor
         gcList.list.emplace_back("Positive");
         this->positiveGroup = &gcList.list.back();
     }
-    StatisticsCounter getCounter() {return gcList;}
-    void operator()(const PortfolioEntry &portfolioEntry)
+    StatisticsCounter getCounter() override {return gcList;}
+    void operator()(const PortfolioEntry &portfolioEntry) override
     {
         auto *groupCounter = (portfolioEntry.derivation > 0)
                 ? positiveGroup
@@ -238,8 +238,8 @@ struct PluginsProcessor : AbstractCategoryProcessor
             gcList.list.emplace_back(plugin);
         }
     }
-    StatisticsCounter getCounter() {return gcList;}
-    void operator()(const PortfolioEntry &portfolioEntry)
+    StatisticsCounter getCounter() override {return gcList;}
+    void operator()(const PortfolioEntry &portfolioEntry) override
     {
         auto f = [&portfolioEntry](auto const &gc)
         {return gc.name == portfolioEntry.plugin;};
