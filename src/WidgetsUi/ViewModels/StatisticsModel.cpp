@@ -106,7 +106,7 @@ int StatisticsModel::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
-StatisticsModelElementType StatisticsModel::getType(const QModelIndex &index)
+StatisticsModelElementType StatisticsModel::getType(const QModelIndex &index) const
 {
     if(index.isValid())
     {
@@ -116,7 +116,7 @@ StatisticsModelElementType StatisticsModel::getType(const QModelIndex &index)
     return StatisticsModelElementType::NONE;
 }
 
-StatisticsTreeElement *StatisticsModel::getTreeElement(const QModelIndex &index)
+StatisticsTreeElement *StatisticsModel::getTreeElement(const QModelIndex &index) const
 {
     assert(index.isValid());
 

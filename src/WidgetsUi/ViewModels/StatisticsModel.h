@@ -64,8 +64,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    StatisticsModelElementType getType(const QModelIndex &index);
-    StatisticsTreeElement *getTreeElement(const QModelIndex &index);
+    StatisticsModelElementType getType(const QModelIndex &index) const;
+    StatisticsTreeElement *getTreeElement(const QModelIndex &index) const;
 
     void addCategory(const QString &name);
     void addGroup(StatisticsTreeElement *parentItem, const QString &name);
