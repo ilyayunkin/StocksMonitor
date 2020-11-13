@@ -13,14 +13,20 @@ public:
     CurrencyCountersList convert(
             const char * const targetCurrency,
             const CurrencyCountersList &counters)const{
-        Q_UNUSED(targetCurrency);
-        return counters;
+        CurrencyCountersList ret;
+        for(auto &currency : counters.list)
+        {
+            ret.add(targetCurrency, convert(targetCurrency, currency.currency.data(), currency.sum));
+        }
+        return ret;
     }
     float convert(const char * const targetCurrency, const char * const currency, const float value)const{
         if(!strcmp(targetCurrency, currency)){
             return value;
-        }else{
+        }else if(QString(targetCurrency) == "RUB"){
             return value * 2;
+        }else{
+            return value / 2;
         }
     }
 };
@@ -48,6 +54,7 @@ private slots:
     void statisticsIncludesCurrencyCategory();
     void statisticsIncludesPluginsCategory();
     void statisticsIncludesTrendCategory();
+    void totalStatisticsIsEqualToSumOfGroupsStatistics();
 };
 
 ProcessStatisticsInteractorTest::ProcessStatisticsInteractorTest()
@@ -342,14 +349,7 @@ void ProcessStatisticsInteractorTest::statisticsIncludesCurrencyCategory()
     const auto result = interactor.processStatistics();
     const auto resultCatIt = std::find_if(result.list.begin(), result.list.end(),
                                           [&](const auto &category){return category.name == "Currency";});
-    for(auto &cat : result.list)
-    {
-        qDebug() <<__PRETTY_FUNCTION__ << __LINE__ << cat.name;
-        for(auto &g : cat.list)
-        {
-            qDebug() <<__PRETTY_FUNCTION__ << __LINE__ << g.name;
-        }
-    }
+
     QVERIFY(resultCatIt != result.list.end());
     const auto &resultCategory = *resultCatIt;
     {
@@ -422,14 +422,7 @@ void ProcessStatisticsInteractorTest::statisticsIncludesPluginsCategory()
     const auto result = interactor.processStatistics();
     const auto resultCatIt = std::find_if(result.list.begin(), result.list.end(),
                                           [&](const auto &category){return category.name == "Plugins";});
-    for(auto &cat : result.list)
-    {
-        qDebug() <<__PRETTY_FUNCTION__ << __LINE__ << cat.name;
-        for(auto &g : cat.list)
-        {
-            qDebug() <<__PRETTY_FUNCTION__ << __LINE__ << g.name;
-        }
-    }
+
     QVERIFY(resultCatIt != result.list.end());
     const auto &resultCategory = *resultCatIt;
     {
@@ -502,14 +495,7 @@ void ProcessStatisticsInteractorTest::statisticsIncludesTrendCategory()
     const auto result = interactor.processStatistics();
     const auto resultCatIt = std::find_if(result.list.begin(), result.list.end(),
                                           [&](const auto &category){return category.name == "Trend";});
-    for(auto &cat : result.list)
-    {
-        qDebug() <<__PRETTY_FUNCTION__ << __LINE__ << cat.name;
-        for(auto &g : cat.list)
-        {
-            qDebug() <<__PRETTY_FUNCTION__ << __LINE__ << g.name;
-        }
-    }
+
     QVERIFY(resultCatIt != result.list.end());
     const auto &resultCategory = *resultCatIt;
     {
@@ -533,6 +519,73 @@ void ProcessStatisticsInteractorTest::statisticsIncludesTrendCategory()
         QCOMPARE(g2.tickers.size(), 1);
         QVERIFY(std::find(g2.tickers.begin(), g2.tickers.end(), "ST4")
                 != g2.tickers.end());
+    }
+}
+
+void ProcessStatisticsInteractorTest::totalStatisticsIsEqualToSumOfGroupsStatistics()
+{
+    cleanupTestCase();
+    const auto plugin1 = "Plugin1";
+    const auto plugin2 = "Plugin2";
+    const auto plugin1C = "RUB";
+    const auto plugin2C = "USD";
+    portfolio.portfolio.push_back(
+                PortfolioEntry(plugin1,
+                               Stock(QString("Stock1"), "ST1", "", 241, +34, -0.65, + 26, -0.5),
+                               1,
+                               plugin1C,
+                               1));
+    portfolio.portfolio.push_back(
+                PortfolioEntry(plugin1,
+                               Stock(QString("Stock2"), "ST2", "", 681, +23, -9, +83, -1),
+                               1,
+                               plugin1C,
+                               1));
+    portfolio.portfolio.push_back(
+                PortfolioEntry(plugin2,
+                               Stock(QString("Stock3"), "ST3", "", 2436, +0.00005, -56, + 7, -0.8),
+                               1,
+                               plugin2C,
+                               1));
+    portfolio.portfolio.push_back(
+                PortfolioEntry(plugin2,
+                               Stock(QString("Stock4"), "ST4", "", 1765, - 0.0001, -8, + 20, -34),
+                               1,
+                               plugin2C,
+                               1));
+
+    StatisticsCathegoryConfig cat1("Cat1");
+
+    StatisticsGroupConfig group1("G1");
+    group1.list.push_back(StockId("ST2", ""));
+    cat1.list.push_back(group1);
+
+    StatisticsGroupConfig group2("G2");
+    group2.list.push_back(StockId("ST4", ""));
+    cat1.list.push_back(group2);
+
+    statisticsConfig.push_back(cat1);
+    const auto result = interactor.processStatistics();
+    for(const auto &cathegory : result.list)
+    {
+        float sum = 0;
+        float derrivationDay = 0;
+        float derrivationWeek = 0;
+        float derrivationMonth = 0;
+        float derrivationYear = 0;
+        for(const auto &group : cathegory.list)
+        {
+            sum+= group.totalSum;
+            derrivationDay+= group.totalDerivation;
+            derrivationWeek+= group.totalDerivationWeek;
+            derrivationMonth+= group.totalDerivationMonth;
+            derrivationYear+= group.totalDerivationYear;
+        }
+        QVERIFY(abs(result.totalDerivation - derrivationDay) < cathegory.list.size());
+        QVERIFY(abs(result.totalDerivationWeek - derrivationWeek) < cathegory.list.size());
+        QVERIFY(abs(result.totalDerivationMonth - derrivationMonth) < cathegory.list.size());
+        QVERIFY(abs(result.totalDerivationYear - derrivationYear) < cathegory.list.size());
+        QVERIFY(abs(result.totalSum - sum) < cathegory.list.size());
     }
 }
 
