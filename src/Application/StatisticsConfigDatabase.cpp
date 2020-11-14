@@ -2,10 +2,10 @@
 #include "ExceptionClasses.h"
 
 namespace  {
-const auto categoryTableName = "category";
-const auto groupTableName = "groups";
-const auto itemsTableName = "items";
-const auto dbName = "StatisticsConfig";
+constexpr auto categoryTableName = "category";
+constexpr auto groupTableName = "groups";
+constexpr auto itemsTableName = "items";
+constexpr auto dbName = "StatisticsConfig";
 }
 
 QStringList StatisticsConfigDatabase::getAllCategories()const
