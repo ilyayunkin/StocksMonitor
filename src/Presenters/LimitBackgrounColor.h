@@ -13,6 +13,6 @@ Color colorForDistance(float d);
 Color colorForDistance(const StockLimit &limit);
 
 QBrush brushForColor(const Color c);
-};
+}
 
 #endif // LIMITBACKGROUNCOLOR_H

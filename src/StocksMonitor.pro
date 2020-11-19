@@ -1,10 +1,15 @@
-QT       += core gui network
+QT += core gui network
 QT += sql
 QT += multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
+QMAKE_CXXFLAGS+= -pedantic-errors
+QMAKE_CXXFLAGS+= -Wformat=2
+QMAKE_CXXFLAGS+= -Wlogical-op -Wshift-overflow=2 -Wduplicated-cond
+QMAKE_CXXFLAGS+= -Wcast-qual -Wcast-align
+#QMAKE_CXXFLAGS+= -Wfloat-equal -Wconversion
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings

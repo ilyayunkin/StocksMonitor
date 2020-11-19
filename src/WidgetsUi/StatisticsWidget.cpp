@@ -234,4 +234,4 @@ void StatisticsWidget::removeSelectedConfigTreeElement()
     case StatisticsModelElementType::NONE:
         break;
     }
-};
+}

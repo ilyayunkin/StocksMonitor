@@ -228,7 +228,7 @@ void ProcessStatisticsInteractorTest::stocksThatDontFallIntoAnyGroupFallIntoUnkn
                                         [&](const auto &group){return group.name == "UNKNOWN";});
     QVERIFY(unknownIt != resultCategory.list.end());
     const auto &unknownGroup = *unknownIt;
-    QCOMPARE(unknownGroup.tickers.size(), 2);
+    QCOMPARE(unknownGroup.tickers.size(), 2u);
     QVERIFY(std::find(unknownGroup.tickers.begin(), unknownGroup.tickers.end(), "ST1")
             != unknownGroup.tickers.end());
     QVERIFY(std::find(unknownGroup.tickers.begin(), unknownGroup.tickers.end(), "ST3")
@@ -288,7 +288,7 @@ void ProcessStatisticsInteractorTest::stocksFallIntoGroupSpecifiedTheirTickers()
                                        [&](const auto &group){return group.name == group1.name;});
         QVERIFY(g1it != resultCategory.list.end());
         const auto &g1 = *g1it;
-        QCOMPARE(g1.tickers.size(), 1);
+        QCOMPARE(g1.tickers.size(), 1u);
         QVERIFY(std::find(g1.tickers.begin(), g1.tickers.end(), "ST2")
                 != g1.tickers.end());
     }
@@ -297,7 +297,7 @@ void ProcessStatisticsInteractorTest::stocksFallIntoGroupSpecifiedTheirTickers()
                                        [&](const auto &group){return group.name == group2.name;});
         QVERIFY(g2it != resultCategory.list.end());
         const auto &g2 = *g2it;
-        QCOMPARE(g2.tickers.size(), 1);
+        QCOMPARE(g2.tickers.size(), 1u);
         QVERIFY(std::find(g2.tickers.begin(), g2.tickers.end(), "ST4")
                 != g2.tickers.end());
     }
@@ -357,7 +357,7 @@ void ProcessStatisticsInteractorTest::statisticsIncludesCurrencyCategory()
                                        [&](const auto &group){return group.name == plugin1C;});
         QVERIFY(g1it != resultCategory.list.end());
         const auto &g1 = *g1it;
-        QCOMPARE(g1.tickers.size(), 2);
+        QCOMPARE(g1.tickers.size(), 2u);
         QVERIFY(std::find(g1.tickers.begin(), g1.tickers.end(), "ST1")
                 != g1.tickers.end());
         QVERIFY(std::find(g1.tickers.begin(), g1.tickers.end(), "ST2")
@@ -368,7 +368,7 @@ void ProcessStatisticsInteractorTest::statisticsIncludesCurrencyCategory()
                                        [&](const auto &group){return group.name == plugin2C;});
         QVERIFY(g2it != resultCategory.list.end());
         const auto &g2 = *g2it;
-        QCOMPARE(g2.tickers.size(), 2);
+        QCOMPARE(g2.tickers.size(), 2u);
         QVERIFY(std::find(g2.tickers.begin(), g2.tickers.end(), "ST3")
                 != g2.tickers.end());
         QVERIFY(std::find(g2.tickers.begin(), g2.tickers.end(), "ST4")
@@ -430,7 +430,7 @@ void ProcessStatisticsInteractorTest::statisticsIncludesPluginsCategory()
                                        [&](const auto &group){return group.name == plugin1;});
         QVERIFY(g1it != resultCategory.list.end());
         const auto &g1 = *g1it;
-        QCOMPARE(g1.tickers.size(), 2);
+        QCOMPARE(g1.tickers.size(), 2u);
         QVERIFY(std::find(g1.tickers.begin(), g1.tickers.end(), "ST1")
                 != g1.tickers.end());
         QVERIFY(std::find(g1.tickers.begin(), g1.tickers.end(), "ST2")
@@ -441,7 +441,7 @@ void ProcessStatisticsInteractorTest::statisticsIncludesPluginsCategory()
                                        [&](const auto &group){return group.name == plugin2;});
         QVERIFY(g2it != resultCategory.list.end());
         const auto &g2 = *g2it;
-        QCOMPARE(g2.tickers.size(), 2);
+        QCOMPARE(g2.tickers.size(), 2u);
         QVERIFY(std::find(g2.tickers.begin(), g2.tickers.end(), "ST3")
                 != g2.tickers.end());
         QVERIFY(std::find(g2.tickers.begin(), g2.tickers.end(), "ST4")
@@ -503,7 +503,7 @@ void ProcessStatisticsInteractorTest::statisticsIncludesTrendCategory()
                                        [&](const auto &group){return group.name == "Positive";});
         QVERIFY(g1it != resultCategory.list.end());
         const auto &g1 = *g1it;
-        QCOMPARE(g1.tickers.size(), 3);
+        QCOMPARE(g1.tickers.size(), 3u);
         QVERIFY(std::find(g1.tickers.begin(), g1.tickers.end(), "ST1")
                 != g1.tickers.end());
         QVERIFY(std::find(g1.tickers.begin(), g1.tickers.end(), "ST2")
@@ -516,7 +516,7 @@ void ProcessStatisticsInteractorTest::statisticsIncludesTrendCategory()
                                        [&](const auto &group){return group.name == "Negative";});
         QVERIFY(g2it != resultCategory.list.end());
         const auto &g2 = *g2it;
-        QCOMPARE(g2.tickers.size(), 1);
+        QCOMPARE(g2.tickers.size(), 1u);
         QVERIFY(std::find(g2.tickers.begin(), g2.tickers.end(), "ST4")
                 != g2.tickers.end());
     }
