@@ -14,34 +14,16 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="3">
-    <widget class="QLabel" name="stockLabel">
-     <property name="text">
-      <string>Stock</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QComboBox" name="stocksComboBox">
+   <item row="2" column="2">
+    <widget class="QComboBox" name="pluginsComboBox">
      <property name="enabled">
       <bool>false</bool>
      </property>
-    </widget>
-   </item>
-   <item row="2" column="4">
-    <widget class="QPushButton" name="addButton">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="text">
-      <string>Add</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="7">
-    <widget class="QPushButton" name="processButton">
-     <property name="text">
-      <string>Process</string>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
     </widget>
    </item>
@@ -52,28 +34,25 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="9">
-    <widget class="QTreeView" name="treeView"/>
-   </item>
-   <item row="2" column="2">
-    <widget class="QComboBox" name="pluginsComboBox">
-     <property name="enabled">
-      <bool>false</bool>
+   <item row="2" column="6">
+    <widget class="QPushButton" name="processButton">
+     <property name="text">
+      <string>Process</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="6">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="2" column="3">
+    <widget class="QComboBox" name="stocksComboBox">
+     <property name="enabled">
+      <bool>false</bool>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>508</width>
-       <height>20</height>
-      </size>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>3</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-    </spacer>
+    </widget>
    </item>
    <item row="2" column="5">
     <widget class="QPushButton" name="removeButton">
@@ -82,6 +61,26 @@
      </property>
      <property name="text">
       <string>Remove</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="8">
+    <widget class="QTreeView" name="treeView"/>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLabel" name="stockLabel">
+     <property name="text">
+      <string>Stock</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QPushButton" name="addButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Add</string>
      </property>
     </widget>
    </item>
