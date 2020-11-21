@@ -72,56 +72,29 @@ Qt::ItemFlags PortfolioModel::flags(const QModelIndex &index) const
 
 QVariant PortfolioModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    QVariant ret;
-    if (role == Qt::DisplayRole)
-    {
-        if (orientation == Qt::Horizontal)
-        {
-            switch (section) {
-            case NAME:
-                ret = tr("Name");
-                break;
-            case QUANTITY:
-                ret = tr("Quantity");
-                break;
-            case TICKER:
-                ret = tr("TICKER");
-                break;
-            case PRICE_BASE_CURRENCY:
-                ret = tr("Price");
-                break;
-            case CURRENCY:
-                ret = tr("Currency");
-                break;
-            case SUM:
-                ret = tr("Sum");
-                break;
-            case DERIVATION:
-                ret = tr("%\nDay");
-                break;
-            case DERIVATION_WEEK:
-                ret = tr("%\nWeek");
-                break;
-            case DERIVATION_MONTH:
-                ret = tr("%\nMonth");
-                break;
-            case DERIVATION_YEAR:
-                ret = tr("%\nYear");
-                break;
-            case SELL_PRICE:
-                ret = tr("Sell price");
-                break;
-            default:
-                break;
-            }
+    if ((role == Qt::DisplayRole) && (orientation == Qt::Horizontal)){
+        if((section >= NAME) && (section < COL_COUNT)){
+            static const QString headers[] ={
+                tr("Name")
+                , tr("TICKER")
+                , tr("Quantity")
+                , tr("Price")
+                , tr("Currency")
+                , tr("Sum")
+                , tr("%\nDay")
+                , tr("%\nWeek")
+                , tr("%\nMonth")
+                , tr("%\nYear")
+                , tr("Sell price")
+            };
+            return headers[section];
         }
     }
-    return ret;
+    return QVariant();
 }
 
 QVariant PortfolioModel::data(const QModelIndex &index, int role) const
 {
-    QVariant ret;
     const int row = index.row();
     const int col = index.column();
     assert(row >= 0);
@@ -129,103 +102,56 @@ QVariant PortfolioModel::data(const QModelIndex &index, int role) const
 
     const auto uRow = static_cast<size_t>(row);
 
-    if ((role == Qt::DisplayRole) || (role == Qt::EditRole))
-    {
-        if(uRow < (size = portfolioInterface.size()))
-        {
+    if ((role == Qt::DisplayRole) || (role == Qt::EditRole)){
+        if(uRow < (size = portfolioInterface.size())){
             const PortfolioEntry &entry = portfolioInterface.getPortfolioEntry(row);
             switch (col) {
-            case NAME:
-                ret = entry.name;
-                break;
-            case TICKER:
-                ret = entry.ticker.data();
-                break;
-            case QUANTITY:
-                ret = entry.quantity;
-                break;
-            case PRICE_BASE_CURRENCY:
-                ret = entry.price;
-                break;
-            case CURRENCY:
-                ret = entry.currency.data();
-                break;
-            case SUM:
-                ret = entry.sum;
-                break;
-            case DERIVATION:
-                ret = entry.derivation;
-                break;
-            case DERIVATION_WEEK:
-                ret = entry.derivationWeek;
-                break;
-            case DERIVATION_MONTH:
-                ret = entry.derivationMonth;
-                break;
-            case DERIVATION_YEAR:
-                ret = entry.derivationYear;
-                break;
-            case SELL_PRICE:
-                ret = entry.sellPrice;
-                break;
-            default:
-                break;
+            case NAME: return entry.name;
+            case TICKER: return entry.ticker.data();
+            case QUANTITY: return entry.quantity;
+            case PRICE_BASE_CURRENCY: return entry.price;
+            case CURRENCY: return entry.currency.data();
+            case SUM: return entry.sum;
+            case DERIVATION: return entry.derivation;
+            case DERIVATION_WEEK: return entry.derivationWeek;
+            case DERIVATION_MONTH: return entry.derivationMonth;
+            case DERIVATION_YEAR: return entry.derivationYear;
+            case SELL_PRICE: return entry.sellPrice;
+            default: break;
             }
         }
-    }
-    if (role == Qt::ToolTipRole)
-    {
-        if(uRow < (size = portfolioInterface.size()))
-        {
+    }else if (role == Qt::ToolTipRole){
+        if(uRow < (size = portfolioInterface.size())){
             auto stock = portfolioInterface.getStock(row);
-            ret = StockHint::getHint(stock);
+            return StockHint::getHint(stock);
         }
-    }
-    if (role == Qt::BackgroundRole)
-    {
-        if(uRow < (size = portfolioInterface.size()) && col == SELL_PRICE)
-        {
+    }else if (role == Qt::BackgroundRole){
+        if(uRow < (size = portfolioInterface.size()) && col == SELL_PRICE){
             const PortfolioEntry &entry = portfolioInterface.getPortfolioEntry(row);
             if(entry.sellPrice > 0
-                    && entry.price >= entry.sellPrice)
-            {
-                ret = QBrush(Qt::red);
+                    && entry.price >= entry.sellPrice){
+                return QBrush(Qt::red);
             }
         }
-    }
-    if (role == Qt::ForegroundRole)
-    {
-        if(uRow < (size = portfolioInterface.size()))
-        {
+    }else if (role == Qt::ForegroundRole){
+        if(uRow < (size = portfolioInterface.size())){
             const PortfolioEntry &entry = portfolioInterface.getPortfolioEntry(row);
-            float number = 0.0;
-            switch (col) {
-            case DERIVATION:
-                number = entry.derivation;
-                break;
-            case DERIVATION_WEEK:
-                number = entry.derivationWeek;
-                break;
-            case DERIVATION_MONTH:
-                number = entry.derivationMonth;
-                break;
-            case DERIVATION_YEAR:
-                number = entry.derivationYear;
-                break;
-            default:
-                break;
-            }
-            if(number < 0.)
-            {
+            float number = [&]{
+                switch (col) {
+                case DERIVATION: return entry.derivation;
+                case DERIVATION_WEEK: return entry.derivationWeek;
+                case DERIVATION_MONTH: return entry.derivationMonth;
+                case DERIVATION_YEAR: return entry.derivationYear;
+                default: return 0.f;
+                }}();
+            if(number < 0.){
                 return QBrush(Qt::GlobalColor::darkRed);
-            }
-            if(number > 0.)
-            {
+            }else if(number > 0.){
                 return QBrush(Qt::GlobalColor::darkGreen);
             }
         }
     }
-    return ret;
+    return QVariant();
 }
 
 bool PortfolioModel::setData(const QModelIndex &index, const QVariant &value, int role)

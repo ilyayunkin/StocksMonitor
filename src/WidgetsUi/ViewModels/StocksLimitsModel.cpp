@@ -54,89 +54,54 @@ QVariant StocksLimitsModel::headerData(int section,
                                        Qt::Orientation orientation,
                                        int role) const
 {
-    QVariant ret;
-    if (role == Qt::DisplayRole)
-    {
-        if (orientation == Qt::Horizontal)
-        {
-            switch (section) {
-            case NAME:
-                ret = tr("Name");
-                break;
-            case TICKER:
-                ret = tr("TICKER");
-                break;
-            case PRICE:
-                ret = tr("Price");
-                break;
-            case BASE_PRICE:
-                ret = tr("Base Price");
-                break;
-            case DISTANCE:
-                ret = tr("Distance");
-                break;
-            default:
-                break;
-            }
+    if ((role == Qt::DisplayRole) && (orientation == Qt::Horizontal)){
+        if((section >= NAME) && (section < COL_COUNT)){
+            static const QString headers[] ={
+                tr("Name")
+                , tr("TICKER")
+                , tr("Price")
+                , tr("Base Price")
+                , tr("Distance")
+            };
+            return headers[section];
         }
     }
-    return ret;
+    return QVariant();
 }
 QVariant StocksLimitsModel::data(const QModelIndex &index, int role) const
 {
-    QVariant ret;
     int row = index.row();
     int col = index.column();
     assert(row >= 0);
     assert(col >= 0);
 
     const auto uRow = static_cast<size_t>(row);
-    if ((role == Qt::DisplayRole) || (role == Qt::EditRole))
-    {
-        if(uRow < (size = stockLimits.size()))
-        {
+    if ((role == Qt::DisplayRole) || (role == Qt::EditRole)){
+        if(uRow < (size = stockLimits.size())){
             const StockLimit &limit = stockLimits.getStockBuyRequest(row);
             switch (col) {
-            case NAME:
-                ret = limit.name;
-                break;
-            case TICKER:
-                ret = limit.ticker.data();
-                break;
-            case PRICE:
-                ret = limit.price;
-                break;
-            case BASE_PRICE:
-                ret = limit.basePrice;
-                break;
-            case DISTANCE:
-                ret = (limit.price - limit.basePrice) / limit.basePrice;
-                break;
-            default:
-                break;
+            case NAME: return limit.name;
+            case TICKER: return limit.ticker.data();
+            case PRICE: return limit.price;
+            case BASE_PRICE: return limit.basePrice;
+            case DISTANCE: return (limit.price - limit.basePrice) / limit.basePrice;
+            default: break;
             }
         }
-    }
-    if (role == Qt::BackgroundRole)
-    {
-        if(uRow < (size = stockLimits.size()))
-        {
+    }else if (role == Qt::BackgroundRole){
+        if(uRow < (size = stockLimits.size())){
             const StockLimit &limit = stockLimits.getStockBuyRequest(row);
-            ret = LimitBackgrounColor::brushForColor(
+            return LimitBackgrounColor::brushForColor(
                         LimitBackgrounColor::colorForDistance(
                             (limit.price - limit.basePrice) / limit.basePrice));
         }
-    }
-    if (role == Qt::ToolTipRole)
-    {
-        if(uRow < (size = stockLimits.size()))
-        {
+    }else if (role == Qt::ToolTipRole){
+        if(uRow < (size = stockLimits.size())){
             const StockLimit &limit = stockLimits.getStockBuyRequest(row);
-            auto stock = stocksInterface.getStock(limit.ticker.data());
-            ret = StockHint::getHint(stock);
+            return StockHint::getHint(stocksInterface.getStock(limit.ticker.data()));
         }
     }
-    return ret;
+    return QVariant();
 }
 
 bool StocksLimitsModel::setData(const QModelIndex &index,

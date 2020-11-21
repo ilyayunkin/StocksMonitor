@@ -43,45 +43,28 @@ QVariant StocksModel::headerData(int section,
                                  Qt::Orientation orientation,
                                  int role) const
 {
-    QVariant ret;
-    if (role == Qt::DisplayRole)
-    {
-        if (orientation == Qt::Horizontal)
-        {
-            switch (section) {
-            case NAME:
-                ret = tr("Name");
-                break;
-            case TICKER:
-                ret = tr("TICKER");
-                break;
-            case PRICE:
-                ret = tr("Price");
-                break;
-            case DERIVATION:
-                ret = tr("%\nDay");
-                break;
-            case DERIVATION_WEEK:
-                ret = tr("%\nWeek");
-                break;
-            case DERIVATION_MONTH:
-                ret = tr("%\nMonth");
-                break;
-            case DERIVATION_YEAR:
-                ret = tr("%\nYear");
-                break;
-            default:
-                break;
+    if (role == Qt::DisplayRole){
+        if (orientation == Qt::Horizontal){
+            if((section >= NAME) && (section < COL_COUNT)){
+                static const QString headers[] ={
+                    tr("Name")
+                    , tr("TICKER")
+                    , tr("Price")
+                    , tr("%\nDay")
+                    , tr("%\nWeek")
+                    , tr("%\nMonth")
+                    , tr("%\nYear")
+                };
+                return headers[section];
             }
         }else{
-            ret = section + 1;
+            return  section + 1;
         }
     }
-    return ret;
+    return QVariant();
 }
 QVariant StocksModel::data(const QModelIndex &index, int role) const
 {
-    QVariant ret;
     int row = index.row();
     int col = index.column();
     assert(row >= 0);
@@ -89,71 +72,39 @@ QVariant StocksModel::data(const QModelIndex &index, int role) const
 
     const auto uRow = static_cast<size_t>(row);
 
-    if ((role == Qt::DisplayRole) || (role == Qt::EditRole))
-    {
-        if(uRow < (size = stocks.size()))
-        {
+    if ((role == Qt::DisplayRole) || (role == Qt::EditRole)){
+        if(uRow < (size = stocks.size())){
             const Stock &stock = stocks.getStock(row);
             switch (col) {
-            case NAME:
-                ret = stock.name;
-                break;
-            case TICKER:
-                ret = stock.ticker.data();
-                break;
-            case PRICE:
-                ret = stock.price;
-                break;
-            case DERIVATION:
-                ret = stock.derivation;
-                break;
-            case DERIVATION_WEEK:
-                ret = stock.derivationWeek;
-                break;
-            case DERIVATION_MONTH:
-                ret = stock.derivationMonth;
-                break;
-            case DERIVATION_YEAR:
-                ret = stock.derivationYear;
-                break;
-            default:
-                break;
+            case NAME: return stock.name;
+            case TICKER: return stock.ticker.data();
+            case PRICE: return stock.price;
+            case DERIVATION: return stock.derivation;
+            case DERIVATION_WEEK: return stock.derivationWeek;
+            case DERIVATION_MONTH: return stock.derivationMonth;
+            case DERIVATION_YEAR: return stock.derivationYear;
+            default: break;
             }
         }
-    }
-    if (role == Qt::ForegroundRole)
-    {
-        if(uRow < (size = stocks.size()))
-        {
+    }else if (role == Qt::ForegroundRole){
+        if(uRow < (size = stocks.size())){
             const Stock &stock = stocks.getStock(row);
-            float number = 0.0;
-            switch (col) {
-            case DERIVATION:
-                number = stock.derivation;
-                break;
-            case DERIVATION_WEEK:
-                number = stock.derivationWeek;
-                break;
-            case DERIVATION_MONTH:
-                number = stock.derivationMonth;
-                break;
-            case DERIVATION_YEAR:
-                number = stock.derivationYear;
-                break;
-            default:
-                break;
-            }
-            if(number < 0.)
-            {
+            float number = [&]{
+                switch (col) {
+                case DERIVATION: return stock.derivation;
+                case DERIVATION_WEEK: return stock.derivationWeek;
+                case DERIVATION_MONTH: return stock.derivationMonth;
+                case DERIVATION_YEAR: return stock.derivationYear;
+                default: return 0.f;
+                }}();
+            if(number < 0.){
                 return QBrush(Qt::GlobalColor::darkRed);
-            }
-            if(number > 0.)
-            {
+            }else if(number > 0.){
                 return QBrush(Qt::GlobalColor::darkGreen);
             }
         }
     }
-    return ret;
+    return QVariant();
 }
 
 QString StocksModel::mimeType() const
