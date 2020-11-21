@@ -146,9 +146,7 @@ QByteArrayList getCols(const QByteArray &table)
 typedef std::tuple<StockName, Url> NameUrlTuple;
 NameUrlTuple getA(const QByteArray &tableCol)
 {
-    QString name;
     Url url;
-    QByteArray ret = tableCol;
     constexpr char divBegin[] = "<a";
     constexpr char divEnd[] = "</a>";
 
@@ -189,10 +187,8 @@ NameUrlTuple getA(const QByteArray &tableCol)
         return NameUrlTuple();
     }
 
-    ret = tableCol.mid(fieldBegin, fieldEnd - fieldBegin);
-
-    name = QString(ret);
-    return NameUrlTuple(name, url);
+    return NameUrlTuple(tableCol.mid(fieldBegin, fieldEnd - fieldBegin)
+                        , url);
 }
 
 float getPercentage(const QByteArray &tableCol)
