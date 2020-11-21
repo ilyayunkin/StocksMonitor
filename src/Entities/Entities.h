@@ -17,9 +17,9 @@ struct StockListsPair
     const std::string currencyCode;
 
     StockListsPair(const QString name,
-                   const std::string &currencyCode,
-                   StockLimitsList &&limits) :
-        name(name), limits(limits), currencyCode(currencyCode){}
+                   const std::string currencyCode,
+                   StockLimitsList limits) :
+        name(name), limits(std::move(limits)), currencyCode(std::move(currencyCode)){}
 };
 
 struct Entities
