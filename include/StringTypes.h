@@ -6,7 +6,7 @@
 #include <QByteArray>
 
 typedef std::string Ticker;
-typedef std::string Url;
+typedef QByteArray Url;
 typedef QString StockName;
 typedef QString PluginName;
 typedef std::string CurrencyCode;
