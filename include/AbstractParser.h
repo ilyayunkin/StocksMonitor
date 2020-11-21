@@ -4,9 +4,9 @@
 #include <QByteArray>
 
 #include <memory>
-#include <string>
 
 #include "StocksList.h"
+#include "StringTypes.h"
 
 class AbstractParser
 {
@@ -16,7 +16,7 @@ public:
     virtual ~AbstractParser(){};
     virtual void parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                       StocksList &stocks,
-                      std::string &time) = 0;
+                      TimeString &time) = 0;
 };
 
 #endif // ABSTRACTPARSER_H

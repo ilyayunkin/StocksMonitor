@@ -6,18 +6,17 @@
 #include "Portfolio.h"
 #include "Statistics.h"
 #include <vector>
-#include <string>
 
 struct StockListsPair
 {
-    const QString name;
+    const PluginName name;
     StockLimitsList limits;
     StocksList stocks;
-    std::string time;
-    const std::string currencyCode;
+    TimeString time;
+    const CurrencyCode currencyCode;
 
-    StockListsPair(const QString name,
-                   const std::string currencyCode,
+    StockListsPair(const PluginName name,
+                   const CurrencyCode currencyCode,
                    StockLimitsList limits) :
         name(name), limits(std::move(limits)), currencyCode(std::move(currencyCode)){}
 };
@@ -30,7 +29,7 @@ struct Entities
 
     float getStockPrice(const stocksListHandler handler,
                         const char *const ticker);
-    std::string getStocksActualizationTime(const stocksListHandler handler) const;
+    TimeString getStocksActualizationTime(const stocksListHandler handler) const;
     Stock getStock(const stocksListHandler handler, const size_t i) const;
     Stock getStock(const stocksListHandler handler,
                    const char *const ticker) const;
@@ -42,7 +41,7 @@ struct Entities
                                   const char *const ticker) const;
     size_t getStockBuyRequestsCount(const stocksListHandler handler) const;
     Stock getStockForPortfolioEntry(const size_t i) const;
-    std::string getUrl(const stocksListHandler handler,
+    Url getUrl(const stocksListHandler handler,
                        const char *const ticker) const;
 };
 

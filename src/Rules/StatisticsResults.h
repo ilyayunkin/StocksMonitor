@@ -4,7 +4,7 @@
 #include <QString>
 
 #include <vector>
-#include <string>
+#include "StringTypes.h"
 
 struct StatisticsGroupCounter
 {
@@ -22,7 +22,7 @@ struct StatisticsGroupCounter
     float totalDerivationYearPercent;
 
     float fractionPercent;
-    std::vector<std::string> tickers;
+    std::vector<Ticker> tickers;
 
     explicit StatisticsGroupCounter(const QString &name)
         : name(name)

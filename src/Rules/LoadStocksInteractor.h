@@ -23,8 +23,8 @@ private:
 
     void updateBuyRequestsFromStocks(const stocksListHandler handler);
     void updatePortfolioPricesFromStocks(const stocksListHandler handler);
-    void signalizePortfolio(const QString &name, const float price);
-    void signalizeLimit(const QString &name, const float price);
+    void signalizePortfolio(const StockName &name, const float price);
+    void signalizeLimit(const StockName &name, const float price);
 };
 
 #endif // LOADSTOCKSINTERACTOR_H

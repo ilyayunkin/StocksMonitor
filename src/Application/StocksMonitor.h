@@ -30,7 +30,7 @@ private:
     AbstractStocksReceiver &model;
     const stocksListHandler handler;
 
-    std::string time;
+    TimeString time;
     QNetworkAccessManager m_WebCtrl;
     AbstractParser::Ptr parser;
     const QUrl url;

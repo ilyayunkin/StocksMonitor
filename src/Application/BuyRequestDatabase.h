@@ -7,7 +7,7 @@
 class BuyRequestDatabase : public AbstractBuyRequestDatabase
 {
 public:
-    explicit BuyRequestDatabase(const QString &name);
+    explicit BuyRequestDatabase(const PluginName &name);
 
     // AbstractBuyRequestDatabase interface
     void add(const StockLimit &stockLimit) override;

@@ -11,7 +11,7 @@ PortfolioEntry Portfolio::getPortfolioEntry(const size_t i) const
     return portfolio.at(i);
 }
 
-void Portfolio::registerStockSourceInPortfolio(const QString &name, const stocksListHandler handler)
+void Portfolio::registerStockSourceInPortfolio(const PluginName &name, const stocksListHandler handler)
 {
     for(auto &e : portfolio)
     {

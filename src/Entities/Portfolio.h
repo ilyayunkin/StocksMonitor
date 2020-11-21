@@ -13,7 +13,7 @@ struct Portfolio{
     void clear() {portfolio.clear();}
 
     PortfolioEntry getPortfolioEntry(const size_t i) const;
-    void registerStockSourceInPortfolio(const QString &name,
+    void registerStockSourceInPortfolio(const PluginName &name,
                                         const stocksListHandler handler);
     auto begin() {return portfolio.begin();}
     auto end() {return portfolio.end();}

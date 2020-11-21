@@ -75,6 +75,7 @@ HEADERS += \
     ../include/SourcePluginInterface.h \
     ../include/ExceptionClasses.h \
     ../include/StocksList.h \
+    ../include/StringTypes.h \
     Application/Application.h \
     Application/BuyRequestDatabase.h \
     Application/Controllers/AbstractStatisticsConfigView.h \

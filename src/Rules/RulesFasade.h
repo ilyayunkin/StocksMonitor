@@ -20,8 +20,8 @@
 class AbstractBuyRequestDatabase;
 struct StocksSource
 {
-    const QString name;
-    const std::string currencyCode;
+    const PluginName name;
+    const CurrencyCode currencyCode;
     AbstractBuyRequestDatabase *const db;
 };
 
@@ -64,7 +64,7 @@ public:
     QStringList getAvailibleCurrencies();
 
     QStringList getPluginsList() const;
-    StockIdList getStockIdList(const QString &plugin) const;
+    StockIdList getStockIdList(const PluginName &plugin) const;
 };
 
 #endif // RULESFASADE_H

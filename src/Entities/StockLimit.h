@@ -2,14 +2,14 @@
 #define STOCKLIMIT_H
 
 #include <vector>
-#include <string>
 
 #include "StocksList.h"
+#include "StringTypes.h"
 
 struct StockLimit
 {
-    QString name;
-    std::string ticker;
+    StockName name;
+    Ticker ticker;
     float price;
     float basePrice;
     StockLimit() = default;

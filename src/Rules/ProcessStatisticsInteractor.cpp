@@ -228,7 +228,7 @@ struct PluginsProcessor : AbstractCategoryProcessor
         , statistics(statistics)
         , gcList("Plugins")
     {
-        std::set<QString> plugins;
+        std::set<PluginName> plugins;
         std::transform(portfolio.portfolio.begin(),
                        portfolio.portfolio.end(),
                        std::inserter(plugins, plugins.begin()),

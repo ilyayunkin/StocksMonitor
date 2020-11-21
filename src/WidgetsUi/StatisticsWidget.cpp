@@ -78,7 +78,7 @@ void StatisticsWidget::removeCategory(const StatisticsConfigCategoryIndex &index
     model->remove(element);
 }
 
-void StatisticsWidget::updateStocksList(const QString &pluginSelected)
+void StatisticsWidget::updateStocksList(const PluginName &pluginSelected)
 {
     qDebug() << __PRETTY_FUNCTION__ << __LINE__ << pluginSelected;
     ui->stocksComboBox->clear();

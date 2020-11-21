@@ -5,8 +5,6 @@
 
 #include <cstdlib>
 
-#include <QString>
-
 #include "Entities/StockLimit.h"
 #include "Entities/StocksListHandler.h"
 

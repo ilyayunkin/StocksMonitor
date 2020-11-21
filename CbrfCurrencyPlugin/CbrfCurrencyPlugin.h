@@ -10,9 +10,9 @@ class CbrfCurrencyPlugin : public SourcePluginInterface
     Q_INTERFACES( SourcePluginInterface )
     Q_PLUGIN_METADATA(IID "com.mysoft.SourcePluginInterface" FILE "interface.json")
 public:
-    QString getName() const override
+    PluginName getName() const override
     {return "CBRF-Currency";}
-    std::string getCurrencyCode() const override
+    CurrencyCode getCurrencyCode() const override
     {return "RUB";}
     AbstractParser::Ptr createParser() const override
     {return AbstractParser::Ptr(new CbrfCurrencyParser);}

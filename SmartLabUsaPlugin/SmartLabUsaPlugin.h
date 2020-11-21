@@ -10,9 +10,9 @@ class SmartLabUsaPlugin : public SourcePluginInterface
     Q_INTERFACES( SourcePluginInterface )
     Q_PLUGIN_METADATA(IID "com.mysoft.SourcePluginInterface" FILE "interface.json")
 public:
-    QString getName() const override
+    PluginName getName() const override
     {return "Smart-Lab-Usa";}
-    std::string getCurrencyCode() const override
+    CurrencyCode getCurrencyCode() const override
     {return "USD";}
     AbstractParser::Ptr createParser() const override
     {return AbstractParser::Ptr(new SmartLabUsaParser);}

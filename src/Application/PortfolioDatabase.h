@@ -10,7 +10,7 @@ public:
     PortfolioDatabase();
 
     // AbstractPortfolioDatabase interface
-    void add(const QString &plugin, const char *const ticker, int quantity) override;
+    void add(const PluginName &plugin, const char *const ticker, int quantity) override;
     void update(const PortfolioEntry &entry) override;
     void deleteEntry(const char *const ticker) override;
     PortfolioEntryList getAll() override;

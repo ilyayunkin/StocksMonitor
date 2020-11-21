@@ -30,7 +30,7 @@ StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
         ui->stocksTableView->sortByColumn(StocksModel::DERIVATION, Qt::AscendingOrder);
         new StocksEventFilter(stocksInterface, ui->stocksTableView);
         connect(model, &StocksModel::time,
-                [this](std::string t){this->ui->timeLabel->setText(t.data());});
+                [this](TimeString t){this->ui->timeLabel->setText(t.data());});
     }
     {
         QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);

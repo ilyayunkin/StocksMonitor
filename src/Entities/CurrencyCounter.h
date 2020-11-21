@@ -1,12 +1,12 @@
 #ifndef CURRENCYCOUNTER_H
 #define CURRENCYCOUNTER_H
 
-#include <string>
 #include <vector>
+#include "StringTypes.h"
 
 struct CurrencyCounter
 {
-    std::string currency;
+    CurrencyCode currency;
     double sum;
     explicit CurrencyCounter(const char *const currency) : currency(currency), sum(0){}
     CurrencyCounter(const char *const currency, const double sum) : currency(currency), sum(sum){}

@@ -72,7 +72,7 @@ void StocksMonitor::fileDownloaded(QNetworkReply *r)
     qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "received" << m_DownloadeAwholeDocumentdData.size();
 #endif
     try {
-        std::string t;
+        TimeString t;
         StocksList stocks;
         static int reserveSize = 500;
         stocks.reserve(reserveSize);

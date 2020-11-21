@@ -55,5 +55,5 @@ void PortfolioInterface::openUrl(size_t row) const
 {
     auto entry = entities.portfolio.getPortfolioEntry(row);
     QDesktopServices::openUrl(
-                QUrl(entities.getUrl(entry.handler, entry.ticker.data()).data()));
+                QUrl(toQString(entities.getUrl(entry.handler, entry.ticker.data()))));
 }

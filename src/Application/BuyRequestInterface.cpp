@@ -62,5 +62,5 @@ void BuyRequestInterface::subscribeForChanges(AbstractStocksView *view)
 
 void BuyRequestInterface::openUrl(const char * const ticker) const
 {
-    QDesktopServices::openUrl(QUrl(entities.getUrl(handler, ticker).data()));
+    QDesktopServices::openUrl(QUrl(toQString(entities.getUrl(handler, ticker))));
 }

@@ -1,8 +1,6 @@
 #ifndef ProcessStatisticsInteractor_H
 #define ProcessStatisticsInteractor_H
 
-#include <QString>
-
 #include "Entities/CurrencyCounter.h"
 #include "StatisticsResults.h"
 #include "Entities/Entities.h"

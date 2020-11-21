@@ -144,11 +144,11 @@ QByteArrayList getCols(const QByteArray &table)
     return ret;
 }
 
-typedef std::tuple<QString, std::string> NameUrlTuple;
+typedef std::tuple<StockName, Url> NameUrlTuple;
 NameUrlTuple getA(const QByteArray &tableCol)
 {
     QString name;
-    std::string url;
+    Url url;
     QByteArray ret = tableCol;
     constexpr char divBegin[] = "<a";
     constexpr char divEnd[] = "</a>";
@@ -205,7 +205,7 @@ float getPercentage(const QByteArray &tableCol)
 
 void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                               StocksList &stocks,
-                              std::string &time)
+                              TimeString &time)
 {
     assert(stocks.empty());
     time = QTime::currentTime().toString().toLatin1().data();
@@ -266,7 +266,7 @@ void SmartLabUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                 if(b)
                 {
                     QString name;
-                    std::string url;
+                    Url url;
                     std::tie(name, url) = getA(tableCols.at(NAME));
                     stocks.push_back(Stock(name,
                                            tableCols.at(TICKER).data(),

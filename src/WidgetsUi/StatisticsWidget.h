@@ -33,7 +33,7 @@ private:
     StatisticsController &configController;
     StatisticsModel *model = nullptr;
 
-    void updateStocksList(const QString &pluginSelected);
+    void updateStocksList(const PluginName &pluginSelected);
     void updateEnables(const QModelIndex &index);
     void addStatisticsConfigElement();
     void removeSelectedConfigTreeElement();

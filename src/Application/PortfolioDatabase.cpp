@@ -23,7 +23,7 @@ PortfolioDatabase::PortfolioDatabase()
     }
 }
 
-void PortfolioDatabase::add(const QString &plugin, const char *const ticker, int quantity)
+void PortfolioDatabase::add(const PluginName &plugin, const char *const ticker, int quantity)
 {
     executeQuery(QString("INSERT INTO %1 "
                          "(plugin, ticker, quantity, sell_price) "

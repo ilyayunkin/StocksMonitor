@@ -100,13 +100,13 @@ void LoadStocksInteractor::updatePortfolioPricesFromStocks(const stocksListHandl
     }
 }
 
-void LoadStocksInteractor::signalizePortfolio(const QString &name, const float price)
+void LoadStocksInteractor::signalizePortfolio(const StockName &name, const float price)
 {
     assert(notifier);
     notifier->signalizePortfolio(name, price);
 }
 
-void LoadStocksInteractor::signalizeLimit(const QString &name, const float price)
+void LoadStocksInteractor::signalizeLimit(const StockName &name, const float price)
 {
     assert(notifier);
     notifier->signalizeLimit(name, price);

@@ -47,7 +47,7 @@ size_t Entities::getStocksCount(const stocksListHandler handler) const
     return stocks.size();
 }
 
-std::string Entities::getStocksActualizationTime(const stocksListHandler handler) const
+TimeString Entities::getStocksActualizationTime(const stocksListHandler handler) const
 {
     const auto &pair = pairs[handler];
     return pair.time;
@@ -92,7 +92,7 @@ Stock Entities::getStockForPortfolioEntry(const size_t i) const
     return getStock(entry.handler, entry.ticker.data());
 }
 
-std::string Entities::getUrl(const stocksListHandler handler, const char * const ticker) const
+Url Entities::getUrl(const stocksListHandler handler, const char * const ticker) const
 {
     return getStock(handler, ticker).url;
 }

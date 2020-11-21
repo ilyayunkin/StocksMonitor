@@ -1,18 +1,17 @@
 #ifndef STOCKID_H
 #define STOCKID_H
 
-#include <string>
 #include <vector>
 
-#include <QString>
+#include "StringTypes.h"
 
 struct StockId
 {
-    std::string ticker;
-    QString name;
-    StockId(const std::string &ticker, const QString &name)
-        : ticker(ticker)
-        , name(name)
+    Ticker ticker;
+    StockName name;
+    StockId(Ticker ticker, StockName name)
+        : ticker(std::move(ticker))
+        , name(std::move(name))
     {}
 };
 bool operator==(const StockId &lhs, const StockId &rhs);

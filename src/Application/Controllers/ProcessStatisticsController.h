@@ -1,8 +1,6 @@
 #ifndef ProcessStatisticsController_H
 #define ProcessStatisticsController_H
 
-#include <QString>
-
 class ProcessStatisticsInteractor;
 class AbstractStatisticsView;
 

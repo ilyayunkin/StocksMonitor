@@ -1,7 +1,6 @@
 #ifndef STATISTICS_H
 #define STATISTICS_H
 
-#include <string>
 #include <vector>
 
 #include <QString>

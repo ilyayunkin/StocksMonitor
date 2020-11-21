@@ -5,8 +5,6 @@
 
 #include <cstdlib>
 
-#include <QString>
-
 #include "StocksList.h"
 #include "Entities/PortfolioEntry.h"
 #include "Entities/StocksListHandler.h"

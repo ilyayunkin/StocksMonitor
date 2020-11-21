@@ -19,7 +19,7 @@ QStringList RulesFasade::getPluginsList() const
     return ret;
 }
 
-StockIdList RulesFasade::getStockIdList(const QString &plugin) const
+StockIdList RulesFasade::getStockIdList(const PluginName &plugin) const
 {
     const auto &it = std::find_if(entities.pairs.begin(), entities.pairs.end(),
                                   [&plugin](const auto &pair){return plugin == pair.name;});

@@ -13,7 +13,7 @@ Notifier::Notifier(QWidget * const alertWidget, AbstractSignalizer * const signa
 
 }
 
-void Notifier::signalizePortfolio(const QString &name, const float price)
+void Notifier::signalizePortfolio(const StockName &name, const float price)
 {
     QString logMessage = QObject::tr("Portfolio sell price reached:\n"
                                      "%1 %2")
@@ -25,7 +25,7 @@ void Notifier::signalizePortfolio(const QString &name, const float price)
     signalizer->signalize();
 }
 
-void Notifier::signalizeLimit(const QString &name, const float price)
+void Notifier::signalizeLimit(const StockName &name, const float price)
 {
     QString logMessage = QObject::tr("Stock cheapened:\n%1 %2")
             .arg(name)

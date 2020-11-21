@@ -1,8 +1,6 @@
 #ifndef STATISTICSCONTROLLER_H
 #define STATISTICSCONTROLLER_H
 
-#include <QString>
-
 #include "Entities/Statistics.h"
 #include "StatisticsConfigIndex.h"
 

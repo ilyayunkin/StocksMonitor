@@ -2,18 +2,16 @@
 #define PORTFOLIOENTRY_H
 
 #include <vector>
-#include <string>
-
-#include <QString>
 
 #include "Entities/StocksListHandler.h"
 #include "StocksList.h"
+#include "StringTypes.h"
 
 struct PortfolioEntry
 {
-    QString plugin;
-    QString name;
-    std::string ticker;
+    PluginName plugin;
+    StockName name;
+    Ticker ticker;
     int quantity;
     float price;
     float derivation;
@@ -22,13 +20,13 @@ struct PortfolioEntry
     float derivationYear;
     float sellPrice;
     float sum;
-    std::string currency;
+    CurrencyCode currency;
     stocksListHandler handler;
 
-    PortfolioEntry(const QString &plugin, const std::string &ticker,
+    PortfolioEntry(PluginName plugin, Ticker ticker,
                    int quantity, float sellPrice)
-        : plugin(plugin)
-        , ticker(ticker)
+        : plugin(std::move(plugin))
+        , ticker(std::move(ticker))
         , quantity(quantity)
         , price(0)
         , derivation(0)
@@ -39,11 +37,11 @@ struct PortfolioEntry
         , sum(0)
         , handler(0)
     {};
-    PortfolioEntry(const QString &plugin, const Stock &stock,
+    PortfolioEntry(PluginName plugin, const Stock &stock,
                    int quantity,
-                   const std::string &currency,
+                   CurrencyCode currency,
                    stocksListHandler handler)
-        : plugin(plugin)
+        : plugin(std::move(plugin))
         , name(stock.name)
         , ticker(stock.ticker)
         , quantity(quantity)
@@ -54,7 +52,7 @@ struct PortfolioEntry
         , derivationYear(stock.derivationYear)
         , sellPrice(0)
         , sum(price * quantity)
-        , currency(currency)
+        , currency(std::move(currency))
         , handler(handler)
     {}
 };

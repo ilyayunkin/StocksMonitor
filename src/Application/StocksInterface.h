@@ -5,8 +5,6 @@
 
 #include <cstdlib>
 
-#include <QString>
-
 #include "StocksList.h"
 #include "Entities/StocksListHandler.h"
 
@@ -28,7 +26,7 @@ public:
     size_t size() const;
     Stock getStock(const size_t i) const;
     Stock getStock(const char *const ticker) const;
-    std::string getActualizationTime() const;
+    TimeString getActualizationTime() const;
     void addToPortfolio(const char *const ticker, const int quantity);
     void addLimit(const char *const ticker);
     void subscribeForChanges(AbstractStocksView *view);

@@ -41,7 +41,7 @@ Stock StocksInterface::getStock(const char *const ticker) const
     return entities.getStock(handler, ticker);
 }
 
-std::string StocksInterface::getActualizationTime() const
+TimeString StocksInterface::getActualizationTime() const
 {
     return entities.getStocksActualizationTime(handler);
 }
@@ -73,5 +73,5 @@ void StocksInterface::subscribeForChanges(AbstractStocksView *view)
 
 void StocksInterface::openUrl(const char * const ticker) const
 {
-    QDesktopServices::openUrl(QUrl(entities.getUrl(handler, ticker).data()));
+    QDesktopServices::openUrl(QUrl(toQString(entities.getUrl(handler, ticker))));
 }

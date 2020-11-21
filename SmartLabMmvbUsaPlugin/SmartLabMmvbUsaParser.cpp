@@ -144,11 +144,11 @@ QByteArrayList getCols(const QByteArray &table)
     return ret;
 }
 
-typedef std::tuple<QString, std::string> NameUrlTuple;
+typedef std::tuple<StockName, Url> NameUrlTuple;
 NameUrlTuple getA(const QByteArray &tableCol)
 {
     QString name;
-    std::string url;
+    Url url;
     QByteArray ret = tableCol;
     constexpr char divBegin[] = "<a";
     constexpr char divEnd[] = "</a>";
@@ -205,7 +205,7 @@ float getPercentage(const QByteArray &tableCol)
 
 void SmartLabMmvbUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                                   StocksList &stocks,
-                                  std::string &time)
+                                  TimeString &time)
 {
     assert(stocks.empty());
 
@@ -268,7 +268,7 @@ void SmartLabMmvbUsaParser::parse(const QByteArray &m_DownloadeAwholeDocumentdDa
                 if(b)
                 {
                     QString name;
-                    std::string url;
+                    Url url;
                     if(tableCols.at(NAME).contains("href"))
                     {
                         std::tie(name, url) = getA(tableCols.at(NAME));
