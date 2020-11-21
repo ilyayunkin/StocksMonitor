@@ -4,40 +4,37 @@ float Entities::getStockPrice(const stocksListHandler handler, const char *const
 {
     const auto &stocks = pairs[handler].stocks;
 
-    float ret{};
     auto cit = std::find_if(stocks.begin(), stocks.end(),
                             [&](const Stock &stock){return stock.ticker == ticker;});
     if(cit != stocks.cend())
     {
-        ret = cit->price;
+        return  cit->price;
     }
-    return ret;
+    return 0.;
 }
 
 Stock Entities::getStock(const stocksListHandler handler, const size_t i) const
 {
     const auto &stocks = pairs[handler].stocks;
 
-    Stock ret{};
     if(i < stocks.size())
     {
-        ret = stocks.at(i);
+        return stocks.at(i);
     }
-    return ret;
+    return Stock{};
 }
 
 Stock Entities::getStock(const stocksListHandler handler, const char *const ticker) const
 {
     const auto &stocks = pairs[handler].stocks;
 
-    Stock ret{};
     auto cit = std::find_if(stocks.begin(), stocks.end(),
                             [&](const Stock &stock){return stock.ticker == ticker;});
     if(cit != stocks.cend())
     {
-        ret = *cit;
+        return *cit;
     }
-    return ret;
+    return Stock{};
 }
 
 size_t Entities::getStocksCount(const stocksListHandler handler) const
@@ -57,26 +54,24 @@ StockLimit Entities::getStockBuyRequest(const stocksListHandler handler, const s
 {
     const auto &limits = pairs[handler].limits;
 
-    StockLimit ret{};
     if(i < limits.size())
     {
-        ret = limits.at(i);
+        return limits.at(i);
     }
-    return ret;
+    return StockLimit{};
 }
 
 StockLimit Entities::getStockBuyRequest(const stocksListHandler handler, const char *const ticker) const
 {
     const auto &limits = pairs[handler].limits;
 
-    StockLimit ret{};
     auto cit = std::find_if(limits.begin(), limits.end(),
                             [&](const StockLimit &stock){return stock.ticker == ticker;});
     if(cit != limits.cend())
     {
-        ret = *cit;
+        return *cit;
     }
-    return ret;
+    return StockLimit{};
 }
 
 size_t Entities::getStockBuyRequestsCount(const stocksListHandler handler) const
