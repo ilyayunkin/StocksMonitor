@@ -169,13 +169,10 @@ bool StatisticsInteractor::removeStatisticsCategory(const QString &category)
 bool StatisticsInteractor::isItemInCategory(const StatisticsConfigList::iterator category,
                                             const char *ticker)
 {
-    for(const auto &group : category->list)
+    auto itemInGroup = [&](const auto &group)
     {
-        if(std::any_of(group.list.begin(), group.list.end(),
-                       [&](auto const &item){return item.ticker == ticker;}))
-        {
-            return true;
-        }
-    }
-    return false;
+        const auto itemFound = [&](auto const &item){return item.ticker == ticker;};
+        return std::any_of(group.list.begin(), group.list.end(), itemFound);
+    };
+    return std::any_of(category->list.begin(), category->list.end(), itemInGroup);
 }
