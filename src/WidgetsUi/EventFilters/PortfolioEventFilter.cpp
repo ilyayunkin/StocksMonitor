@@ -20,8 +20,7 @@ PortfolioEventFilter::PortfolioEventFilter(PortfolioInterface &portfolioInterfac
 {
     table->installEventFilter(this);
     menu = new QMenu;
-    urlAction = new QAction("Open in the Internet", this);
-    menu->addAction(urlAction);
+    urlAction = menu->addAction("Open in the Internet");
 }
 
 bool PortfolioEventFilter::eventFilter(QObject *obj, QEvent *event)

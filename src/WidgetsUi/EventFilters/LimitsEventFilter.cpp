@@ -22,10 +22,8 @@ LimitsEventFilter::LimitsEventFilter(BuyRequestInterface &stocksInterface,
 {
     table->installEventFilter(this);
     menu = new QMenu;
-    portfolioAction = new QAction("To Portfolio", this);
-    urlAction = new QAction("Open in the Internet", this);
-    menu->addAction(portfolioAction);
-    menu->addAction(urlAction);
+    portfolioAction = menu->addAction("To Portfolio");
+    urlAction = menu->addAction("Open in the Internet");
 }
 
 bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)

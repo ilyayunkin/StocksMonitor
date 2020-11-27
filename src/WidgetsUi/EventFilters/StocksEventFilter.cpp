@@ -21,12 +21,9 @@ StocksEventFilter::StocksEventFilter(StocksInterface &stocksInterface,
 {
     table->installEventFilter(this);
     menu = new QMenu;
-    portfolioAction = new QAction("To Portfolio", this);
-    limitsAction = new QAction("Set limit", this);
-    urlAction = new QAction("Open in the Internet", this);
-    menu->addAction(portfolioAction);
-    menu->addAction(limitsAction);
-    menu->addAction(urlAction);
+    portfolioAction = menu->addAction("To Portfolio");
+    limitsAction = menu->addAction("Set limit");
+    urlAction = menu->addAction("Open in the Internet");
 
     connect(table, &QAbstractItemView::doubleClicked,
             this, &StocksEventFilter::addLimit);
