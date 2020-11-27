@@ -18,11 +18,11 @@ public:
     bool eventFilter(QObject *obj, QEvent *event) override;
 private:
     QTableView *table;
+    StocksInterface &stocksInterface;
     QMenu *menu;
     QAction *portfolioAction;
     QAction *limitsAction;
     QAction *urlAction;
-    StocksInterface &stocksInterface;
 
     void addLimit(const QModelIndex &index);
 };

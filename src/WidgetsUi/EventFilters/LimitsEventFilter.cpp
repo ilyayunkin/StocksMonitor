@@ -15,15 +15,15 @@
 #include "WidgetsUi/ViewModels/StocksLimitsModel.h"
 
 LimitsEventFilter::LimitsEventFilter(BuyRequestInterface &stocksInterface,
-                                     QTableView *table) :
-    QObject(table),
-    table(table),
-    buyRequestInterface(stocksInterface)
+                                     QTableView *table)
+    : QObject(table)
+    , table(table)
+    , buyRequestInterface(stocksInterface)
+    , menu(new QMenu)
+    , portfolioAction(menu->addAction("To Portfolio"))
+    , urlAction(menu->addAction("Open in the Internet"))
 {
     table->installEventFilter(this);
-    menu = new QMenu;
-    portfolioAction = menu->addAction("To Portfolio");
-    urlAction = menu->addAction("Open in the Internet");
 }
 
 bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
@@ -71,7 +71,7 @@ bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
             }
         }
     }
-    break;
+        break;
 #if 0
     case QEvent::MouseButtonDblClick:
     {

@@ -17,9 +17,9 @@ public:
     bool eventFilter(QObject *obj, QEvent *event) override;
 private:
     QTableView *table;
+    PortfolioInterface &portfolioInterface;
     QMenu *menu;
     QAction *urlAction;
-    PortfolioInterface &portfolioInterface;
 };
 
 #endif // PortfolioEventFilter_H

@@ -13,14 +13,14 @@
 #include "Application/PortfolioInterface.h"
 
 PortfolioEventFilter::PortfolioEventFilter(PortfolioInterface &portfolioInterface,
-                                     QTableView *table) :
-    QObject(table),
-    table(table),
-    portfolioInterface(portfolioInterface)
+                                           QTableView *table)
+    : QObject(table)
+    , table(table)
+    , portfolioInterface(portfolioInterface)
+    , menu(new QMenu)
+    , urlAction(menu->addAction("Open in the Internet"))
 {
     table->installEventFilter(this);
-    menu = new QMenu;
-    urlAction = menu->addAction("Open in the Internet");
 }
 
 bool PortfolioEventFilter::eventFilter(QObject *obj, QEvent *event)

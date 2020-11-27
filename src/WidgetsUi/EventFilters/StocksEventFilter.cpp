@@ -14,17 +14,16 @@
 #include "WidgetsUi/ViewModels/StocksLimitsModel.h"
 
 StocksEventFilter::StocksEventFilter(StocksInterface &stocksInterface,
-                                     QTableView *table) :
-    QObject(table),
-    table(table),
-    stocksInterface(stocksInterface)
+                                     QTableView *table)
+    : QObject(table)
+    , table(table)
+    , stocksInterface(stocksInterface)
+    , menu(new QMenu)
+    , portfolioAction(menu->addAction("To Portfolio"))
+    , limitsAction(menu->addAction("Set limit"))
+    , urlAction(menu->addAction("Open in the Internet"))
 {
     table->installEventFilter(this);
-    menu = new QMenu;
-    portfolioAction = menu->addAction("To Portfolio");
-    limitsAction = menu->addAction("Set limit");
-    urlAction = menu->addAction("Open in the Internet");
-
     connect(table, &QAbstractItemView::doubleClicked,
             this, &StocksEventFilter::addLimit);
 }

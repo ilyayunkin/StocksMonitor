@@ -18,10 +18,10 @@ public:
     bool eventFilter(QObject *obj, QEvent *event) override;
 private:
     QTableView *table;
+    BuyRequestInterface &buyRequestInterface;
     QMenu *menu;
     QAction *portfolioAction;
     QAction *urlAction;
-    BuyRequestInterface &buyRequestInterface;
 };
 
 #endif // LIMITSEVENTFILTER_H
