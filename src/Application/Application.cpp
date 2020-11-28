@@ -27,7 +27,7 @@ PluginsList loadPlugins()
         throw NoPluginsException();
     }
 
-    foreach(const QString& fileName, pluginsDir.entryList(QStringList("*.dll"), QDir::Files ))
+    for(const QString& fileName : pluginsDir.entryList(QStringList("*.dll"), QDir::Files ))
     {
         Logger::instance().log(QObject::tr("File found: ")
                                + fileName);
@@ -62,6 +62,11 @@ Application::Application(QObject *parent) :
   , csvSaver(new StatisticsCsvSaver)
   , statisticsConfigDatabase(new StatisticsConfigDatabase)
   , rules(new RulesFasade(statisticsConfigDatabase.get()))
+  , portfolioDatabase(new PortfolioDatabase)
+  , statisticsController(new StatisticsController(rules->getStatisticsInteractor()))
+  , processStatisticsController(new ProcessStatisticsController(
+                                    rules->getProcessStatisticsInteractor(),
+                                    *csvSaver))
 {
     QDir pluginsDir( "./plugins" );
     PluginsList plugins = loadPlugins();
@@ -102,18 +107,11 @@ Application::Application(QObject *parent) :
     }();
     converter.reset(new CurrencyConverter("RUB", currencyStocksInterface));
     rules->setConverter(converter.get());
-    portfolioDatabase.reset(new PortfolioDatabase);
     rules->getEditPortfolioInteractor().setPortfolioDatabase(portfolioDatabase.get());
     portfolioInterface.reset(new PortfolioInterface(
                                  rules->getEntities(),
                                  rules->getSubscriptions(),
                                  rules->getEditPortfolioInteractor()));
-    statisticsController.reset(new StatisticsController(
-                                   rules->getStatisticsInteractor()));
-    processStatisticsController.reset(
-                new ProcessStatisticsController(
-                    rules->getProcessStatisticsInteractor(),
-                    *csvSaver));
 }
 
 Application::~Application()
