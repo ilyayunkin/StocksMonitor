@@ -99,6 +99,9 @@ StatisticsModel::StatisticsModel(const StatisticsConfigList &config, QObject *pa
 {    
 }
 
+StatisticsModel::~StatisticsModel()
+{
+}
 
 int StatisticsModel::columnCount(const QModelIndex &parent) const
 {

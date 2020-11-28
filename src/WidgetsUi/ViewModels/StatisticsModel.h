@@ -53,6 +53,7 @@ class StatisticsModel : public QAbstractItemModel
 public:
     explicit StatisticsModel(const StatisticsConfigList &config,
                     QObject *parent = nullptr);
+    ~StatisticsModel();
 
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -73,7 +74,7 @@ public:
                  const char *const &ticker);
     void remove(StatisticsTreeElement *item);
 private:
-    std::shared_ptr<StatisticsModelPrivate> pimpl;
+    std::unique_ptr<StatisticsModelPrivate> pimpl;
     QModelIndex index(const StatisticsTreeElement * const item) const;
 };
 

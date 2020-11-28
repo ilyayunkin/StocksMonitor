@@ -49,16 +49,16 @@ private:
 
     ViewInterfacesList viewInterfaces;
 
-    std::shared_ptr<PortfolioInterface> portfolioInterface;
-    std::vector<std::shared_ptr<StocksMonitor>> monitors;
-    std::shared_ptr<StatisticsCsvSaver> csvSaver;
-    std::shared_ptr<StatisticsConfigDatabase> statisticsConfigDatabase;
-    std::shared_ptr<RulesFasade> rules;
-    std::shared_ptr<CurrencyConverter> converter;
-    std::vector<std::shared_ptr<BuyRequestDatabase>> buyRequestDatabases;
-    std::shared_ptr<PortfolioDatabase> portfolioDatabase;
-    std::shared_ptr<StatisticsController> statisticsController;
-    std::shared_ptr<ProcessStatisticsController> processStatisticsController;
+    std::unique_ptr<PortfolioInterface> portfolioInterface;
+    std::vector<std::unique_ptr<StocksMonitor>> monitors;
+    std::unique_ptr<StatisticsCsvSaver> csvSaver;
+    std::unique_ptr<StatisticsConfigDatabase> statisticsConfigDatabase;
+    std::unique_ptr<RulesFasade> rules;
+    std::unique_ptr<CurrencyConverter> converter;
+    std::vector<std::unique_ptr<BuyRequestDatabase>> buyRequestDatabases;
+    std::unique_ptr<PortfolioDatabase> portfolioDatabase;
+    std::unique_ptr<StatisticsController> statisticsController;
+    std::unique_ptr<ProcessStatisticsController> processStatisticsController;
 };
 
 #endif // APPLICATION_H

@@ -14,7 +14,7 @@
 #include "Controllers/ProcessStatisticsController.h"
 
 namespace  {
-typedef std::vector<std::shared_ptr<SourcePluginInterface>> PluginsList;
+typedef std::vector<std::unique_ptr<SourcePluginInterface>> PluginsList;
 
 PluginsList loadPlugins()
 {
