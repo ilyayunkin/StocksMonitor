@@ -2,3 +2,4 @@
 [![Build Status](https://travis-ci.com/ilyayunkin/StocksMonitor.svg?branch=master)](https://travis-ci.com/ilyayunkin/StocksMonitor)
 
 # StocksMonitor
+
