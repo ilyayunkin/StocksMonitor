@@ -279,7 +279,6 @@ bool StatisticsConfigDatabase::isEmpty() const
                         ";")
                     .arg(groupTableName));
 
-        QSqlRecord rec = q.record();
         if(q.next())
         {
             bool ok;
@@ -301,7 +300,6 @@ bool StatisticsConfigDatabase::isEmpty() const
                         ";")
                     .arg(itemsTableName));
 
-        QSqlRecord rec = q.record();
         if(q.next())
         {
             bool ok;
@@ -327,7 +325,6 @@ size_t StatisticsConfigDatabase::getCategoryCount() const
                     ";")
                 .arg(categoryTableName));
 
-    QSqlRecord rec = q.record();
     if(q.next())
     {
         bool ok;
@@ -352,7 +349,6 @@ size_t StatisticsConfigDatabase::getGroupCount(const QString &category) const
                 .arg(groupTableName)
                 .arg(category));
 
-    QSqlRecord rec = q.record();
     if(q.next())
     {
         bool ok;
@@ -379,7 +375,6 @@ size_t StatisticsConfigDatabase::getItemsCount(const QString &category,
                 .arg(itemsTableName)
                 .arg(group));
 
-    QSqlRecord rec = q.record();
     if(q.next())
     {
         bool ok;
