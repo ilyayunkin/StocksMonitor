@@ -32,8 +32,12 @@ after_build:
   - dir
   - cp -r ./script ./bin/script
   - cp LICENSE ./bin/
-  - mv *.dll bin/
-  - mv bin StocksMonitor
+  - cp *.dll bin/
+  - cp -r bin StocksMonitor
+  
+test_script:
+  - qmake StocksMonitor.pro
+  - mingw32-make check
 
 #Note: artifacts path should be from root directory
 artifacts:
