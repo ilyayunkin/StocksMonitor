@@ -13,6 +13,8 @@ SOURCES +=  \
 
 INCLUDEPATH+=../../../src/
 INCLUDEPATH+=../../../include/
+QMAKE_CXXFLAGS += --coverage
+QMAKE_LFLAGS += --coverage
 
 HEADERS += \
     ../../../src/WidgetsUi/PopUp/PopUpLayout.h

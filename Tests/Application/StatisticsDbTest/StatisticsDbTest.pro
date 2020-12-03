@@ -8,6 +8,8 @@ TEMPLATE = app
 
 INCLUDEPATH+=../../../include/
 INCLUDEPATH+=../../../src
+QMAKE_CXXFLAGS += --coverage
+QMAKE_LFLAGS += --coverage
 
 SOURCES +=  tst_statisticsdbtest.cpp \
     ../../../src/Application/StatisticsConfigDatabase.cpp \
