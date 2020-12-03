@@ -1,3 +1,5 @@
+include(../../test.pri)
+
 QT += testlib
 QT += gui
 QT += widgets
@@ -10,9 +12,6 @@ TEMPLATE = app
 SOURCES +=  \
     ../../../src/WidgetsUi/PopUp/PopUpLayout.cpp \
     tst_PopUpLayoutTest.cpp
-
-INCLUDEPATH+=../../../src/
-INCLUDEPATH+=../../../include/
 
 HEADERS += \
     ../../../src/WidgetsUi/PopUp/PopUpLayout.h

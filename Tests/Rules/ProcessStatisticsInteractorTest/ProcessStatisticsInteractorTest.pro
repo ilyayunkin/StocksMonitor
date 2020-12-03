@@ -1,3 +1,5 @@
+include(../../test.pri)
+
 QT += testlib
 QT -= gui
 
@@ -10,9 +12,6 @@ SOURCES +=  tst_processstatisticsinteractortest.cpp \
     ../../../src/Entities/CurrencyCounter.cpp \
     ../../../src/Entities/Portfolio.cpp \
     ../../../src/Rules/ProcessStatisticsInteractor.cpp
-
-INCLUDEPATH+=../../../src/
-INCLUDEPATH+=../../../include/
 
 HEADERS += \
     ../../../src/Entities/CurrencyCounter.h \

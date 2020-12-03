@@ -1,3 +1,5 @@
+include(../../test.pri)
+
 QT += testlib
 QT -= gui
 
@@ -23,6 +25,3 @@ HEADERS += \
     ../../../src/Entities/StocksListHandler.h \
     ../../../src/Rules/LoadStocksInteractor.h \
     ../../../src/Rules/Subscriptions.h
-
-INCLUDEPATH+=../../../src/
-INCLUDEPATH+=../../../include/
