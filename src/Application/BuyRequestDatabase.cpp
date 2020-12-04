@@ -23,11 +23,9 @@ BuyRequestDatabase::BuyRequestDatabase(const PluginName &name)
         qDebug() << db.lastError().text();
         throw CantOpenDatabaseException();
     }
-    {
-        QSqlQuery q = executeQuery(
-                    "create table if not exists "
-                    "Limits (ticker TEXT, name TEXT, base_price REAL)");
-    }
+    executeQuery(
+                "create table if not exists "
+                "Limits (ticker TEXT, name TEXT, base_price REAL)");
 }
 
 void BuyRequestDatabase::add(const StockLimit &stockLimit)

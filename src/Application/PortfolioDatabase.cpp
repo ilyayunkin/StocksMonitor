@@ -14,13 +14,11 @@ PortfolioDatabase::PortfolioDatabase()
         qDebug() << __PRETTY_FUNCTION__ << db.lastError().text();
         throw CantOpenDatabaseException();
     }
-    {
-        QSqlQuery q = executeQuery(
-                    QString("create table if not exists "
-                            "%1 (plugin TEXT, ticker TEXT, quantity INTEGER,"
-                            " sell_price REAL)")
-                    .arg(tableName));
-    }
+    executeQuery(
+                QString("create table if not exists "
+                        "%1 (plugin TEXT, ticker TEXT, quantity INTEGER,"
+                        " sell_price REAL)")
+                .arg(tableName));
 }
 
 void PortfolioDatabase::add(const PluginName &plugin, const char *const ticker, int quantity)
@@ -58,9 +56,9 @@ void PortfolioDatabase::update(const PortfolioEntry &entry)
 void PortfolioDatabase::deleteEntry(const char *const ticker)
 {
     executeQuery(QString("DELETE FROM %1 "
-                             "WHERE ticker = '%2';")
-                     .arg(tableName)
-                     .arg(QString(ticker)));
+                         "WHERE ticker = '%2';")
+                 .arg(tableName)
+                 .arg(QString(ticker)));
 }
 
 PortfolioEntryList PortfolioDatabase::getAll()

@@ -61,7 +61,7 @@ StockIdList StatisticsConfigDatabase::getAllItems(const QString &group)const
 
 void StatisticsConfigDatabase::addCategory(const QString &category)
 {
-    QSqlQuery q = executeQueryException(
+    executeQueryException(
                 QString("INSERT INTO %1"
                         "(name) "
                         "VALUES('%2')"
@@ -73,7 +73,7 @@ void StatisticsConfigDatabase::addCategory(const QString &category)
 void StatisticsConfigDatabase::addGroup(const QString &category,
                                         const QString &group)
 {
-    QSqlQuery q = executeQueryException(
+    executeQueryException(
                 QString("INSERT INTO %1"
                         "(category, name) "
                         "VALUES('%2', '%3')"
@@ -85,7 +85,7 @@ void StatisticsConfigDatabase::addGroup(const QString &category,
 
 void StatisticsConfigDatabase::addItem(const QString &group, const StockId &item)
 {
-    QSqlQuery q = executeQueryException(
+    executeQueryException(
                 QString("INSERT INTO %1"
                         "(groupName, ticker, name) "
                         "VALUES('%2', '%3', '%4')"
@@ -98,88 +98,70 @@ void StatisticsConfigDatabase::addItem(const QString &group, const StockId &item
 
 void StatisticsConfigDatabase::removeCategory(const QString &category)
 {
-    {
-        QSqlQuery q = executeQueryException("BEGIN TRANSACTION;");
-    }
+    executeQueryException("BEGIN TRANSACTION;");
     try
     {
-        {
-            QSqlQuery q = executeQueryException(
-                        QString("DELETE FROM %1"
-                                " WHERE "
-                                "groupName "
-                                " IN "
-                                "("
-                                "SELECT DISTINCT name FROM %2"
-                                " WHERE "
-                                " category='%3'"
-                                ")"
-                                ";")
-                        .arg(itemsTableName)
-                        .arg(groupTableName)
-                        .arg(category));
-        }
-        {
-            QSqlQuery q = executeQueryException(
-                        QString("DELETE FROM %1"
-                                " WHERE "
-                                "name='%2'"
-                                ";")
-                        .arg(categoryTableName)
-                        .arg(category));
-        }
-        {
-            QSqlQuery q = executeQueryException(
-                        QString("DELETE FROM %1"
-                                " WHERE "
-                                "category='%2'"
-                                ";")
-                        .arg(groupTableName)
-                        .arg(category));
-        }
-        {
-            QSqlQuery q = executeQueryException("COMMIT;");
-        }
+        executeQueryException(
+                    QString("DELETE FROM %1"
+                            " WHERE "
+                            "groupName "
+                            " IN "
+                            "("
+                            "SELECT DISTINCT name FROM %2"
+                            " WHERE "
+                            " category='%3'"
+                            ")"
+                            ";")
+                    .arg(itemsTableName)
+                    .arg(groupTableName)
+                    .arg(category));
+        executeQueryException(
+                    QString("DELETE FROM %1"
+                            " WHERE "
+                            "name='%2'"
+                            ";")
+                    .arg(categoryTableName)
+                    .arg(category));
+        executeQueryException(
+                    QString("DELETE FROM %1"
+                            " WHERE "
+                            "category='%2'"
+                            ";")
+                    .arg(groupTableName)
+                    .arg(category));
+        executeQueryException("COMMIT;");
     }catch(...)
     {
-        QSqlQuery q = executeQueryException("ROLLBACK;");
+        executeQueryException("ROLLBACK;");
         throw;
     }
 }
 
 void StatisticsConfigDatabase::removeGroup(const QString &category, const QString &group)
 {
-    {
-        QSqlQuery q = executeQueryException("BEGIN TRANSACTION;");
-    }
+    executeQueryException("BEGIN TRANSACTION;");
     try
     {
-        {
-            QSqlQuery q = executeQueryException(
-                        QString("DELETE FROM %1"
-                                " WHERE "
-                                "category='%2'"
-                                " AND "
-                                "name='%3'"
-                                ";")
-                        .arg(groupTableName)
-                        .arg(category)
-                        .arg(group));
-        }
-        {
-            QSqlQuery q = executeQueryException(
-                        QString("DELETE FROM %1"
-                                " WHERE "
-                                "groupName='%2'"
-                                ";")
-                        .arg(itemsTableName)
-                        .arg(group));
-        }
-        {
-            QSqlQuery q = executeQueryException("COMMIT;");
-        }
+        executeQueryException(
+                    QString("DELETE FROM %1"
+                            " WHERE "
+                            "category='%2'"
+                            " AND "
+                            "name='%3'"
+                            ";")
+                    .arg(groupTableName)
+                    .arg(category)
+                    .arg(group));
+        executeQueryException(
+                    QString("DELETE FROM %1"
+                            " WHERE "
+                            "groupName='%2'"
+                            ";")
+                    .arg(itemsTableName)
+                    .arg(group));
+        executeQueryException("COMMIT;");
     } catch (...) {
-        QSqlQuery q = executeQueryException("ROLLBACK;");
+        executeQueryException("ROLLBACK;");
         throw;
     }
 }
@@ -188,18 +170,17 @@ void StatisticsConfigDatabase::removeItem(const QString &group, const char * con
 {
     assert(ticker);
     assert(strlen(ticker) != 0);
-    {
-        QSqlQuery q = executeQueryException(
-                    QString("DELETE FROM %1"
-                            " WHERE "
-                            "groupName='%2'"
-                            " AND "
-                            "ticker='%3'"
-                            ";")
-                    .arg(itemsTableName)
-                    .arg(group)
-                    .arg(ticker));
-    }
+
+    executeQueryException(
+                QString("DELETE FROM %1"
+                        " WHERE "
+                        "groupName='%2'"
+                        " AND "
+                        "ticker='%3'"
+                        ";")
+                .arg(itemsTableName)
+                .arg(group)
+                .arg(ticker));
 }
 
 StatisticsConfigDatabase::StatisticsConfigDatabase()
@@ -211,30 +192,24 @@ StatisticsConfigDatabase::StatisticsConfigDatabase()
         qDebug() << db.lastError().text();
         throw CantOpenDatabaseException();
     }
-    {
-        QSqlQuery q = executeQueryException(
-                    QString(
-                        "create table if not exists "
-                        "%1 (name TEXT NOT NULL UNIQUE)"
-                        ";")
-                    .arg(categoryTableName));
-    }
-    {
-        QSqlQuery q = executeQueryException(
-                    QString(
-                        "create table if not exists "
-                        "%1 (category TEXT NOT NULL, name TEXT NOT NULL UNIQUE)"
-                        ";")
-                    .arg(groupTableName));
-    }
-    {
-        QSqlQuery q = executeQueryException(
-                    QString(
-                        "create table if not exists "
-                        "%1 (groupName TEXT NOT NULL, ticker TEXT NOT NULL, name TEXT NOT NULL)"
-                        ";")
-                    .arg(itemsTableName));
-    }
+    executeQueryException(
+                QString(
+                    "create table if not exists "
+                    "%1 (name TEXT NOT NULL UNIQUE)"
+                    ";")
+                .arg(categoryTableName));
+    executeQueryException(
+                QString(
+                    "create table if not exists "
+                    "%1 (category TEXT NOT NULL, name TEXT NOT NULL UNIQUE)"
+                    ";")
+                .arg(groupTableName));
+    executeQueryException(
+                QString(
+                    "create table if not exists "
+                    "%1 (groupName TEXT NOT NULL, ticker TEXT NOT NULL, name TEXT NOT NULL)"
+                    ";")
+                .arg(itemsTableName));
 }
 
 StatisticsConfigDatabase::~StatisticsConfigDatabase()
