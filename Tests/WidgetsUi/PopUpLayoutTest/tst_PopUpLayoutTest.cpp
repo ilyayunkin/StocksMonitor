@@ -1,10 +1,17 @@
 #include <QtTest>
 #include <QCoreApplication>
-#include <QWidget>
-#include <QDesktopWidget>
 
 #include "WidgetsUi/PopUp/PopUpLayout.h"
 // add necessary includes here
+struct Widget : public AbstractPopUpWindow
+{
+    QRect r;
+    int width()const override{return r.width();}
+    int height()const override{return r.height();}
+    int x()const override{return r.x();}
+    int y()const override{return r.y();}
+    void setGeometry(int x, int y, int w, int h) override{r = QRect(x, y, w, h);}
+};
 
 class PopUpLayoutTest : public QObject
 {
@@ -24,33 +31,29 @@ private slots:
 
 PopUpLayoutTest::PopUpLayoutTest()
 {
-
 }
 
 PopUpLayoutTest::~PopUpLayoutTest()
 {
-
 }
 
 void PopUpLayoutTest::initTestCase()
 {
-
 }
 
 void PopUpLayoutTest::cleanupTestCase()
 {
-
 }
 
 void PopUpLayoutTest::test_PlacesFirstWidgetInTheBottomRightCorner()
 {
-    PopUpLayout layout;
-    QRect window = QApplication::desktop()->availableGeometry();
+    QRect window(0, 0, 1280, 960);
+    PopUpLayout layout(window);
 
     auto const span = 40;
     auto const width = 200;
     auto const height = 100;
-    QWidget *w = new QWidget;
+    auto *w = new Widget;
     w->setGeometry(0, 0, width, height);
     QCOMPARE(w->height(), height);
     QCOMPARE(w->width(), width);
@@ -64,20 +67,20 @@ void PopUpLayoutTest::test_PlacesFirstWidgetInTheBottomRightCorner()
 
 void PopUpLayoutTest::test_PlacesSecondWidgetAboveFirst()
 {
-    PopUpLayout layout;
-    QRect window = QApplication::desktop()->availableGeometry();
+    QRect window(0, 0, 1280, 960);
+    PopUpLayout layout(window);
 
     auto const span = 40;
 
     auto const width = 200;
     auto const height = 110;
-    QWidget *w1 = new QWidget;
+    auto *w1 = new Widget;
     w1->setGeometry(0, 0, width, height);
     layout.place(w1);
 
     auto const width2 = 130;
     auto const height2 = 100;
-    QWidget *w2 = new QWidget;
+    auto *w2 = new Widget;
 
     w2->setGeometry(0, 0, width2, height2);
     layout.place(w2);
@@ -87,25 +90,25 @@ void PopUpLayoutTest::test_PlacesSecondWidgetAboveFirst()
 
 void PopUpLayoutTest::test_MovesWidgetsDownAfterFirstRemoved()
 {
-    PopUpLayout layout;
-    QRect window = QApplication::desktop()->availableGeometry();
+    QRect window(0, 0, 1280, 960);
+    PopUpLayout layout(window);
 
     auto const span = 40;
 
     auto const width = 200;
     auto const height = 110;
-    QWidget *w1 = new QWidget;
+    auto *w1 = new Widget;
     w1->setGeometry(0, 0, width, height);
     layout.place(w1);
 
     auto const width2 = 130;
     auto const height2 = 100;
-    QWidget *w2 = new QWidget;
+    auto *w2 = new Widget;
 
     w2->setGeometry(0, 0, width2, height2);
     layout.place(w2);
 
-    QWidget *w3 = new QWidget;
+    auto *w3 = new Widget;
 
     w3->setGeometry(0, 0, width2, height2);
     layout.place(w3);

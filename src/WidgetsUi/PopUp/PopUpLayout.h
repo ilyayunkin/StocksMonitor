@@ -1,18 +1,20 @@
 #ifndef POPUPLAYOUT_H
 #define POPUPLAYOUT_H
 
-#include <QWidget>
+#include <QRect>
 #include <list>
+#include "AbstractPopUpWindow.h"
 
 class PopUpLayout
 {
 public:
-    static PopUpLayout &instance();
-    void place(QWidget *w);
-    void remove(QWidget *w);
+    static PopUpLayout &instance(const QRect availableGeometry);
+    void place(AbstractPopUpWindow *w);
+    void remove(AbstractPopUpWindow *w);
 private:
-    PopUpLayout();
-    std::list<QWidget *> widgets;
+    PopUpLayout(const QRect availableGeometry);
+    QRect availableGeometry;
+    std::list<AbstractPopUpWindow *> widgets;
 
     friend class PopUpLayoutTest;
 };

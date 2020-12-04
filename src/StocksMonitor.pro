@@ -123,6 +123,7 @@ HEADERS += \
     WidgetsUi/Dialogs.h \
     WidgetsUi/EventFilters/PortfolioEventFilter.h \
     WidgetsUi/Notifier.h \
+    WidgetsUi/PopUp/AbstractPopUpWindow.h \
     WidgetsUi/PopUp/PopUpLayout.h \
     WidgetsUi/PortfolioWidget.h \
     WidgetsUi/StatisticsWidget.h \

@@ -27,7 +27,7 @@ PopUpWindow::PopUpWindow(const QString &text, int timeMs)
     show();
     adjustSize();
 
-    PopUpLayout::instance().place(this);
+    PopUpLayout::instance(QApplication::desktop()->availableGeometry()).place(this);
     {
         QTimer *t = new QTimer(this);
         connect(t, &QTimer::timeout, this, &QObject::deleteLater);
@@ -37,7 +37,7 @@ PopUpWindow::PopUpWindow(const QString &text, int timeMs)
 
 PopUpWindow::~PopUpWindow()
 {
-    PopUpLayout::instance().remove(this);
+    PopUpLayout::instance(QRect()).remove(this);
 }
 
 void PopUpWindow::mousePressEvent(QMouseEvent *event)
