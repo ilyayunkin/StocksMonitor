@@ -1,43 +1,40 @@
+image:
+  - Visual Studio 2015
+  - Ubuntu
+  
 branches:
   only:
     - master
     
 install:
-  - set QTDIR=C:\Qt\5.13\mingw73_32
-  - set QT_TOOLS_DIR=C:\Qt\Tools\mingw730_32\ 
-  - set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw730_32\bin;%PATH%
+  - cmd: set QTDIR=C:\Qt\5.13\mingw73_32
+  - cmd: set QT_TOOLS_DIR=C:\Qt\Tools\mingw730_32\ 
+  - cmd: set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw730_32\bin;%PATH%
+  - sh: PATH=$HOME/Qt/5.14.2/gcc_64/bin:$PATH
+  - sh: sudo apt-get install -y libgl-dev
   - qmake -v
-  - dir C:\Qt\
-  - dir C:\Qt\5.13\
-  - dir %QTDIR%
-  - dir %QTDIR%\bin
-  - dir %QTDIR%\lib
-  - dir C:\Qt\Tools\
-  - dir C:\Qt\Tools\QtCreator
-  - dir C:\Qt\Tools\QtCreator\bin
-  - dir %QT_TOOLS_DIR%\  
-  - dir %QT_TOOLS_DIR%\bin
-  - dir %QT_TOOLS_DIR%\lib
-  - dir C:\OpenSSL-Win32\bin
-  - dir C:\OpenSSL-Win32\lib
   
 build_script:
   - qmake StocksMonitor.pro
-  - mingw32-make
+  - cmd: mingw32-make
+  - sh: make
   
 after_build:
-  - windeployqt bin/StocksMonitor.exe
-  - curl https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1c-win32-mingw.zip -o ssl.zip -LO
-  - 7z e ssl.zip
-  - dir
-  - cp -r ./script ./bin/script
-  - cp LICENSE ./bin/
-  - cp *.dll bin/
-  - cp -r bin StocksMonitor
+  - cmd: windeployqt bin/StocksMonitor.exe
+  - cmd: curl https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1c-win32-mingw.zip -o ssl.zip -LO
+  - cmd: 7z e ssl.zip
+  - cmd: dir
+  - cmd: cp -r ./script ./bin/script
+  - cmd: cp LICENSE ./bin/
+  - cmd: cp *.dll bin/
+  - cmd: cp -r bin StocksMonitor
+  - sh: ls
+  - sh: cp -r bin StocksMonitor
   
 test_script:
-  - qmake StocksMonitor.pro
-  - mingw32-make check
+  - cmd: qmake StocksMonitor.pro
+  - cmd: mingw32-make check
+  - sh: make check
 
 #Note: artifacts path should be from root directory
 artifacts:
