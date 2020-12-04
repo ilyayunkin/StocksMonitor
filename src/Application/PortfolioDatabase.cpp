@@ -7,8 +7,8 @@ QString tableName = "Pocket";
 }
 
 PortfolioDatabase::PortfolioDatabase()
+    : db(QSqlDatabase::addDatabase("QSQLITE", "pocket"))
 {
-    db = QSqlDatabase::addDatabase("QSQLITE", "pocket");
     db.setDatabaseName("pocket.sqlite");
     if (!db.open()) {
         qDebug() << __PRETTY_FUNCTION__ << db.lastError().text();

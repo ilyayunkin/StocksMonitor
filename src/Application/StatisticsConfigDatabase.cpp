@@ -184,8 +184,8 @@ void StatisticsConfigDatabase::removeItem(const QString &group, const char * con
 }
 
 StatisticsConfigDatabase::StatisticsConfigDatabase()
+    : db(QSqlDatabase::addDatabase("QSQLITE", dbName))
 {
-    db = QSqlDatabase::addDatabase("QSQLITE", dbName);
     db.setDatabaseName(QString(dbName) + ".sqlite");
 
     if (!db.open()) {

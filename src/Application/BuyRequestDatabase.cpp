@@ -15,8 +15,8 @@ QSqlQuery BuyRequestDatabase::executeQuery(const QString &query)
 }
 
 BuyRequestDatabase::BuyRequestDatabase(const PluginName &name)
-{
-    db = QSqlDatabase::addDatabase("QSQLITE", name);
+    : db(QSqlDatabase::addDatabase("QSQLITE", name))
+{    
     db.setDatabaseName(name + ".sqlite");
 
     if (!db.open()) {
