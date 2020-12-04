@@ -15,8 +15,9 @@ install:
   - qmake -v
   
 build_script:
-  - qmake StocksMonitor.pro
+  - cmd: qmake 
   - cmd: mingw32-make
+  - sh: qmake "CONFIG+=debug"
   - sh: make
   
 after_build:
@@ -35,6 +36,7 @@ test_script:
   - cmd: qmake StocksMonitor.pro
   - cmd: mingw32-make check
   - sh: make check
+  - sh: bash <(curl -s https://codecov.io/bash)
 
 #Note: artifacts path should be from root directory
 artifacts:
