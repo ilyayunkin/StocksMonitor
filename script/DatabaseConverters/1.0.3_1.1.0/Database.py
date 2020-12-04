@@ -25,7 +25,7 @@ class Database:
         return minimal
 
     def get_count(self, table_name):
-        q = 'SELECT count(*) FROM ' + table_name;
+        q = 'SELECT count(*) FROM ' + table_name
         self.execute_query(q)
         count = int(self.query_result())
         return count
@@ -33,7 +33,7 @@ class Database:
     def get_columns(self, table_name):
         cursor = self.db.execute('select * from ' + table_name)
         names = list(map(lambda x: x[0], cursor.description))
-        return names;
+        return names
 
     def add_column(self, table_name, column_name):
         self.execute_query("ALTER TABLE " + table_name + " ADD COLUMN " + column_name + ";")
