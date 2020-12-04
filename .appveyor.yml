@@ -17,7 +17,7 @@ install:
 build_script:
   - cmd: qmake 
   - cmd: mingw32-make
-  - sh: qmake "CONFIG+=debug"
+  - sh: qmake CONFIG+="debug" QMAKE_LFLAGS+="--coverage" QMAKE_CXXFLAGS+="--coverage"
   - sh: make
   
 after_build:
