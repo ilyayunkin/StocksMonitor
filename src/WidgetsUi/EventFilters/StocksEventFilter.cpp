@@ -30,9 +30,7 @@ StocksEventFilter::StocksEventFilter(StocksInterface &stocksInterface,
 
 bool StocksEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
-    switch (event->type()) {
-    case QEvent::ContextMenu:
-    {
+    if (event->type() == QEvent::ContextMenu) {
         auto model = table->model();
         if(model)
         {
@@ -57,29 +55,6 @@ bool StocksEventFilter::eventFilter(QObject *obj, QEvent *event)
                 }
             }
         }
-    }
-        break;
-#if 0
-    case QEvent::MouseButtonDblClick:
-    {
-        qDebug() << __PRETTY_FUNCTION__;
-        auto model = table->model();
-        if(model)
-        {
-            auto contextEvent = static_cast<QContextMenuEvent*>(event);
-            auto globalPos = contextEvent->globalPos();
-            auto sortModelIndex = table->indexAt(table->viewport()->mapFromGlobal(globalPos));
-            if(sortModelIndex.isValid())
-            {
-                addLimit(sortModelIndex);
-            }
-        }
-
-    }
-        break;
-#endif
-    default:
-        break;
     }
     return QObject::eventFilter(obj, event);
 }

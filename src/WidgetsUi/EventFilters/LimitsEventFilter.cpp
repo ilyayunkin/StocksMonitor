@@ -72,25 +72,6 @@ bool LimitsEventFilter::eventFilter(QObject *obj, QEvent *event)
         }
     }
         break;
-#if 0
-    case QEvent::MouseButtonDblClick:
-    {
-        qDebug() << __PRETTY_FUNCTION__;
-        auto model = table->model();
-        if(model)
-        {
-            auto contextEvent = static_cast<QContextMenuEvent*>(event);
-            auto globalPos = contextEvent->globalPos();
-            auto sortModelIndex = table->indexAt(table->viewport()->mapFromGlobal(globalPos));
-            if(sortModelIndex.isValid())
-            {
-                addLimit(sortModelIndex);
-            }
-        }
-
-    }
-        break;
-#endif
     default:
         break;
     }
