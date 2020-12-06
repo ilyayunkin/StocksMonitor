@@ -36,6 +36,7 @@ test_script:
   - cmd: qmake StocksMonitor.pro
   - cmd: mingw32-make check
   - sh: make check
+  - sh: rm ./Tests/*/*/tst_*.gc*
   - sh: bash <(curl -s https://codecov.io/bash) -v
 
 #Note: artifacts path should be from root directory
