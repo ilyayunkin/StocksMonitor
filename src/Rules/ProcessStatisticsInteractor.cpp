@@ -86,6 +86,8 @@ auto percentDertivationToTotal(float price, float percent)
 void inlist(StatisticsGroupCounter *groupCounter, const PortfolioEntry &portfolioEntry,
             const AbstractCurrencyConverter *const converter)
 {
+    assert(groupCounter);
+    assert(converter);
     const auto price = converter->convert(
                 "RUB",
                 portfolioEntry.currency.data(),

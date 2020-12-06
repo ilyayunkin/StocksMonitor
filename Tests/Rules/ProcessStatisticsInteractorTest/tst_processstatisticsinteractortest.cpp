@@ -47,8 +47,6 @@ private slots:
     void cleanupTestCase();
     void processingThrowsOnEmptyPortfolio();
     void processingDoesntThrowOnEmptyConfig();
-    void processStatisticsEmptyConfigBenchmark();
-    void processStatisticsBenchmark();
     void stocksThatDontFallIntoAnyGroupFallIntoUnknownGroup();
     void stocksFallIntoGroupSpecifiedTheirTickers();
     void statisticsIncludesCurrencyCategory();
@@ -153,25 +151,6 @@ void ProcessStatisticsInteractorTest::processingDoesntThrowOnEmptyConfig()
         QVERIFY(true);
     } catch (...) {
         QVERIFY(false);
-    }
-}
-
-void ProcessStatisticsInteractorTest::processStatisticsEmptyConfigBenchmark()
-{
-    initTestCase();
-
-    statisticsConfig.clear();
-    QBENCHMARK{
-        interactor.processStatistics();
-    }
-}
-
-void ProcessStatisticsInteractorTest::processStatisticsBenchmark()
-{
-    initTestCase();
-
-    QBENCHMARK{
-        interactor.processStatistics();
     }
 }
 

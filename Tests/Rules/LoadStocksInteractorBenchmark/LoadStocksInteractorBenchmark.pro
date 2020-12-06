@@ -1,4 +1,4 @@
-include(../../test.pri)
+include(../../benchmark.pri)
 
 QT += testlib
 QT -= gui

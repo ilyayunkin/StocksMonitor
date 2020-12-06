@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    LoadStocksInteractorTest \
+    LoadStocksInteractorBenchmark \
+    ProcessStatisticsInteractorBenchmark \
     ProcessStatisticsInteractorTest
