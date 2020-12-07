@@ -2,6 +2,13 @@ image:
   - Visual Studio 2015
   - Ubuntu
   
+skip_commits:
+  files:
+    - README.md
+    - .travis.yml
+    - .gitignore
+    - LICENSE
+  
 branches:
   only:
     - master
