@@ -15,8 +15,9 @@ public:
     float convert(const char *const targetCurrency,
                               const char *const currency,
                               const float value)const override;
+    void setCurrencyModel(StocksInterface *const currencyModel);
 private:
-    StocksInterface * const currencyModel;
+    StocksInterface * currencyModel;
     const QByteArray currencyCode;
 };
 

@@ -61,7 +61,8 @@ Application::Application(QObject *parent) :
     QObject(parent)
   , csvSaver(new StatisticsCsvSaver)
   , statisticsConfigDatabase(new StatisticsConfigDatabase)
-  , rules(new RulesFasade(statisticsConfigDatabase.get()))
+  , converter(new CurrencyConverter("RUB"))
+  , rules(new RulesFasade(statisticsConfigDatabase.get(), *converter.get()))
   , portfolioDatabase(new PortfolioDatabase)
   , statisticsController(new StatisticsController(rules->getStatisticsInteractor()))
   , processStatisticsController(new ProcessStatisticsController(
@@ -105,8 +106,7 @@ Application::Application(QObject *parent) :
             return &(cbrfInterface->stocksInterfaces);
         return static_cast<StocksInterface *>(nullptr);
     }();
-    converter.reset(new CurrencyConverter("RUB", currencyStocksInterface));
-    rules->setConverter(converter.get());
+    converter->setCurrencyModel(currencyStocksInterface);
     rules->getEditPortfolioInteractor().setPortfolioDatabase(portfolioDatabase.get());
     portfolioInterface.reset(new PortfolioInterface(
                                  rules->getEntities(),

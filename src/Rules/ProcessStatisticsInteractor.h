@@ -12,14 +12,14 @@ class ProcessStatisticsInteractor
 {
 public:
     ProcessStatisticsInteractor(const Portfolio &portfolio,
-                                const StatisticsConfigList &statisticsConfig);
+                                const StatisticsConfigList &statisticsConfig,
+                                AbstractCurrencyConverter &converter);
 
-    void setConverter(AbstractCurrencyConverter *const converter);
     Statistics processStatistics() const;
 private:
     const Portfolio &portfolio;
     const StatisticsConfigList &statisticsConfig;
-    AbstractCurrencyConverter * converter = nullptr;
+    const AbstractCurrencyConverter &converter;
     void processCategoies(Statistics &statistics) const;
 };
 

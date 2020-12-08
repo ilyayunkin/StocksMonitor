@@ -2,7 +2,6 @@
 #define PORTFOLIO_WIDGET_H
 
 #include <QWidget>
-#include "Rules/AbstractCurrencyConverter.h"
 
 namespace Ui {
 class PortfolioWidget;

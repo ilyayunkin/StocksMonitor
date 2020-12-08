@@ -7,9 +7,11 @@
 #include "Presenters/CurrencyPresenter.h"
 
 EditPortfolioInteractor::EditPortfolioInteractor(Entities &entities,
-                                                 Subscriptions &subscriptions)
+                                                 Subscriptions &subscriptions,
+                                                 const AbstractCurrencyConverter &converter)
     : entities(entities)
     , subscriptions(subscriptions)
+    , converter(converter)
 {
 }
 
@@ -27,11 +29,6 @@ void EditPortfolioInteractor::setPortfolioDatabase(AbstractPortfolioDatabase *co
         const auto &pair = entities.pairs[handler];
         entities.portfolio.registerStockSourceInPortfolio(pair.name, handler);
     }
-}
-
-void EditPortfolioInteractor::setConverter(AbstractCurrencyConverter * const converter)
-{
-    this->converter = converter;
 }
 
 void EditPortfolioInteractor::addToPortfolio(const stocksListHandler handler, const char *const ticker, const int quantity)
@@ -94,8 +91,7 @@ bool EditPortfolioInteractor::setPortfolioEntryReferencePrice(size_t row, float 
 
 QString EditPortfolioInteractor::getPortfolioPrice(const char * const currency)
 {
-    assert(converter);
-    return CurrencyPresenter::toText(converter->convert(currency, entities.portfolio.sum()));
+    return CurrencyPresenter::toText(converter.convert(currency, entities.portfolio.sum()));
 }
 
 QString EditPortfolioInteractor::getPortfolioPrice()

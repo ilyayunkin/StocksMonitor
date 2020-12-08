@@ -53,8 +53,8 @@ private:
     std::vector<std::unique_ptr<StocksMonitor>> monitors;
     std::unique_ptr<StatisticsCsvSaver> csvSaver;
     std::unique_ptr<StatisticsConfigDatabase> statisticsConfigDatabase;
-    std::unique_ptr<RulesFasade> rules;
     std::unique_ptr<CurrencyConverter> converter;
+    std::unique_ptr<RulesFasade> rules;
     std::vector<std::unique_ptr<BuyRequestDatabase>> buyRequestDatabases;
     std::unique_ptr<PortfolioDatabase> portfolioDatabase;
     std::unique_ptr<StatisticsController> statisticsController;

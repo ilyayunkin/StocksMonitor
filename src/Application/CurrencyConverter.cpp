@@ -84,3 +84,8 @@ float CurrencyConverter::convert(const char * const targetCurrency,
         return value;
     }
 }
+
+void CurrencyConverter::setCurrencyModel(StocksInterface * const currencyModel)
+{
+    this->currencyModel = currencyModel;
+}

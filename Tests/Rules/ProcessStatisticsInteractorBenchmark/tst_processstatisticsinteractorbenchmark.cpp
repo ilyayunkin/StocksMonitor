@@ -110,9 +110,8 @@ void ProcessStatisticsInteractorBenchmark::cleanupTestCase()
 ProcessStatisticsInteractorBenchmark::ProcessStatisticsInteractorBenchmark()
     : portfolio()
     , statisticsConfig()
-    , interactor(portfolio, statisticsConfig)
+    , interactor(portfolio, statisticsConfig, converter)
 {
-    interactor.setConverter(&converter);
 }
 
 ProcessStatisticsInteractorBenchmark::~ProcessStatisticsInteractorBenchmark()

@@ -9,17 +9,13 @@
 #include <set>
 #include <memory>
 
-ProcessStatisticsInteractor::ProcessStatisticsInteractor(
-        const Portfolio &entities,
-        const StatisticsConfigList &statisticsConfig)
+ProcessStatisticsInteractor::ProcessStatisticsInteractor(const Portfolio &entities,
+        const StatisticsConfigList &statisticsConfig,
+        AbstractCurrencyConverter &converter)
     : portfolio(entities)
     , statisticsConfig(statisticsConfig)
+    , converter(converter)
 {
-}
-
-void ProcessStatisticsInteractor::setConverter(AbstractCurrencyConverter * const converter)
-{
-    this->converter = converter;
 }
 
 Statistics ProcessStatisticsInteractor::processStatistics() const
@@ -29,7 +25,7 @@ Statistics ProcessStatisticsInteractor::processStatistics() const
 
     Statistics statistics;
     processCategoies(statistics);
-    statistics.totalSum = converter->convert("RUB", portfolio.sum()).list.front().sum;
+    statistics.totalSum = converter.convert("RUB", portfolio.sum()).list.front().sum;
     {
         const auto dayAgo = (statistics.totalSum - statistics.totalDerivation) ;
         const auto weekAgo = (statistics.totalSum - statistics.totalDerivationWeek);
@@ -83,12 +79,12 @@ auto percentDertivationToTotal(float price, float percent)
     return price / (100 + percent) * percent;
 }
 
-void inlist(StatisticsGroupCounter *groupCounter, const PortfolioEntry &portfolioEntry,
-            const AbstractCurrencyConverter *const converter)
+void inlist(StatisticsGroupCounter *groupCounter,
+            const PortfolioEntry &portfolioEntry,
+            const AbstractCurrencyConverter &converter)
 {
     assert(groupCounter);
-    assert(converter);
-    const auto price = converter->convert(
+    const auto price = converter.convert(
                 "RUB",
                 portfolioEntry.currency.data(),
                 portfolioEntry.sum);
@@ -110,14 +106,14 @@ struct AbstractCategoryProcessor
 struct CathegoryProcessor : AbstractCategoryProcessor
 {
     const Portfolio &portfolio;
-    AbstractCurrencyConverter *converter;
+    const AbstractCurrencyConverter &converter;
     const StatisticsCathegoryConfig &entry;
     Statistics &statistics;
     StatisticsCounter gcList;
     StatisticsGroupCounter *unknownCounter;
     CathegoryProcessor(const StatisticsCathegoryConfig &entry,
                        const Portfolio &portfolio,
-                       AbstractCurrencyConverter *converter,
+                       const AbstractCurrencyConverter &converter,
                        Statistics &statistics)
         : portfolio(portfolio)
         , converter(converter)
@@ -157,11 +153,11 @@ struct CathegoryProcessor : AbstractCategoryProcessor
 struct CurrencyProcessor : AbstractCategoryProcessor
 {
     const Portfolio &portfolio;
-    AbstractCurrencyConverter *converter;
+    const AbstractCurrencyConverter &converter;
     Statistics &statistics;
     StatisticsCounter gcList;
     CurrencyProcessor(const Portfolio &portfolio,
-                      AbstractCurrencyConverter *converter,
+                      const AbstractCurrencyConverter &converter,
                       Statistics &statistics)
         : portfolio(portfolio)
         , converter(converter)
@@ -188,13 +184,13 @@ struct CurrencyProcessor : AbstractCategoryProcessor
 struct TrendProcessor : AbstractCategoryProcessor
 {
     const Portfolio &portfolio;
-    AbstractCurrencyConverter *converter;
+    const AbstractCurrencyConverter &converter;
     Statistics &statistics;
     StatisticsCounter gcList;
     StatisticsGroupCounter *positiveGroup;
     StatisticsGroupCounter *negativeGroup;
     TrendProcessor(const Portfolio &portfolio,
-                   AbstractCurrencyConverter *converter,
+                   const AbstractCurrencyConverter &converter,
                    Statistics &statistics)
         : portfolio(portfolio)
         , converter(converter)
@@ -219,11 +215,11 @@ struct TrendProcessor : AbstractCategoryProcessor
 struct PluginsProcessor : AbstractCategoryProcessor
 {
     const Portfolio &portfolio;
-    AbstractCurrencyConverter *converter;
+    const AbstractCurrencyConverter &converter;
     Statistics &statistics;
     StatisticsCounter gcList;
     PluginsProcessor(const Portfolio &portfolio,
-                     AbstractCurrencyConverter *converter,
+                     const AbstractCurrencyConverter &converter,
                      Statistics &statistics)
         : portfolio(portfolio)
         , converter(converter)
@@ -269,7 +265,7 @@ void ProcessStatisticsInteractor::processCategoies(Statistics &statistics) const
         std::for_each(processors.begin(), processors.end(),
                       [&](const auto &f){(*f)(portfolioEntry);});
 
-        const auto price = converter->convert(
+        const auto price = converter.convert(
                     "RUB",
                     portfolioEntry.currency.data(),
                     portfolioEntry.sum);

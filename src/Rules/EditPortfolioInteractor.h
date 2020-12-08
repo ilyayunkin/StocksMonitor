@@ -14,10 +14,10 @@ class EditPortfolioInteractor
 {
 public:
     EditPortfolioInteractor(Entities &entities,
-                            Subscriptions &subscriptions);
+                            Subscriptions &subscriptions,
+                            const AbstractCurrencyConverter &converter);
     void setDialogs(AbstractDialogs *const dialogs);
     void setPortfolioDatabase(AbstractPortfolioDatabase *const portfolioDb);
-    void setConverter(AbstractCurrencyConverter *const converter);
 
     bool setPortfolioEntryQuantity(size_t row, int quantity);
     bool setPortfolioEntryReferencePrice(size_t row, float referencePrice);
@@ -31,7 +31,7 @@ private:
     AbstractDialogs *dialogs = nullptr;
     Subscriptions &subscriptions;
     AbstractPortfolioDatabase *portfolioDb = nullptr;
-    AbstractCurrencyConverter *converter = nullptr;
+    const AbstractCurrencyConverter &converter;
 };
 
 #endif // EDITPORTFOLIOINTERACTOR_H

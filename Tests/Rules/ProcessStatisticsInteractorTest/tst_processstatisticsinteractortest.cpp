@@ -58,9 +58,8 @@ private slots:
 ProcessStatisticsInteractorTest::ProcessStatisticsInteractorTest()
     : portfolio()
     , statisticsConfig()
-    , interactor(portfolio, statisticsConfig)
+    , interactor(portfolio, statisticsConfig, converter)
 {
-    interactor.setConverter(&converter);
 }
 
 ProcessStatisticsInteractorTest::~ProcessStatisticsInteractorTest()
