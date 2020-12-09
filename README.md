@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/ilyayunkin/StocksMonitor/branch/master/graph/badge.svg?token=0AZSC6W43C)](https://codecov.io/gh/ilyayunkin/StocksMonitor)
 
 # StocksMonitor
+Securities prices monitoring application. Needs Qt 5.14 and C++17.
 
 ## Structure
 On the very top level, the project consists of several sub-projects that are built independently.
