@@ -24,6 +24,11 @@ Application sources are located in the ./src directory. The structure or the App
 * Application - Controllers, interfaces.
 * WidgetsUi - QtWidgets-based GUI.
 
+## Building
+Refer to the Appveyor build script for detailed information. Generally it
+* Builds the project qith qmake.
+* Downloads openssl and adds to the distribution.
+
 ## Testing
 Unit-tests and benchmarks are provided in the Test dirrectory. They can me invoked:
 * From QtCreator.
@@ -40,3 +45,4 @@ Test coverage statistics is collected during Appveyor for Linux sessions. Severa
 ## Credits
 - Qt framework
 - SQLITE
+- OpenSSL
