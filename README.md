@@ -17,11 +17,10 @@ One of the plugins has a specific meaning because it provides the currency cours
 The application contains the rest of the logic and implements the functionality. It loads plugins after launch.
 
 ### Application
-Application sources are located in the ./src directory.
-The structure or the Application contains of several layers:
+Application sources are located in the ./src directory. The structure or the Application consists of several layers:
 * Entities - basic objects.
 * Business rules - interactors.
-* Application - Controllers, interfaaces.
+* Application - Controllers, interfaces.
 * WidgetsUi - QtWidgets-based GUI.
 
 ## Testing
