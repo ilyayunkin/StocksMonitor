@@ -6,11 +6,11 @@
 # StocksMonitor
 
 ## Structure
-On the highest level, the project consists of several sub-projects that are built independently.
+On the very top level, the project consists of several sub-projects that are built independently.
 * Plugins,
 * Application.
 The plugins are dynamic libraries detected by the application in runtime. The purpose of the plugins is to provide URLs to web-pages and to parse the pages. 
-One plugin has specific meaning because it provides the currency courses which can be used for dynamic currency conversion.
+One of the plugins has a specific meaning because it provides the currency courses which can be used for dynamic currency conversion.
 
 The application contains the rest of the logic and implements the functionality. It loads plugins after launch.
 
