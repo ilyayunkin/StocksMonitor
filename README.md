@@ -7,6 +7,7 @@
 Securities prices monitoring application. Needs Qt 5.14 and C++17.
 
 ## Structure
+### Project
 On the very top level, the project consists of several sub-projects that are built independently.
 * Plugins,
 * Application.
@@ -14,6 +15,14 @@ The plugins are dynamic libraries detected by the application in runtime. The pu
 One of the plugins has a specific meaning because it provides the currency courses which can be used for dynamic currency conversion.
 
 The application contains the rest of the logic and implements the functionality. It loads plugins after launch.
+
+### Application
+Application sources are located in the ./src directory.
+The structure or the Application contains of several layers:
+* Entities - basic objects.
+* Business rules - interactors.
+* Application - Controllers, interfaaces.
+* WidgetsUi - QtWidgets-based GUI.
 
 ## Testing
 Unit-tests and benchmarks are provided in the Test dirrectory. They can me invoked:
