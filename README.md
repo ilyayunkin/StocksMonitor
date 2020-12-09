@@ -16,7 +16,7 @@ The application contains the rest of the logic and implements the functionality.
 
 ## Testing
 Unit-tests and benchmarks are provided in the Test dirrectory. They can me invoked:
-* From QtCretor.
+* From QtCreator.
 * With "make check" command.
 
 ## Test coverage
