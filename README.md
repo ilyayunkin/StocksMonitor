@@ -6,6 +6,9 @@
 # StocksMonitor
 Securities prices monitoring application. Needs Qt 5.14 and C++17.
 
+## Warning
+The author and the application don't provide users any information or any right to this information. A user has to check the legal conditions of using the parsed pages before using the application.
+
 ## Structure
 ### Project
 On the very top level, the project consists of several sub-projects that are built independently.
