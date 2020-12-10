@@ -4,19 +4,34 @@
 [![codecov](https://codecov.io/gh/ilyayunkin/StocksMonitor/branch/master/graph/badge.svg?token=0AZSC6W43C)](https://codecov.io/gh/ilyayunkin/StocksMonitor)
 
 # StocksMonitor
+Securities prices monitoring application. Needs Qt 5.14 and C++17.
 
 ## Structure
+### Project
 On the very top level, the project consists of several sub-projects that are built independently.
 * Plugins,
 * Application.
+
 The plugins are dynamic libraries detected by the application in runtime. The purpose of the plugins is to provide URLs to web-pages and to parse the pages. 
 One of the plugins has a specific meaning because it provides the currency courses which can be used for dynamic currency conversion.
 
 The application contains the rest of the logic and implements the functionality. It loads plugins after launch.
 
+### Application
+Application sources are located in the ./src directory. The structure or the Application consists of several layers:
+* Entities - basic objects.
+* Business rules - interactors.
+* Application - Controllers, interfaces.
+* WidgetsUi - QtWidgets-based GUI.
+
+## Building
+Refer to the Appveyor build script for detailed information. Generally it
+* Builds the project qith qmake.
+* Downloads openssl and adds to the distribution.
+
 ## Testing
 Unit-tests and benchmarks are provided in the Test dirrectory. They can me invoked:
-* From QtCretor.
+* From QtCreator.
 * With "make check" command.
 
 ## Test coverage
@@ -30,3 +45,4 @@ Test coverage statistics is collected during Appveyor for Linux sessions. Severa
 ## Credits
 - Qt framework
 - SQLITE
+- OpenSSL
