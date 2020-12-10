@@ -34,9 +34,12 @@ after_build:
   - cmd: dir
   - cmd: cp -r ./script ./bin/script
   - cmd: cp LICENSE ./bin/
+  - cmd: cp README.md ./bin/
   - cmd: cp *.dll bin/
   - cmd: cp -r bin StocksMonitor
   - sh: ls
+  - sh: cp LICENSE bin
+  - sh: cp README.md bin
   - sh: cp -r bin StocksMonitor
   
 test_script:
