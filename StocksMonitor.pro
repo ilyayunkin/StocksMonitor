@@ -2,7 +2,8 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
         SmartLabMmvbPlugin \
-		SmartLabMmvbUsaPlugin \
+        SmartLabMmvbUsaPlugin \
+        SmartLabMetalPlugin \
         SmartLabUsaPlugin \
         CbrfCurrencyPlugin \
         Tests \
