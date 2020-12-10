@@ -62,12 +62,12 @@ float CurrencyConverter::convert(const char * const targetCurrency,
             if(currencyCode == targetCurrency)
             {
                 Stock stock = currencyModel->getStock(currency);
-                if(stock.price != -1)
+                if(stock.price != Stock::defaultPrice)
                     cource = stock.price;
             }else if(currencyCode == currency)
             {
                 Stock stock = currencyModel->getStock(targetCurrency);
-                if(stock.price != -1)
+                if(stock.price != Stock::defaultPrice)
                     cource = 1 / stock.price;
             }else
             {
