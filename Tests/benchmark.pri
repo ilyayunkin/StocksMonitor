@@ -1,4 +1,5 @@
 
+INCLUDEPATH+=../../../
 INCLUDEPATH+=../../../src/
 INCLUDEPATH+=../../../include/
 
