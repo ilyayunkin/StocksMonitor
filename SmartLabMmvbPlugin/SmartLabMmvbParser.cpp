@@ -69,6 +69,21 @@ QByteArray getTable(const QByteArray &div)
 
 }
 
+#if WRITE_DEBUG_FILES
+void writeDebugFile(const QString &filename, QByteArray data)
+{
+    QFile f(filename);
+    f.open(QIODevice::WriteOnly);
+    if(f.isOpen())
+    {
+        auto count = f.write(data);
+        qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "written" << count << f.size();
+        f.flush();
+        f.close();
+    }
+}
+#endif
+
 QByteArrayList getRows(const QByteArray &table)
 {
     QByteArrayList ret;
@@ -92,17 +107,7 @@ QByteArrayList getRows(const QByteArray &table)
         QByteArray tableRow = table.mid(fieldBegin, fieldEnd - fieldBegin);
         ret.push_back(tableRow);
 #if WRITE_DEBUG_FILES
-        {
-            QFile f(QString::number(i) +".txt");
-            f.open(QIODevice::WriteOnly);
-            if(f.isOpen())
-            {
-                auto count = f.write(tableRow);
-                qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "written" << count << f.size();
-                f.flush();
-                f.close();
-            }
-        }
+        writeDebugFile(QString::number(i) +".txt", tableRow);
 #endif
         ++i;
     }
@@ -211,17 +216,7 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
     QDateTime begin = QDateTime::currentDateTime();
 #endif
 #if WRITE_DEBUG_FILES
-    {
-        QFile f(htmlName);
-        f.open(QIODevice::WriteOnly);
-        if(f.isOpen())
-        {
-            auto count = f.write(m_DownloadeAwholeDocumentdData);
-            qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "written" << count << f.size();
-            f.flush();
-            f.close();
-        }
-    }
+    writeDebugFile(htmlName, m_DownloadeAwholeDocumentdData);
 #endif
 #if DEBUG_PRINT
     QDateTime t1 = QDateTime::currentDateTime();
@@ -230,17 +225,7 @@ void SmartLabMmvbParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
     {
         QByteArray table = getTable(m_DownloadeAwholeDocumentdData);
 #if WRITE_DEBUG_FILES
-        {
-            QFile f(tableName);
-            f.open(QIODevice::WriteOnly);
-            if(f.isOpen())
-            {
-                auto count = f.write(table);
-                qDebug() << __PRETTY_FUNCTION__ << __LINE__ << "written" << count << f.size();
-                f.flush();
-                f.close();
-            }
-        }
+        writeDebugFile(tableName, table);
 #endif
         return  getRows(table);
     }();
