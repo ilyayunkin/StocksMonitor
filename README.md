@@ -7,7 +7,7 @@
 Securities prices monitoring application. Needs Qt 5.14 and C++17.
 
 ## Warning
-The author and the application don't provide users any information or any right to this information. A user has to check the legal conditions of using the parsed pages before using the application.
+The author and the application don't provide users any information or any right to any information. A user has to check the legal conditions of using the parsed pages before using the application.
 
 ## Structure
 ### Project
@@ -24,7 +24,7 @@ The application contains the rest of the logic and implements the functionality.
 Application sources are located in the ./src directory. The structure or the Application consists of several layers:
 * Entities - basic objects.
 * Business rules - interactors.
-* Application - Controllers, interfaces.
+* Application - Controllers, interfaces, implementations of abstract classes, defined in the Business rules layer.
 * WidgetsUi - QtWidgets-based GUI.
 
 ## Building
