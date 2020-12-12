@@ -19,7 +19,7 @@ namespace  {
 const QString htmlName = "stocks.html";
 const QString txtName = "stocks.txt";
 const QString tableName = "table.html";
-
+const QLocale locale(QLocale::Russian, QLocale::Russia);
 enum
 {
     NUM,
@@ -96,7 +96,7 @@ void CbrfCurrencyParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                         stock.ticker = text.toLatin1().data();
                     }else  if(tag == "Value")
                     {
-                        stock.price = QLocale::system().toFloat(text);
+                        stock.price = locale.toFloat(text);
                     }
                 }
                 subNode = subNode.nextSibling();
