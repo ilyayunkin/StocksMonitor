@@ -8,7 +8,7 @@ class CurrencyCourseSource : public AbstractCurrencyCourseSource
 {
 public:
     CurrencyCourseSource(const StocksInterface &stocksInterface);
-    double getCurrencyCourse(const char * const currency) override;
+    double getCurrencyCourse(const char * const currency)const override;
 private:
     const StocksInterface &stocksInterface;
 };

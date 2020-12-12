@@ -4,7 +4,7 @@
 class AbstractCurrencyCourseSource
 {
 public:
-    virtual double getCurrencyCourse(const char *const currency) = 0;
+    virtual double getCurrencyCourse(const char *const currency) const = 0;
 };
 
 #endif // ABSTRACTCURRENCYCOURSESOURCE_H

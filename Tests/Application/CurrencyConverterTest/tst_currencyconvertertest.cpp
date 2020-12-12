@@ -1,7 +1,18 @@
 #include <QtTest>
 #include "Application/CurrencyConverter.h"
 #include "Rules/AbstractDialogs.h"
+#include "Application/AbstractCurrencyCourseSource.h"
 // add necessary includes here
+
+struct CurrencySource : public AbstractCurrencyCourseSource
+{
+    mutable int askedTimes = 0;
+    double getCurrencyCourse(const char * const currency)const
+    {
+        ++askedTimes;
+        return 2;
+    }
+};
 
 struct Dialogs : public AbstractDialogs
 {
@@ -24,7 +35,7 @@ struct Dialogs : public AbstractDialogs
     double askCurrencyCourse([[maybe_unused]]const char * const currency, [[maybe_unused]]const char * const targetCurrency) const
     {
         ++askedTimes;
-        return true;
+        return 2.0;
     };
     double getBuyRequestPrice([[maybe_unused]]StockName name, [[maybe_unused]]float price, [[maybe_unused]]bool *ok) const
     {return 1;}
@@ -39,17 +50,17 @@ public:
 
 private slots:
     void asksCurrencyCourseIfCurrencySourceIsntSpecified();
+    void doesntAskCourseIfSourceSpecified();
     void returnsTheSameValueForTheSameCurrency();
+    void converts();
 };
 
 CurrencyConverterTest::CurrencyConverterTest()
 {
-
 }
 
 CurrencyConverterTest::~CurrencyConverterTest()
 {
-
 }
 
 void CurrencyConverterTest::asksCurrencyCourseIfCurrencySourceIsntSpecified()
@@ -58,23 +69,82 @@ void CurrencyConverterTest::asksCurrencyCourseIfCurrencySourceIsntSpecified()
     CurrencyConverter converter("RUB", dialogs);
     CurrencyCountersList counters;
     counters.add("USD", 1);
-    QVERIFY(!dialogs.askedTimes);
+    QCOMPARE(dialogs.askedTimes, 0);
     converter.convert("RUB", counters);
     QCOMPARE(dialogs.askedTimes, 1);
     converter.convert("RUB", counters);
     QCOMPARE(dialogs.askedTimes, 2);
+    converter.convert("USD", "RUB", 42);
+    QCOMPARE(dialogs.askedTimes, 3);
+}
+
+void CurrencyConverterTest::doesntAskCourseIfSourceSpecified()
+{
+    Dialogs dialogs;
+    CurrencySource source;
+    CurrencyConverter converter("RUB", dialogs, &source);
+    CurrencyCountersList counters;
+    counters.add("USD", 1);
+    QCOMPARE(dialogs.askedTimes, 0);
+    converter.convert("RUB", counters);
+    QCOMPARE(dialogs.askedTimes, 0);
 }
 
 void CurrencyConverterTest::returnsTheSameValueForTheSameCurrency()
 {
-    const double val = 42;
-    Dialogs dialogs;
-    CurrencyConverter converter("RUB", dialogs);
-    CurrencyCountersList counters;
-    counters.add("RUB", val);
-    QCOMPARE(val, converter.convert("RUB", counters).list.front().sum);
-    QCOMPARE(converter.convert("RUB", "RUB", val), val);
-    QCOMPARE(dialogs.askedTimes, 0);
+    {
+        const double val = 42;
+        Dialogs dialogs;
+        CurrencySource source;
+        CurrencyConverter converter("RUB", dialogs, &source);
+        CurrencyCountersList counters;
+        counters.add("RUB", val);
+        QCOMPARE(dialogs.askedTimes, 0);
+        QCOMPARE(val, converter.convert("RUB", counters).list.front().sum);
+        QCOMPARE(converter.convert("RUB", "RUB", val), val);
+        QCOMPARE(dialogs.askedTimes, 0);
+    }
+    {
+        const double val = 42;
+        Dialogs dialogs;
+        CurrencyConverter converter("RUB", dialogs);
+        CurrencyCountersList counters;
+        counters.add("RUB", val);
+        QCOMPARE(dialogs.askedTimes, 0);
+        QCOMPARE(val, converter.convert("RUB", counters).list.front().sum);
+        QCOMPARE(converter.convert("RUB", "RUB", val), val);
+        QCOMPARE(dialogs.askedTimes, 0);
+    }
+}
+
+void CurrencyConverterTest::converts()
+{
+    {
+        const double val = 42;
+        const auto targetVal = val * 2;
+        Dialogs dialogs;
+        CurrencySource source;
+        CurrencyConverter converter("RUB", dialogs, &source);
+        CurrencyCountersList counters;
+        counters.add("USD", val);
+        QCOMPARE(dialogs.askedTimes, 0);
+        QCOMPARE(targetVal, converter.convert("RUB", counters).list.front().sum);
+        QCOMPARE(converter.convert("RUB", "USD", val), targetVal);
+        QCOMPARE(dialogs.askedTimes, 0);
+    }
+    {
+        const double val = 42;
+        const auto targetVal = val / 2;
+        Dialogs dialogs;
+        CurrencySource source;
+        CurrencyConverter converter("RUB", dialogs, &source);
+        CurrencyCountersList counters;
+        counters.add("RUB", val);
+        QCOMPARE(dialogs.askedTimes, 0);
+        QCOMPARE(targetVal, converter.convert("USD", counters).list.front().sum);
+        QCOMPARE(converter.convert("USD", "RUB", val), targetVal);
+        QCOMPARE(dialogs.askedTimes, 0);
+    }
 }
 
 QTEST_APPLESS_MAIN(CurrencyConverterTest)

@@ -7,7 +7,7 @@ CurrencyCourseSource::CurrencyCourseSource(const StocksInterface &stocksInterfac
 {
 }
 
-double CurrencyCourseSource::getCurrencyCourse(const char * const currency)
+double CurrencyCourseSource::getCurrencyCourse(const char * const currency) const
 {
     return stocksInterface.getStock(currency).price;
 }

@@ -47,29 +47,27 @@ float CurrencyConverter::convert(const char * const targetCurrency,
 
     if(strcmp(currency, targetCurrency) != 0)
     {
-        double cource = 0;
-        if(currencyModel != nullptr)
+        double course = [&]
         {
-            if(currencyCode == targetCurrency)
+            if(currencyModel != nullptr)
             {
-                auto price = currencyModel->getCurrencyCourse(currency);
-                if(price != Stock::defaultPrice)
-                    cource = price;
-            }else if(currencyCode == currency)
-            {
-                auto price = currencyModel->getCurrencyCourse(targetCurrency);
-                if(price != Stock::defaultPrice)
-                    cource = 1 / price;
-            }else
-            {
-                cource = dialogs.askCurrencyCourse(currency, targetCurrency);
+                if(currencyCode == targetCurrency)
+                {
+                    auto price = currencyModel->getCurrencyCourse(currency);
+                    if(price != Stock::defaultPrice)
+                        return price;
+                }else if(currencyCode == currency)
+                {
+                    auto price = currencyModel->getCurrencyCourse(targetCurrency);
+                    if(price != Stock::defaultPrice)
+                        return 1 / price;
+                }
+                return dialogs.askCurrencyCourse(currency, targetCurrency);
             }
-        }else
-        {
-            cource = dialogs.askCurrencyCourse(currency, targetCurrency);
-        }
+            return dialogs.askCurrencyCourse(currency, targetCurrency);
+        }();
 
-        return value * cource;
+        return value * course;
     }else
     {
         return value;
