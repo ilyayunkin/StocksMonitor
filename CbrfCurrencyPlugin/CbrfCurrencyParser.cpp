@@ -51,7 +51,7 @@ void CbrfCurrencyParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                                TimeString &time)
 {
     assert(stocks.empty());
-    time = QTime::currentTime().toString().toLatin1().data();
+//    time = QTime::currentTime().toString().toLatin1().data();
 
     if(m_DownloadeAwholeDocumentdData.isEmpty())
     {
@@ -64,10 +64,9 @@ void CbrfCurrencyParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
         return;
     }
 
-    // print out the element names of all elements that are direct children
-    // of the outermost element.
     QDomElement docElem = doc.documentElement();
 
+    time = docElem.attribute("Date").toStdString();
     QDomNode currencyNode = docElem.firstChild();
     int i = 1;
     while(!currencyNode.isNull())

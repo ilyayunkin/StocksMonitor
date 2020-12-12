@@ -19,6 +19,7 @@ private slots:
     void rightDerivationWeek();
     void rightDerivationMonth();
     void rightDerivationYear();
+    void dateFromXmlReturnedAsTime();
 };
 QByteArray sample(){
     return R"TEST(<?xml version="1.0" encoding="windows-1251"?>
@@ -151,6 +152,14 @@ void CbrfCurrencyParserTest::rightDerivationYear()
     for(std::size_t i = 0; i < list.size(); ++i){
         QCOMPARE(list[i].derivationYear, derivation[i]);
     }
+}
+
+void CbrfCurrencyParserTest::dateFromXmlReturnedAsTime()
+{
+    StocksList list;
+    TimeString time;
+    parser.parse(arr, list, time);
+    QCOMPARE(QString(time.data()), "12.12.2020");
 }
 
 
