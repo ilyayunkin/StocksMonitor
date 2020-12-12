@@ -9,24 +9,27 @@
 struct ViewInterfacesPair
 {
     QString name;
-    StocksInterface stocksInterfaces;
-    BuyRequestInterface buyRequestInterfaces;
+    Url url;
+    StocksInterface stocksInterface;
+    BuyRequestInterface buyRequestInterface;
 
-    ViewInterfacesPair(const QString &name,
+    ViewInterfacesPair(const QString name,
+                       const Url url,
                        const Entities &entities,
                        Subscriptions &subscriptions,
                        LoadStocksInteractor &loadStocksInteractor,
                        EditPortfolioInteractor &editPortfolioInteractor,
                        EditBuyRequestInteractor &editBuyRequestInteractor,
                        const stocksListHandler handler) :
-        name(name),
-        stocksInterfaces(entities,
+        name(std::move(name)),
+        url(std::move(url)),
+        stocksInterface(entities,
                          subscriptions,
                          loadStocksInteractor,
                          editBuyRequestInteractor,
                          editPortfolioInteractor,
                          handler),
-        buyRequestInterfaces(entities,
+        buyRequestInterface(entities,
                              subscriptions,
                              loadStocksInteractor,
                              editPortfolioInteractor,

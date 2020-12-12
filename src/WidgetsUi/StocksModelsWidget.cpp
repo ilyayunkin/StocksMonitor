@@ -10,13 +10,13 @@
 #include "ViewModels/StocksModel.h"
 #include "ViewModels/StocksLimitsModel.h"
 
-StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
-                                       BuyRequestInterface &buyRequestInterface,
-                                       QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::StocksModelsWidget),
-    stocksInterface(stocksInterface),
-    buyRequestInterface(buyRequestInterface)
+StocksModelsWidget::StocksModelsWidget(ViewInterfacesPair &viewInterfaces,
+                                       QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::StocksModelsWidget)
+    , viewInterfaces(viewInterfaces)
+    , stocksInterface(viewInterfaces.stocksInterface)
+    , buyRequestInterface(viewInterfaces.buyRequestInterface)
 {
     ui->setupUi(this);
     {
@@ -43,6 +43,7 @@ StocksModelsWidget::StocksModelsWidget(StocksInterface &stocksInterface,
         ui->stocksLimitsTableView->sortByColumn(StocksLimitsModel::DISTANCE, Qt::AscendingOrder);
         new LimitsEventFilter(buyRequestInterface, ui->stocksLimitsTableView);
     }
+    ui->sourceLinkLabel->setText(tr("Original resource: ") + viewInterfaces.url);
 }
 
 StocksModelsWidget::~StocksModelsWidget()

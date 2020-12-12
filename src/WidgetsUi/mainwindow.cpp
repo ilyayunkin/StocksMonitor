@@ -41,8 +41,7 @@ MainWindow::MainWindow(Application &application,
                 for(auto &modelsRef : application.getViewInterfaces())
                 {
                     StocksModelsWidget *w =
-                            new StocksModelsWidget(modelsRef.stocksInterfaces,
-                                                   modelsRef.buyRequestInterfaces);
+                            new StocksModelsWidget(modelsRef);
                     QHBoxLayout *viewLay = new QHBoxLayout;
                     viewLay->setMargin(0);
 

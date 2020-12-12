@@ -87,6 +87,7 @@ Application::Application(QObject *parent) :
                                  buyRequestDatabases.back().get()});
 
         viewInterfaces.push_back(ViewInterfacesPair(plugin->getName(),
+                                                    plugin->getUrl().toString(),
                                                     rules->getEntities(),
                                                     rules->getSubscriptions(),
                                                     rules->getLoadStocksInteractor(),
@@ -103,7 +104,7 @@ Application::Application(QObject *parent) :
         auto cbrfInterface = std::find_if(viewInterfaces.begin(), viewInterfaces.end(),
                                           [](const auto &interface){return interface.name == "CBRF-Currency";});
         if(cbrfInterface != viewInterfaces.end())
-            return &(cbrfInterface->stocksInterfaces);
+            return &(cbrfInterface->stocksInterface);
         return static_cast<StocksInterface *>(nullptr);
     }();
     converter->setCurrencyModel(currencyStocksInterface);
