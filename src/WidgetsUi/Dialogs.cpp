@@ -3,6 +3,8 @@
 #include <QMessageBox>
 #include <QObject>
 
+#include <QInputDialog>
+
 Dialogs::Dialogs(QWidget * const w) :
     w(w)
 {
@@ -11,9 +13,9 @@ Dialogs::Dialogs(QWidget * const w) :
 bool Dialogs::askReplaceBuyRequest(const char *const ticker, const float sellPrice) const
 {
     return QMessageBox::question(w,QObject::tr("Replace?"),
-                                  QObject::tr("There already is %1:\n %1 %2")
-                                  .arg(QString(ticker))
-                                  .arg(sellPrice))
+                                 QObject::tr("There already is %1:\n %1 %2")
+                                 .arg(QString(ticker))
+                                 .arg(sellPrice))
             == QMessageBox::Yes;
 }
 
@@ -86,4 +88,32 @@ bool Dialogs::askBuyRequestDoubleDeletion(const char *const ticker1, const float
                                  .arg(QString(ticker2))
                                  .arg(basePrice2))
             == QMessageBox::Yes;
+}
+
+double Dialogs::askCurrencyCourse(const char *const currency,
+                                const char *const targetCurrency) const
+{
+    return QInputDialog::getDouble(0,
+                                   QObject::tr("Input cource"),
+                                   QObject::tr("Cource of %1 to %2")
+                                   .arg(currency)
+                                   .arg(targetCurrency),
+                                   0,
+                                   0,
+                                   10000,
+                                   8);
+}
+
+void Dialogs::setMainWindow(QWidget * const w)
+{
+    this->w = w;
+}
+
+double Dialogs::getBuyRequestPrice(StockName name, float price, bool *ok) const
+{
+    return QInputDialog::getDouble(nullptr,
+                                   name,
+                                   QObject::tr("Price"),
+                                   price,
+                                   0, 100000, 10, ok);
 }

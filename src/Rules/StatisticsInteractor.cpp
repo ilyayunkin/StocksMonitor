@@ -9,16 +9,13 @@
 #include <assert.h>
 
 StatisticsInteractor::StatisticsInteractor(AbstractStatisticsConfigDatabase &db,
-                                           Entities &entities)
+                                           Entities &entities,
+                                           const AbstractDialogs &dialogs)
     : db(db)
     , entities(entities)
+    , dialogs(dialogs)
 {
     entities.statistics = db.getAll();
-}
-
-void StatisticsInteractor::setDialogs(AbstractDialogs * const dialogs)
-{
-    this->dialogs = dialogs;
 }
 
 const StatisticsConfigList &StatisticsInteractor::getStatisticsConfig() const
@@ -108,7 +105,7 @@ bool StatisticsInteractor::removeStatisticsItem(const QString &category, const Q
         throw NoSuchItemInStatisticsConfig();
     }
 
-    if(dialogs->askReplaceItemFromStatistics(ticker))
+    if(dialogs.askReplaceItemFromStatistics(ticker))
     {
         db.removeItem(group, ticker);
         groupIt->list.erase(itemIt);
@@ -137,7 +134,7 @@ bool StatisticsInteractor::removeStatisticsGroup(const QString &category, const 
         throw NoSuchGroupInStatisticsConfig();
     }
 
-    if(dialogs->askReplaceGroupStatistics(group))
+    if(dialogs.askReplaceGroupStatistics(group))
     {
         db.removeGroup(category, group);
         catIt->list.erase(groupIt);
@@ -157,7 +154,7 @@ bool StatisticsInteractor::removeStatisticsCategory(const QString &category)
         throw NoSuchCategoryInStatisticsConfig();
     }
 
-    if(dialogs->askReplaceGroupStatistics(category))
+    if(dialogs.askReplaceGroupStatistics(category))
     {
         db.removeCategory(category);
         entities.statistics.erase(catIt);

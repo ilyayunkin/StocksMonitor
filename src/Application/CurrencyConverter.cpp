@@ -6,12 +6,15 @@
 #include <QString>
 #include <QStringList>
 
-#include <QInputDialog>
+#include "Rules/AbstractDialogs.h"
+#include "StocksList.h"
 
 CurrencyConverter::CurrencyConverter(const char *const currencyCode,
-                                     StocksInterface * const currencyModel) :
-    currencyModel(currencyModel),
-    currencyCode(currencyCode)
+                                     const AbstractDialogs &dialogs,
+                                     AbstractCurrencyCourseSource * const currencyModel)
+    : currencyModel(currencyModel)
+    , currencyCode(currencyCode)
+    , dialogs(dialogs)
 {
 }
 
@@ -45,37 +48,25 @@ float CurrencyConverter::convert(const char * const targetCurrency,
     if(strcmp(currency, targetCurrency) != 0)
     {
         double cource = 0;
-        auto getDouble = [&currency, &targetCurrency]
-        {
-            return QInputDialog::getDouble(0,
-                                    QObject::tr("Input cource"),
-                                    QObject::tr("Cource of %1 to %2")
-                                    .arg(currency)
-                                    .arg(targetCurrency),
-                                    0,
-                                    0,
-                                    10000,
-                                    8);
-        };
         if(currencyModel != nullptr)
         {
             if(currencyCode == targetCurrency)
             {
-                Stock stock = currencyModel->getStock(currency);
-                if(stock.price != Stock::defaultPrice)
-                    cource = stock.price;
+                auto price = currencyModel->getCurrencyCourse(currency);
+                if(price != Stock::defaultPrice)
+                    cource = price;
             }else if(currencyCode == currency)
             {
-                Stock stock = currencyModel->getStock(targetCurrency);
-                if(stock.price != Stock::defaultPrice)
-                    cource = 1 / stock.price;
+                auto price = currencyModel->getCurrencyCourse(targetCurrency);
+                if(price != Stock::defaultPrice)
+                    cource = 1 / price;
             }else
             {
-                cource = getDouble();
+                cource = dialogs.askCurrencyCourse(currency, targetCurrency);
             }
         }else
         {
-            cource = getDouble();
+            cource = dialogs.askCurrencyCourse(currency, targetCurrency);
         }
 
         return value * cource;
@@ -85,7 +76,7 @@ float CurrencyConverter::convert(const char * const targetCurrency,
     }
 }
 
-void CurrencyConverter::setCurrencyModel(StocksInterface * const currencyModel)
+void CurrencyConverter::setCurrencyModel(AbstractCurrencyCourseSource * const currencyModel)
 {
     this->currencyModel = currencyModel;
 }

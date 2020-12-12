@@ -24,13 +24,16 @@ class StatisticsConfigDatabase;
 class StatisticsController;
 class ProcessStatisticsController;
 class AbstractStatisticsConfigView;
+class Browser;
+class CurrencyCourseSource;
 
 class Application : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Application(QObject *parent = nullptr);
+    explicit Application(const AbstractDialogs &dialogs,
+                         QObject *parent = nullptr);
     ~Application();
     ViewInterfacesList &getViewInterfaces(){return viewInterfaces;}
     PortfolioInterface &getPortfolioInterface(){return  *portfolioInterface;}
@@ -43,12 +46,13 @@ public:
     QStringList getPluginsList() const;
     StockIdList getStockIdList(const QString &plugin) const;
     void setNotifier(AbstractNotifier *const notifier);
-    void setDialogs(AbstractDialogs *const dialogs);
     void setStatisticsConfigView(AbstractStatisticsConfigView *configView);
 private:
 
     ViewInterfacesList viewInterfaces;
 
+    std::unique_ptr<CurrencyCourseSource> currencyCourseSource;
+    std::unique_ptr<Browser> browser;
     std::unique_ptr<PortfolioInterface> portfolioInterface;
     std::vector<std::unique_ptr<StocksMonitor>> monitors;
     std::unique_ptr<StatisticsCsvSaver> csvSaver;

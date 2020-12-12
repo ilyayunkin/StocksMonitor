@@ -15,8 +15,8 @@ class EditPortfolioInteractor
 public:
     EditPortfolioInteractor(Entities &entities,
                             Subscriptions &subscriptions,
-                            const AbstractCurrencyConverter &converter);
-    void setDialogs(AbstractDialogs *const dialogs);
+                            const AbstractCurrencyConverter &converter,
+                            const AbstractDialogs &dialogs);
     void setPortfolioDatabase(AbstractPortfolioDatabase *const portfolioDb);
 
     bool setPortfolioEntryQuantity(size_t row, int quantity);
@@ -28,7 +28,7 @@ public:
     void deletePortfolioEntry(size_t row);
 private:
     Entities &entities;
-    AbstractDialogs *dialogs = nullptr;
+    const AbstractDialogs &dialogs;
     Subscriptions &subscriptions;
     AbstractPortfolioDatabase *portfolioDb = nullptr;
     const AbstractCurrencyConverter &converter;

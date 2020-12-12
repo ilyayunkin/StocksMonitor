@@ -6,15 +6,12 @@
 #include "AbstractBuyRequestDatabase.h"
 
 EditBuyRequestInteractor::EditBuyRequestInteractor(Entities &entities,
-                                                   Subscriptions &subscriptions)
+                                                   Subscriptions &subscriptions,
+                                                   const AbstractDialogs &dialogs)
     : entities(entities)
     , subscriptions(subscriptions)
+    , dialogs(dialogs)
 {
-}
-
-void EditBuyRequestInteractor::setDialogs(AbstractDialogs * const dialogs)
-{
-    this->dialogs = dialogs;
 }
 
 void EditBuyRequestInteractor::addDatabase(AbstractBuyRequestDatabase *db)
@@ -22,7 +19,9 @@ void EditBuyRequestInteractor::addDatabase(AbstractBuyRequestDatabase *db)
     buyRequestDatabases.push_back(db);
 }
 
-void EditBuyRequestInteractor::addLimit(const stocksListHandler handler, const char * const ticker, float referencePrice)
+void EditBuyRequestInteractor::addLimit(const stocksListHandler handler,
+                                        const char * const ticker,
+                                        float referencePrice)
 {
     assert(ticker);
     assert(strlen(ticker) != 0);
@@ -34,7 +33,7 @@ void EditBuyRequestInteractor::addLimit(const stocksListHandler handler, const c
 
     if(it != stockLimits.end())
     {
-        if(dialogs->askReplaceBuyRequest(it->ticker.data(), it->basePrice))
+        if(dialogs.askReplaceBuyRequest(it->ticker.data(), it->basePrice))
         {
             it->basePrice = referencePrice;
             //                int row = it - stockLimits.begin();
@@ -66,7 +65,7 @@ bool EditBuyRequestInteractor::setReferencePrice(const stocksListHandler handler
 void EditBuyRequestInteractor::remove(const stocksListHandler handler, const char * const ticker)
 {
     assert(ticker);
-    if(dialogs->askDeleteBuyRequest(ticker))
+    if(dialogs.askDeleteBuyRequest(ticker))
     {
         auto &pair = entities.pairs[handler];
         auto &limits = pair.limits;

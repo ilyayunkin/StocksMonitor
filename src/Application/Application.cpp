@@ -10,6 +10,8 @@
 #include "PortfolioDatabase.h"
 #include "StatisticsCsvSaver.h"
 #include "StatisticsConfigDatabase.h"
+#include "Browser.h"
+#include "CurrencyCourseSource.h"
 #include "Controllers/StatisticsController.h"
 #include "Controllers/ProcessStatisticsController.h"
 
@@ -57,12 +59,13 @@ PluginsList loadPlugins()
 }
 }
 
-Application::Application(QObject *parent) :
+Application::Application(const AbstractDialogs &dialogs, QObject *parent) :
     QObject(parent)
+  , browser(std::make_unique<Browser>())
   , csvSaver(new StatisticsCsvSaver)
   , statisticsConfigDatabase(new StatisticsConfigDatabase)
-  , converter(new CurrencyConverter("RUB"))
-  , rules(new RulesFasade(statisticsConfigDatabase.get(), *converter.get()))
+  , converter(new CurrencyConverter("RUB", dialogs))
+  , rules(new RulesFasade(statisticsConfigDatabase.get(), *converter.get(), dialogs))
   , portfolioDatabase(new PortfolioDatabase)
   , statisticsController(new StatisticsController(rules->getStatisticsInteractor()))
   , processStatisticsController(new ProcessStatisticsController(
@@ -88,6 +91,8 @@ Application::Application(QObject *parent) :
 
         viewInterfaces.push_back(ViewInterfacesPair(plugin->getName(),
                                                     plugin->getUrl().toString(),
+                                                    dialogs,
+                                                    *browser.get(),
                                                     rules->getEntities(),
                                                     rules->getSubscriptions(),
                                                     rules->getLoadStocksInteractor(),
@@ -100,14 +105,14 @@ Application::Application(QObject *parent) :
                                   plugin->createParser(),
                                   plugin->getUrl()));
     }
-    auto currencyStocksInterface = [&]{
+    {
         auto cbrfInterface = std::find_if(viewInterfaces.begin(), viewInterfaces.end(),
                                           [](const auto &interface){return interface.name == "CBRF-Currency";});
         if(cbrfInterface != viewInterfaces.end())
-            return &(cbrfInterface->stocksInterface);
-        return static_cast<StocksInterface *>(nullptr);
-    }();
-    converter->setCurrencyModel(currencyStocksInterface);
+            currencyCourseSource.reset(new CurrencyCourseSource(cbrfInterface->stocksInterface));
+    }
+
+    converter->setCurrencyModel(currencyCourseSource.get());
     rules->getEditPortfolioInteractor().setPortfolioDatabase(portfolioDatabase.get());
     portfolioInterface.reset(new PortfolioInterface(
                                  rules->getEntities(),
@@ -152,11 +157,6 @@ StatisticsController &Application::getStatisticsController()
 void Application::setNotifier(AbstractNotifier * const notifier)
 {
     rules->getLoadStocksInteractor().setNotifier(notifier);
-}
-
-void Application::setDialogs(AbstractDialogs * const dialogs)
-{
-    rules->setDialogs(dialogs);
 }
 
 void Application::setStatisticsConfigView(AbstractStatisticsConfigView *configView)

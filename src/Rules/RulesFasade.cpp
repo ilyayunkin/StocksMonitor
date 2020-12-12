@@ -34,16 +34,19 @@ StockIdList RulesFasade::getStockIdList(const PluginName &plugin) const
     return StockIdList();
 }
 
-RulesFasade::RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb, AbstractCurrencyConverter &converter)
+RulesFasade::RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb,
+                         AbstractCurrencyConverter &converter,
+                         const AbstractDialogs &dialogs)
     : entities()
     , subscriptions()
     , statisticsDb(statisticsDb)
-    , statisticsInteractor(*statisticsDb, entities)
+    , statisticsInteractor(*statisticsDb, entities, dialogs)
     , processStatisticsInteractor(entities.portfolio, entities.statistics, converter)
     , loadStocksInteractor(entities, subscriptions)
-    , editPortfolioInteractor(entities, subscriptions, converter)
-    , editBuyRequestInteractor(entities, subscriptions)
+    , editPortfolioInteractor(entities, subscriptions, converter, dialogs)
+    , editBuyRequestInteractor(entities, subscriptions, dialogs)
     , converter(converter)
+    , dialogs(dialogs)
 {
     qDebug() << __PRETTY_FUNCTION__;
 }
@@ -58,14 +61,6 @@ stocksListHandler RulesFasade::addStocksSource(const StocksSource &source)
     editBuyRequestInteractor.addDatabase(source.db);
     entities.portfolio.registerStockSourceInPortfolio(source.name, handler);
     return handler;
-}
-
-void RulesFasade::setDialogs(AbstractDialogs * const dialogs)
-{
-    this->dialogs = dialogs;
-    statisticsInteractor.setDialogs(dialogs);
-    editBuyRequestInteractor.setDialogs(dialogs);
-    editPortfolioInteractor.setDialogs(dialogs);
 }
 
 RulesFasade::~RulesFasade()

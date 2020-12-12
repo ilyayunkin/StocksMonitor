@@ -15,9 +15,8 @@ class StatisticsInteractor
 {
 public:
     StatisticsInteractor(AbstractStatisticsConfigDatabase &db,
-                         Entities &entities);
-
-    void setDialogs(AbstractDialogs *const dialogs);
+                         Entities &entities,
+                         const AbstractDialogs &dialogs);
 
     const StatisticsConfigList &getStatisticsConfig()const;
     bool addStatisticsItem(const QString &category,
@@ -35,7 +34,7 @@ public:
 private:
     AbstractStatisticsConfigDatabase &db;
     Entities &entities;
-    AbstractDialogs * dialogs = nullptr;
+    const AbstractDialogs &dialogs;
 
     bool isItemInCategory(const StatisticsConfigList::iterator category, const char *ticker);
 };

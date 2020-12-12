@@ -5,19 +5,22 @@
 #include "Rules/EditBuyRequestInteractor.h"
 #include "Rules/EditPortfolioInteractor.h"
 #include "Rules/Subscriptions.h"
+#include "Rules/AbstractDialogs.h"
+#include "Application/AbstractBrowser.h"
 
 #include <QDebug>
-#include <QInputDialog>
-#include <QDesktopServices>
-#include <QUrl>
 
 StocksInterface::StocksInterface(const Entities &entities,
                                  Subscriptions &subscriptions,
                                  LoadStocksInteractor &loadStocksInteractor,
                                  EditBuyRequestInteractor &editBuyRequestInteractor,
                                  EditPortfolioInteractor &editPortfolioInteractor,
+                                 const AbstractDialogs &dialogs,
+                                 const AbstractBrowser &browser,
                                  const stocksListHandler handler)
     : handler(handler)
+    , dialogs(dialogs)
+    , browser(browser)
     , entities(entities)
     , subscriptions(subscriptions)
     , loadStocksInteractor(loadStocksInteractor)
@@ -55,11 +58,7 @@ void StocksInterface::addLimit(const char * const ticker)
 {
     Stock stock = getStock(ticker);
     bool ok;
-    float basePrice = QInputDialog::getDouble(nullptr,
-                                              stock.name,
-                                              QObject::tr("Price"),
-                                              stock.price,
-                                              0, 100000, 10, &ok);
+    float basePrice = dialogs.getBuyRequestPrice(stock.name, stock.price, &ok);
     if(ok)
     {
         editBuyRequestInteractor.addLimit(handler, ticker, basePrice);
@@ -73,5 +72,5 @@ void StocksInterface::subscribeForChanges(AbstractStocksView *view)
 
 void StocksInterface::openUrl(const char * const ticker) const
 {
-    QDesktopServices::openUrl(QUrl(toQString(entities.getUrl(handler, ticker))));
+    browser.openUrl(entities.getUrl(handler, ticker));
 }

@@ -26,6 +26,7 @@ SOURCES += \
     Application/Application.cpp \
     Application/BuyRequestDatabase.cpp \
     Application/Controllers/ProcessStatisticsController.cpp \
+    Application/CurrencyCourseSource.cpp \
     Application/PortfolioDatabase.cpp \
     Application/CurrencyConverter.cpp \
     Application/StatisticsConfigDatabase.cpp \
@@ -76,11 +77,15 @@ HEADERS += \
     ../include/ExceptionClasses.h \
     ../include/StocksList.h \
     ../include/StringTypes.h \
+    Application/AbstractBrowser.h \
+    Application/AbstractCurrencyCourseSource.h \
     Application/Application.h \
+    Application/Browser.h \
     Application/BuyRequestDatabase.h \
     Application/Controllers/AbstractStatisticsConfigView.h \
     Application/Controllers/ProcessStatisticsController.h \
     Application/Controllers/StatisticsConfigIndex.h \
+    Application/CurrencyCourseSource.h \
     Application/PortfolioDatabase.h \
     Application/CurrencyConverter.h \
     Application/StatisticsConfigDatabase.h \

@@ -24,13 +24,13 @@ int main(int argc, char *argv[])
     {
         Logger::instance().log("The program is started");
 
-        Application app;
+        Dialogs dialogs;
+        Application app(dialogs);
 
         MainWindow w(app);
         w.showMaximized();
 
-        Dialogs dialogs(&w);
-        app.setDialogs(&dialogs);
+        dialogs.setMainWindow(&w);
 
         ret = a.exec();
     }catch(std::runtime_error &e)

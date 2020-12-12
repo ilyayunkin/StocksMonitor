@@ -6,6 +6,8 @@
 
 #include <vector>
 
+class AbstractDialogs;
+
 struct ViewInterfacesPair
 {
     QString name;
@@ -15,6 +17,8 @@ struct ViewInterfacesPair
 
     ViewInterfacesPair(const QString name,
                        const Url url,
+                       const AbstractDialogs &dialogs,
+                       const AbstractBrowser &browser,
                        const Entities &entities,
                        Subscriptions &subscriptions,
                        LoadStocksInteractor &loadStocksInteractor,
@@ -24,17 +28,19 @@ struct ViewInterfacesPair
         name(std::move(name)),
         url(std::move(url)),
         stocksInterface(entities,
-                         subscriptions,
-                         loadStocksInteractor,
-                         editBuyRequestInteractor,
-                         editPortfolioInteractor,
-                         handler),
+                        subscriptions,
+                        loadStocksInteractor,
+                        editBuyRequestInteractor,
+                        editPortfolioInteractor,
+                        dialogs,
+                        browser,
+                        handler),
         buyRequestInterface(entities,
-                             subscriptions,
-                             loadStocksInteractor,
-                             editPortfolioInteractor,
-                             editBuyRequestInteractor,
-                             handler)
+                            subscriptions,
+                            loadStocksInteractor,
+                            editPortfolioInteractor,
+                            editBuyRequestInteractor,
+                            handler)
     {}
 };
 

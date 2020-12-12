@@ -14,8 +14,8 @@ class EditBuyRequestInteractor
 {
 public:
     EditBuyRequestInteractor(Entities &entities,
-                             Subscriptions &subscriptions);
-    void setDialogs(AbstractDialogs *const dialogs);
+                             Subscriptions &subscriptions,
+                             const AbstractDialogs &dialogs);
     void addDatabase(AbstractBuyRequestDatabase *db);
 
     void addLimit(const stocksListHandler handler,
@@ -29,9 +29,8 @@ public:
 private:
     Entities &entities;
     Subscriptions &subscriptions;
-    AbstractDialogs *dialogs = nullptr;
+    const AbstractDialogs &dialogs;
     BuyRequestDatabasesList buyRequestDatabases;
-
 };
 
 #endif // EDITBUYREQUESTINTERACTOR_H

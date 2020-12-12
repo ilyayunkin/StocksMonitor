@@ -44,10 +44,11 @@ class RulesFasade
     EditBuyRequestInteractor editBuyRequestInteractor;
 
     const AbstractCurrencyConverter &converter;
-    AbstractDialogs *dialogs = nullptr;
+    const AbstractDialogs &dialogs;
 public:
     explicit RulesFasade(AbstractStatisticsConfigDatabase *statisticsDb,
-                         AbstractCurrencyConverter &converter);
+                         AbstractCurrencyConverter &converter,
+                         const AbstractDialogs &dialogs);
     ~RulesFasade();
 
     const Entities &getEntities(){return entities;}
@@ -59,7 +60,6 @@ public:
     ProcessStatisticsInteractor &getProcessStatisticsInteractor(){return processStatisticsInteractor;}
 
     stocksListHandler addStocksSource(const StocksSource &source);
-    void setDialogs(AbstractDialogs *const dialogs);
 
     QStringList getAvailibleCurrencies();
 

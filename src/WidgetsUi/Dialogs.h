@@ -20,8 +20,12 @@ public:
                                      , const float basePrice1
                                      , const char *const ticker2
                                      , const float basePrice2)const;
+    double askCurrencyCourse(const char *const currency,
+                           const char *const targetCurrency)const override;
+    void setMainWindow(QWidget *const w);
+    double getBuyRequestPrice(StockName name, float price, bool *ok) const override;
 private:
-    QWidget *const w = nullptr;
+    QWidget *w = nullptr;
 };
 
 #endif // DIALOGS_H

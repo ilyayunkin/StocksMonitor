@@ -8,16 +8,13 @@
 
 EditPortfolioInteractor::EditPortfolioInteractor(Entities &entities,
                                                  Subscriptions &subscriptions,
-                                                 const AbstractCurrencyConverter &converter)
+                                                 const AbstractCurrencyConverter &converter,
+                                                 const AbstractDialogs &dialogs)
     : entities(entities)
+    , dialogs(dialogs)
     , subscriptions(subscriptions)
     , converter(converter)
 {
-}
-
-void EditPortfolioInteractor::setDialogs(AbstractDialogs * const dialogs)
-{
-    this->dialogs = dialogs;
 }
 
 void EditPortfolioInteractor::setPortfolioDatabase(AbstractPortfolioDatabase *const portfolioDb)
@@ -38,7 +35,7 @@ void EditPortfolioInteractor::addToPortfolio(const stocksListHandler handler, co
     const bool alreadyInPortfolio = entryIt != entities.portfolio.portfolio.end();
     if(alreadyInPortfolio)
     {
-        if(dialogs->askAddQuantityToPortfolio(entryIt->ticker.data()))
+        if(dialogs.askAddQuantityToPortfolio(entryIt->ticker.data()))
         {
             entryIt->quantity+= quantity;
             int row = entryIt - entities.portfolio.portfolio.begin();
