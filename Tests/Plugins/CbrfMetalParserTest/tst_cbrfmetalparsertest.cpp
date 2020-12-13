@@ -20,6 +20,7 @@ private slots:
     void rightDerivationWeek();
     void rightDerivationMonth();
     void rightDerivationYear();
+    void dateFromXmlReturnedAsTime();
 };
 
 QByteArray sample(){
@@ -38,7 +39,22 @@ QByteArray sample(){
            <Record Date="12.12.2020" Code="4">
            <Buy>5470,42</Buy>
            <Sell>5470,42</Sell>
-           </Record></Metall>)TEST";
+           </Record>
+           <Record Date="12.12.2020" Code="1">
+           <Buy>4310,63</Buy>
+           <Sell>4310,63</Sell>
+           </Record><Record Date="12.12.2020" Code="2">
+           <Buy>56,15</Buy>
+           <Sell>56,15</Sell></Record>
+           <Record Date="12.12.2020" Code="3">
+           <Buy>2402,56</Buy>
+           <Sell>2402,56</Sell>
+           </Record>
+           <Record Date="12.12.2020" Code="4">
+           <Buy>5470,42</Buy>
+           <Sell>5470,42</Sell>
+           </Record>
+           </Metall>)TEST";
 }
 
 CbrfMetalParserTest::CbrfMetalParserTest()
@@ -137,6 +153,14 @@ void CbrfMetalParserTest::rightDerivationYear()
     for(std::size_t i = 0; i < list.size(); ++i){
         QCOMPARE(list[i].derivationYear, derivation[i]);
     }
+}
+
+void CbrfMetalParserTest::dateFromXmlReturnedAsTime()
+{
+    StocksList list;
+    TimeString time;
+    parser.parse(arr, list, time);
+    QCOMPARE(QString(time.data()), "12.12.2020");
 }
 
 QTEST_APPLESS_MAIN(CbrfMetalParserTest)

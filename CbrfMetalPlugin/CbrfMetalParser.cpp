@@ -51,7 +51,7 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                                TimeString &time)
 {
     assert(stocks.empty());
-    time = QTime::currentTime().toString().toLatin1().data();
+//    time = QTime::currentTime().toString().toLatin1().data();
 
     if(m_DownloadeAwholeDocumentdData.isEmpty())
     {
@@ -66,7 +66,6 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
 
     QDomElement docElem = doc.documentElement();
 
-//    time = docElem.attribute("Date").toStdString();
     QDomNode currencyNode = docElem.firstChild();
     int i = 1;
     while(!currencyNode.isNull())
@@ -77,6 +76,7 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
         {
             QDomNode subNode = element.firstChild();
             auto code = element.attribute("Code");
+            time = element.attribute("Date").toStdString();
             if(code == "1"){
                 stock.name = "Aurum";
                 stock.ticker = "AURUM";
@@ -113,5 +113,11 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
 
     if(stocks.empty())
         throw EmptyTableException();
+
+    if(stocks.size() > 4){
+        auto newestSubrange = stocks.end() - 4;
+        std::rotate(stocks.begin(), newestSubrange, stocks.end());
+        stocks.erase(stocks.begin() + 4, stocks.end());
+    }
 }
 
