@@ -5,5 +5,6 @@ SUBDIRS += \
 		SmartLabMmvbUsaPlugin \
         SmartLabUsaPlugin \
         CbrfCurrencyPlugin \
+        CbrfMetalPlugin \
         Tests \
         src/StocksMonitor.pro
