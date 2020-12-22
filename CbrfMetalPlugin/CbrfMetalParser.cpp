@@ -53,8 +53,7 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
     assert(stocks.empty());
 //    time = QTime::currentTime().toString().toLatin1().data();
 
-    if(m_DownloadeAwholeDocumentdData.isEmpty())
-    {
+    if(m_DownloadeAwholeDocumentdData.isEmpty()){
         throw PageUnavailibleException();
     }
 
@@ -67,15 +66,13 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
     QDomElement docElem = doc.documentElement();
 
     int i = 1;
-    for(QDomNode currencyNode = docElem.firstChild(); !currencyNode.isNull();
-        currencyNode = currencyNode.nextSibling())
+    for(QDomNode currencyNode = docElem.lastChild(); !currencyNode.isNull();
+        currencyNode = currencyNode.previousSibling())
     {
         QDomElement element = currencyNode.toElement(); // try to convert the node to an element.
-        if(!element.isNull())
-        {
+        if(!element.isNull()){
             Stock stock = [&]{
                 auto code = element.attribute("Code");
-                time = element.attribute("Date").toStdString();
                 if(code == "1"){
                     return Stock{"Aurum", "AURUM"};
                 }else if(code == "2"){
@@ -87,6 +84,7 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                 }
                 return Stock{};
             }();
+            time = element.attribute("Date").toStdString();
             for(QDomNode subNode = element.firstChild(); !subNode.isNull();
                 subNode = subNode.nextSibling())
             {
@@ -96,8 +94,7 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                     auto tag = subElement.tagName();
                     auto text = subElement.text();
 
-                    if(tag == "Buy")
-                    {
+                    if(tag == "Buy"){
                         stock.price = locale.toFloat(text);
                     }
                 }
@@ -112,8 +109,7 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
 
     if(stocks.size() > 4){
         StocksList out;
-        auto newestSubrange = stocks.end() - 4;
-        std::copy(newestSubrange, stocks.end(), std::back_inserter(out));
+        std::copy(stocks.rend() - 4, stocks.rend(), std::back_inserter(out));
         std::swap(out, stocks);
     }
 }
