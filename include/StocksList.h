@@ -17,17 +17,10 @@ struct Stock
     float derivationMonth;
     float derivationYear;
 
-    Stock() :
-        price(defaultPrice),
-        derivation(defaultDerivation),
-        derivationWeek(defaultDerivation),
-        derivationMonth(defaultDerivation),
-        derivationYear(defaultDerivation)
-    {}
-    Stock(StockName name,
-          Ticker ticker,
-          Url url,
-          float price,
+    Stock(StockName name = StockName(),
+          Ticker ticker = Ticker(),
+          Url url = Url(),
+          float price = defaultPrice,
           float derivation = defaultDerivation,
           float derivationWeek = defaultDerivation,
           float derivationMonth = defaultDerivation,

@@ -66,31 +66,29 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
 
     QDomElement docElem = doc.documentElement();
 
-    QDomNode currencyNode = docElem.firstChild();
     int i = 1;
-    while(!currencyNode.isNull())
+    for(QDomNode currencyNode = docElem.firstChild(); !currencyNode.isNull();
+        currencyNode = currencyNode.nextSibling())
     {
-        Stock stock;
         QDomElement element = currencyNode.toElement(); // try to convert the node to an element.
         if(!element.isNull())
         {
-            QDomNode subNode = element.firstChild();
-            auto code = element.attribute("Code");
-            time = element.attribute("Date").toStdString();
-            if(code == "1"){
-                stock.name = "Aurum";
-                stock.ticker = "AURUM";
-            }else if(code == "2"){
-                stock.name = "Silver";
-                stock.ticker = "SILVER";
-            }if(code == "3"){
-                stock.name = "Platinum";
-                stock.ticker = "PL";
-            }if(code == "4"){
-                stock.name = "Palladium";
-                stock.ticker = "PALAD";
-            }
-            while(!subNode.isNull())
+            Stock stock = [&]{
+                auto code = element.attribute("Code");
+                time = element.attribute("Date").toStdString();
+                if(code == "1"){
+                    return Stock{"Aurum", "AURUM"};
+                }else if(code == "2"){
+                    return Stock{"Silver", "SILVER"};
+                }if(code == "3"){
+                    return Stock{"Platinum", "PL"};
+                }if(code == "4"){
+                    return Stock{"Palladium", "PALAD"};
+                }
+                return Stock{};
+            }();
+            for(QDomNode subNode = element.firstChild(); !subNode.isNull();
+                subNode = subNode.nextSibling())
             {
                 QDomElement subElement = subNode.toElement(); // try to convert the node to an element.
                 if(!subElement.isNull())
@@ -103,11 +101,9 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
                         stock.price = locale.toFloat(text);
                     }
                 }
-                subNode = subNode.nextSibling();
             }
+            stocks.push_back(stock);
         }
-        stocks.push_back(stock);
-        currencyNode = currencyNode.nextSibling();
         ++i;
     }
 
@@ -115,9 +111,10 @@ void CbrfMetalParser::parse(const QByteArray &m_DownloadeAwholeDocumentdData,
         throw EmptyTableException();
 
     if(stocks.size() > 4){
+        StocksList out;
         auto newestSubrange = stocks.end() - 4;
-        std::rotate(stocks.begin(), newestSubrange, stocks.end());
-        stocks.erase(stocks.begin() + 4, stocks.end());
+        std::copy(newestSubrange, stocks.end(), std::back_inserter(out));
+        std::swap(out, stocks);
     }
 }
 
