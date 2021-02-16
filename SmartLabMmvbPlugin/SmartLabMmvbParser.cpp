@@ -27,6 +27,7 @@ enum
     TIME,
     NAME,
     TICKER,
+    BLOG,
     CHART,
     CHART2,
     PRICE,
