@@ -8,7 +8,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES +=  tst_cbrfmetalparsertest.cpp \
-    ../../../CbrfMetalPlugin/CbrfMetalParser.cpp
+    $$PLUGINS_DIR/CbrfMetalPlugin/CbrfMetalParser.cpp
 
 HEADERS += \
-    ../../../CbrfMetalPlugin/CbrfMetalParser.h
+    $$PLUGINS_DIR/CbrfMetalPlugin/CbrfMetalParser.h

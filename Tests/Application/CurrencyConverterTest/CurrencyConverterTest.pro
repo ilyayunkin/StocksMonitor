@@ -8,9 +8,9 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES +=  tst_currencyconvertertest.cpp \
-    ../../../src/Application/CurrencyConverter.cpp \
-    ../../../src/Entities/CurrencyCounter.cpp \
+    $$ROOT_DIR/src/Application/CurrencyConverter.cpp \
+    $$ROOT_DIR/src/Entities/CurrencyCounter.cpp \
 
 HEADERS += \
-    ../../../src/Application/CurrencyConverter.h \
-    ../../../src/Entities/CurrencyCounter.h \
+    $$ROOT_DIR/src/Application/CurrencyConverter.h \
+    $$ROOT_DIR/src/Entities/CurrencyCounter.h \

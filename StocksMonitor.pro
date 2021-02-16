@@ -1,10 +1,10 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-        SmartLabMmvbPlugin \
-		SmartLabMmvbUsaPlugin \
-        SmartLabUsaPlugin \
-        CbrfCurrencyPlugin \
-        CbrfMetalPlugin \
+        plugins/SmartLabMmvbPlugin \
+        plugins/SmartLabMmvbUsaPlugin \
+        plugins/SmartLabUsaPlugin \
+        plugins/CbrfCurrencyPlugin \
+        plugins/CbrfMetalPlugin \
         Tests \
         src/StocksMonitor.pro

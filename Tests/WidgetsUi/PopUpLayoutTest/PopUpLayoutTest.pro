@@ -9,8 +9,8 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES +=  \
-    ../../../src/WidgetsUi/PopUp/PopUpLayout.cpp \
+    $$ROOT_DIR/src/WidgetsUi/PopUp/PopUpLayout.cpp \
     tst_PopUpLayoutTest.cpp
 
 HEADERS += \
-    ../../../src/WidgetsUi/PopUp/PopUpLayout.h
+    $$ROOT_DIR/src/WidgetsUi/PopUp/PopUpLayout.h

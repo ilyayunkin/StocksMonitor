@@ -8,7 +8,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES +=  tst_smartlabusaparsertest.cpp \
-    ../../../SmartLabUsaPlugin/SmartLabUsaParser.cpp
+    $$PLUGINS_DIR/SmartLabUsaPlugin/SmartLabUsaParser.cpp
 
 HEADERS += \
-    ../../../SmartLabUsaPlugin/SmartLabUsaParser.h
+    $$PLUGINS_DIR/SmartLabUsaPlugin/SmartLabUsaParser.h

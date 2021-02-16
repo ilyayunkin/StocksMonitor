@@ -1,15 +1,6 @@
+include(../plugins.pri)
 QT -= gui
-
-TEMPLATE = lib
-
-CONFIG += plugin
-
-CONFIG += c++17
-QMAKE_CXXFLAGS+= -pedantic-errors
-QMAKE_CXXFLAGS+= -Wformat=2
-QMAKE_CXXFLAGS+= -Wlogical-op -Wshift-overflow=2 -Wduplicated-cond
-QMAKE_CXXFLAGS+= -Wcast-qual -Wcast-align -Wfloat-equal
-#QMAKE_CXXFLAGS+= -Wconversion
+QT += xml
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -21,24 +12,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
 SOURCES += \
-    SmartLabMmvbPlugin.cpp \
-    SmartLabMmvbParser.cpp \
+    CbrfCurrencyPlugin.cpp \
+    CbrfCurrencyParser.cpp \
 
 HEADERS += \
-    SmartLabMmvbPlugin.h \
-    SmartLabMmvbParser.h \
-    ../include/AbstractParser.h \
-    ../include/SourcePluginInterface.h \
-    ../include/ExceptionClasses.h
-
-INCLUDEPATH+=../include/
-
-DESTDIR= ../bin/plugins
-
-# Default rules for deployment.
-unix {
-    target.path = /usr/lib
-}
-!isEmpty(target.path): INSTALLS += target
+    CbrfCurrencyPlugin.h \
+    CbrfCurrencyParser.h \
+    $$ROOT_DIR/include/AbstractParser.h \
+    $$ROOT_DIR/include/SourcePluginInterface.h \
+    $$ROOT_DIR/include/ExceptionClasses.h

@@ -1,7 +1,10 @@
 
-INCLUDEPATH+=../../../
-INCLUDEPATH+=../../../src/
-INCLUDEPATH+=../../../include/
+ROOT_DIR=../../../
+PLUGINS_DIR=$$ROOT_DIR/plugins/
+INCLUDEPATH+=$$ROOT_DIR/
+INCLUDEPATH+=$$ROOT_DIR/src/
+INCLUDEPATH+=$$ROOT_DIR/include/
+INCLUDEPATH+=$$PLUGINS_DIR/
 
 QMAKE_CXXFLAGS= -O0 --coverage
 QMAKE_LFLAGS+= --coverage

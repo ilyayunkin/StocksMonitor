@@ -7,7 +7,7 @@
 struct CurrencySource : public AbstractCurrencyCourseSource
 {
     mutable int askedTimes = 0;
-    double getCurrencyCourse(const char * const currency)const
+    double getCurrencyCourse([[maybe_unused]]const char * const currency)const
     {
         ++askedTimes;
         return 2;

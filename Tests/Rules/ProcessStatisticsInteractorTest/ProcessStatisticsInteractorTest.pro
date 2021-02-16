@@ -9,13 +9,13 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES +=  tst_processstatisticsinteractortest.cpp \
-    ../../../src/Entities/CurrencyCounter.cpp \
-    ../../../src/Entities/Portfolio.cpp \
-    ../../../src/Rules/ProcessStatisticsInteractor.cpp
+    $$ROOT_DIR/src/Entities/CurrencyCounter.cpp \
+    $$ROOT_DIR/src/Entities/Portfolio.cpp \
+    $$ROOT_DIR/src/Rules/ProcessStatisticsInteractor.cpp
 
 HEADERS += \
-    ../../../src/Entities/CurrencyCounter.h \
-    ../../../src/Entities/Portfolio.h \
-    ../../../src/Entities/PortfolioEntry.h \
-    ../../../src/Entities/Statistics.h \
-    ../../../src/Rules/ProcessStatisticsInteractor.h
+    $$ROOT_DIR/src/Entities/CurrencyCounter.h \
+    $$ROOT_DIR/src/Entities/Portfolio.h \
+    $$ROOT_DIR/src/Entities/PortfolioEntry.h \
+    $$ROOT_DIR/src/Entities/Statistics.h \
+    $$ROOT_DIR/src/Rules/ProcessStatisticsInteractor.h

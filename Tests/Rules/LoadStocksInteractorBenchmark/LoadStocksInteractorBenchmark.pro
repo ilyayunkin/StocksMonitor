@@ -9,19 +9,19 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES +=  tst_loadstocksinteractortest.cpp \
-    ../../../src/Entities/CurrencyCounter.cpp \
-    ../../../src/Entities/Entities.cpp \
-    ../../../src/Entities/Portfolio.cpp \
-    ../../../src/Rules/LoadStocksInteractor.cpp \
-    ../../../src/Rules/Subscriptions.cpp
+    $$ROOT_DIR/src/Entities/CurrencyCounter.cpp \
+    $$ROOT_DIR/src/Entities/Entities.cpp \
+    $$ROOT_DIR/src/Entities/Portfolio.cpp \
+    $$ROOT_DIR/src/Rules/LoadStocksInteractor.cpp \
+    $$ROOT_DIR/src/Rules/Subscriptions.cpp
 
 HEADERS += \
-    ../../../include/StocksList.h \
-    ../../../src/Entities/CurrencyCounter.h \
-    ../../../src/Entities/Entities.h \
-    ../../../src/Entities/Portfolio.h \
-    ../../../src/Entities/PortfolioEntry.h \
-    ../../../src/Entities/StockLimit.h \
-    ../../../src/Entities/StocksListHandler.h \
-    ../../../src/Rules/LoadStocksInteractor.h \
-    ../../../src/Rules/Subscriptions.h
+    $$ROOT_DIR/include/StocksList.h \
+    $$ROOT_DIR/src/Entities/CurrencyCounter.h \
+    $$ROOT_DIR/src/Entities/Entities.h \
+    $$ROOT_DIR/src/Entities/Portfolio.h \
+    $$ROOT_DIR/src/Entities/PortfolioEntry.h \
+    $$ROOT_DIR/src/Entities/StockLimit.h \
+    $$ROOT_DIR/src/Entities/StocksListHandler.h \
+    $$ROOT_DIR/src/Rules/LoadStocksInteractor.h \
+    $$ROOT_DIR/src/Rules/Subscriptions.h

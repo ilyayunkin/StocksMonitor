@@ -9,9 +9,9 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES +=  tst_statisticsdbtest.cpp \
-    ../../../src/Application/StatisticsConfigDatabase.cpp \
-    ../../../src/Entities/StockId.cpp
+    $$ROOT_DIR/src/Application/StatisticsConfigDatabase.cpp \
+    $$ROOT_DIR/src/Entities/StockId.cpp
 
 HEADERS += \
-    ../../../src/Application/StatisticsConfigDatabase.h \
-    ../../../src/Entities/StockId.h
+    $$ROOT_DIR/src/Application/StatisticsConfigDatabase.h \
+    $$ROOT_DIR/src/Entities/StockId.h

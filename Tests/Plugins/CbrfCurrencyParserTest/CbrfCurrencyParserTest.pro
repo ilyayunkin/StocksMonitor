@@ -8,7 +8,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES +=  tst_cbrfcurrencyparsertest.cpp \
-    ../../../CbrfCurrencyPlugin/CbrfCurrencyParser.cpp
+    $$PLUGINS_DIR/CbrfCurrencyPlugin/CbrfCurrencyParser.cpp
 
 HEADERS += \
-    ../../../CbrfCurrencyPlugin/CbrfCurrencyParser.h
+    $$PLUGINS_DIR/CbrfCurrencyPlugin/CbrfCurrencyParser.h
