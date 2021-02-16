@@ -29,6 +29,7 @@ QByteArray sample(){
                    <th><a href="/q/shares/order_by_time/desc/"><img class="mart_portf_icon" src="/plugins/trade/templates/skin/default/img/time.svg"></a></th>
                    <th><a href="/q/shares/order_by_short_name/asc/">Название</a></th>
                    <th><a href="/q/shares/order_by_sec_id/asc/">Тикер</a></th>
+                   <th class="chartrow"><img class="mart_portf_icon" src="/plugins/trade/templates/skin/default/img/blog.svg"></th>
                    <th class="chartrow"><img class="mart_portf_icon" src="/plugins/trade/templates/skin/default/img/chart.svg"></th>
                    <th class="chartrow"><img class="mart_portf_icon" src="/plugins/trade/templates/skin/default/img/bars.svg"></th>
                    <th><a href="/q/shares/order_by_last/desc/">Цена,<br> посл</a></th>
@@ -51,6 +52,7 @@ QByteArray sample(){
                    <td>18:51:01</td>
                    <td><a href="/q/index_stocks/IMOEX/">Индекс ММВБ</a></td>
                    <td>IMOEX</td>
+                   <td><a class="charticon" href="/gr/MOEX.IMOEX" target="_blank"></a></td>
                    <td><a class="charticon" href="/gr/MOEX.IMOEX" target="_blank"></a></td>
                    <td><a class="charticon2" href="/q/shares_fundamental/" target="_blank"></a></td>
                    <td>3258.31</td>
@@ -77,6 +79,7 @@ QByteArray sample(){
                    <td><a href="/forum/SBER">Сбербанк</a></td>
                    <td>SBER</td>
                    <td><a class="charticon" href="/gr/MOEX.SBER" target="_blank"></a></td>
+                   <td><a class="charticon" href="/gr/MOEX.SBER" target="_blank"></a></td>
                    <td><a class="charticon2" href="/q/SBER/f/y/" target="_blank"></a></td>
                    <td>281.81</td>
                    <td class="up">
@@ -100,6 +103,7 @@ QByteArray sample(){
                    <td>18:45:34</td>
                    <td><a href="/forum/LKOH">ЛУКОЙЛ</a></td>
                    <td>LKOH</td>
+                   <td><a class="charticon" href="/gr/MOEX.SBER" target="_blank"></a></td>
                    <td><a class="charticon" href="/gr/MOEX.LKOH" target="_blank"></a></td>
                    <td><a class="charticon2" href="/q/LKOH/f/y/" target="_blank"></a></td>
                    <td>5315.5</td>
@@ -124,6 +128,7 @@ QByteArray sample(){
                    <td>18:45:45</td>
                    <td><a href="/forum/GAZP">ГАЗПРОМ ао</a></td>
                    <td>GAZP</td>
+                   <td><a class="charticon" href="/gr/MOEX.SBER" target="_blank"></a></td>
                    <td><a class="charticon" href="/gr/MOEX.GAZP" target="_blank"></a></td>
                    <td><a class="charticon2" href="/q/GAZP/f/y/" target="_blank"></a></td>
                    <td>193.3</td>
@@ -148,6 +153,7 @@ QByteArray sample(){
                    <td>18:45:47</td>
                    <td><a href="/forum/GMKN">ГМКНорНик</a></td>
                    <td>GMKN</td>
+                   <td><a class="charticon" href="/gr/MOEX.SBER" target="_blank"></a></td>
                    <td><a class="charticon" href="/gr/MOEX.GMKN" target="_blank"></a></td>
                    <td><a class="charticon2" href="/q/GMKN/f/y/" target="_blank"></a></td>
                    <td>24050</td>
@@ -172,6 +178,7 @@ QByteArray sample(){
                    <td>18:45:02</td>
                    <td><a href="/forum/MGNT">Магнит ао</a></td>
                    <td>MGNT</td>
+                   <td><a class="charticon" href="/gr/MOEX.SBER" target="_blank"></a></td>
                    <td><a class="charticon" href="/gr/MOEX.MGNT" target="_blank"></a></td>
                    <td><a class="charticon2" href="/q/MGNT/f/y/" target="_blank"></a></td>
                    <td>5334</td>
